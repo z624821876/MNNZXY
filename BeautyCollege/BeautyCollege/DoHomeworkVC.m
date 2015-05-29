@@ -78,10 +78,6 @@
     [_faceBtn addTarget:self action:@selector(faceBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_scrollView addSubview:_faceBtn];
     
-    UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(_faceBtn.right + 15, _faceBtn.top, 25, 25)];
-    [image setImage:[UIImage imageNamed:@"write_work2.png"]];
-    [_scrollView addSubview:image];
-    
     _confirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _confirmBtn.backgroundColor = BaseColor;
     _confirmBtn.layer.cornerRadius = 5;
@@ -91,8 +87,6 @@
     [_scrollView addSubview:_confirmBtn];
     
     [self buildImgView];
-
-
 }
 
     //提交作业

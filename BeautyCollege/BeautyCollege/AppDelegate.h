@@ -27,7 +27,7 @@
 
 - (NSInteger)currentPage;
 + (AppDelegate *)shareApp;
-
+- (void)showMainTabBar;
 
 
 - (void)WXlogin;

@@ -80,7 +80,6 @@
             FeedbackVC *vc = [[FeedbackVC alloc] init];
             vc.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:vc animated:YES];
-
         }
             break;
         case 2:
@@ -108,11 +107,12 @@
         {
             NSString *path = [PATH_OF_DOCUMENT stringByAppendingPathComponent:@"MyUser"];
             BOOL isSucceed = [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+            [User shareUser].userId = nil;
             if (isSucceed) {
-            LoginVC *vc = [[LoginVC alloc] init];
-            vc.type = 10;
-            vc.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:vc animated:YES];
+                LoginVC *vc = [[LoginVC alloc] init];
+                vc.type = 10;
+                vc.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:vc animated:YES];
             }
         }
             break;

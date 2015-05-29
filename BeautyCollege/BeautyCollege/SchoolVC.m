@@ -17,6 +17,8 @@
 #import "LessonsVC.h"
 #import "ClassmateInfoVC.h"
 #import "GoodsVC.h"
+#import "HomeworkVC.h"
+#import "GroupVC.h"
 
 @interface SchoolVC ()
 {
@@ -50,6 +52,10 @@
     
     NSInteger           _currentPage;
     
+    
+    NSDate              *_groupDate;
+    NSDate              *_currentDate;
+    
 }
 
 @end
@@ -76,6 +82,7 @@
                 BaseCellModel *model = [[BaseCellModel alloc] init];
                 model.name = nilOrJSONObjectForKey(dic, @"orgName");
                 model.modelId = nilOrJSONObjectForKey(dic, @"clickurl");
+                model.content = nilOrJSONObjectForKey(dic, @"orgName");
                 model.logo = nilOrJSONObjectForKey(dic, @"filePath");
                 [_topImgArr addObject:model];
             }
@@ -170,6 +177,7 @@
                 NSDictionary *memberDic = [dic objectForKey:@"member"];
                 NSDictionary *blogDic = [dic objectForKey:@"blog"];
                 BaseCellModel *model = [[BaseCellModel alloc] init];
+                model.modelId = nilOrJSONObjectForKey(blogDic, @"id");
                 model.title = nilOrJSONObjectForKey(blogDic, @"title");
                 model.name = nilOrJSONObjectForKey(blogDic, @"createName");
                 model.url = nilOrJSONObjectForKey(memberDic, @"level");
@@ -179,6 +187,8 @@
                 model.job = nilOrJSONObjectForKey(memberDic, @"levelName");
                 NSNumber *number = nilOrJSONObjectForKey(blogDic, @"ct");
                 model.date = [number stringValue];
+                model.likeId = [MyTool getValuesFor:dic key:@"likeId"];
+                model.collectId = [MyTool getValuesFor:dic key:@"favouriteId"];
                 [_homeworkArr addObject:model];
             }
             [_tableView reloadData];
@@ -198,15 +208,19 @@
                 if ([_courseArr count] >= 2) {
                     break;
                 }
-                BaseCellModel *model = [[BaseCellModel alloc] init];
-                model.modelId = nilOrJSONObjectForKey(dic, @"id");
-                model.title = nilOrJSONObjectForKey(dic, @"title");
-                model.logo = nilOrJSONObjectForKey(dic, @"image");
-                NSNumber *student = nilOrJSONObjectForKey(dic, @"studentCount");
-                model.studentCount = student == nil ? @"0" : [student stringValue];
-                NSNumber *homework = nilOrJSONObjectForKey(dic, @"todayHomeworkCount");
-                model.homeworkCount = homework == nil ? @"0" : [homework stringValue];
-                [_courseArr addObject:model];
+                if ([dic isKindOfClass:[NSDictionary class]]) {
+                    BaseCellModel *model = [[BaseCellModel alloc] init];
+
+                    model.modelId = nilOrJSONObjectForKey(dic, @"id");
+                    model.title = nilOrJSONObjectForKey(dic, @"title");
+                    model.logo = nilOrJSONObjectForKey(dic, @"image");
+                    NSNumber *student = nilOrJSONObjectForKey(dic, @"studentCount");
+                    model.studentCount = student == nil ? @"0" : [student stringValue];
+                    NSNumber *homework = nilOrJSONObjectForKey(dic, @"todayHomeworkCount");
+                    model.homeworkCount = homework == nil ? @"0" : [homework stringValue];
+                    [_courseArr addObject:model];
+
+                }
             }
             [_tableView reloadData];
         }
@@ -242,12 +256,56 @@
         DDLog(@"%@",error);
     }];
 
+    
+    //获取团购图片
+    NSString *str10 = @"mobi/index/getAdv?type=3";
+    [[HttpManager shareManger] getWithStr:str10 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            NSDictionary *dic = [json objectForKey:@"result"];
+            NSArray *topArray = [dic objectForKey:@"top"];
+            NSString *time = [MyTool getValuesFor:dic key:@"startTime"];
+            _groupDate = [NSDate dateWithTimeIntervalSince1970:[time doubleValue] / 1000.0];
+            [self updateTime];
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+
+    
 }
+
+- (void)updateTime
+{
+    
+    NSURL *url=[NSURL URLWithString:@"http://www.baidu.com"];
+    NSURLRequest *request=[NSURLRequest requestWithURL:url];
+    NSURLConnection *connection=[[NSURLConnection alloc]initWithRequest:request delegate:self startImmediately:YES];
+    [connection start];
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    NSHTTPURLResponse *httpResponse=(NSHTTPURLResponse *)response;
+    if ([response respondsToSelector:@selector(allHeaderFields)]) {
+        NSDictionary *dic=[httpResponse allHeaderFields];
+        NSString *time=[dic objectForKey:@"Date"];
+        
+        NSString* string = [time substringToIndex:25];
+        NSDateFormatter *inputFormatter = [[NSDateFormatter alloc] init];
+        [inputFormatter setLocale:[[NSLocale alloc] initWithLocaleIdentifier:@"en_US"]];
+        [inputFormatter setDateFormat:@"EEE, d MMM yyyy HH:mm:ss"];
+        NSDate *inputDate = [inputFormatter dateFromString:string];
+        _currentDate = inputDate;
+    }
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.view.backgroundColor = ColorWithRGBA(215.0, 225.0, 227.0, 1);
     [self initData];
     [self initGUI];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -271,32 +329,28 @@
 
 - (void)initGUI
 {
-    
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 49) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 45) style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     //    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     UIView *view = [UIView new];
     _tableView.tableFooterView = view;
-    _tableView.delaysContentTouches = NO;
     _tableView.backgroundColor = ColorWithRGBA(215.0, 225.0, 227.0, 1);
     [self.view addSubview:_tableView];
     
+    _tableView.delaysContentTouches = NO;
     for (id view in _tableView.subviews)
     {
-        // looking for a UITableViewWrapperView
         if ([NSStringFromClass([view class]) isEqualToString:@"UITableViewWrapperView"])
         {
             if([view isKindOfClass:[UIScrollView class]])
             {
-                // turn OFF delaysContentTouches in the hidden subview
                 UIScrollView *scroll = (UIScrollView *) view;
                 scroll.delaysContentTouches = NO;
             }
             break;
         }
     }
-
     
     //区头背景图
     _topBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 408)];
@@ -348,9 +402,8 @@
     [_topBgView2 addSubview:searchTF];
     
     _topScroll2 = [[UIScrollView alloc] initWithFrame:CGRectMake(0, label.bottom + 5, UI_SCREEN_WIDTH, searchTF.top - label.bottom - 20)];
-    
-    [self updateScroll];
     [_topBgView2 addSubview:_topScroll2];
+    [self updateScroll];
     _tableView.tableHeaderView = _topBgView;
 }
 
@@ -395,7 +448,9 @@
         for (NSInteger i = 0; i < [_topImgArr count]; i ++) {
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(UI_SCREEN_WIDTH * i, 0, UI_SCREEN_WIDTH, _topScroll.height);
+            btn.tag = i;
             BaseCellModel *model = [_topImgArr objectAtIndex:i];
+            [btn addTarget:self action:@selector(bgScrollClick:) forControlEvents:UIControlEventTouchUpInside];
             [btn sd_setImageWithURL:[NSURL URLWithString:model.logo] forState:UIControlStateNormal];
             [_topScroll addSubview:btn];
         }
@@ -409,6 +464,42 @@
     _currentPage = 0;
 }
 
+    //点击轮播图
+- (void)bgScrollClick:(UIButton *)btn
+{
+    BaseCellModel *model = _topImgArr[btn.tag];
+    if ([model.content isEqualToString:@"帖子广告"]) {
+        [[tools shared] HUDShowText:@"请稍候..."];
+        NSString *str = [NSString stringWithFormat:@"mobi/class/tempGetHomeWorkForADV?memberId=%@&blogId=%@",[User shareUser].userId,model.modelId];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                [[tools shared] HUDHide];
+                NSDictionary *resultDic = nilOrJSONObjectForKey(json, @"result");
+                model.likeId = [MyTool getValuesFor:resultDic key:@"likeId"];
+                model.collectId = [MyTool getValuesFor:resultDic key:@"favouriteId"];
+                
+                HomeworkVC *vc = [[HomeworkVC alloc] init];
+                vc.homeworkId = model.modelId;
+                vc.homworkModel = model;
+                vc.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:vc animated:YES];
+                
+            }else {
+                [[tools shared] HUDShowHideText:@"加载失败" delay:1.5];
+            }
+            
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+        }];
+        
+    }else {
+        GoodsVC *vc = [[GoodsVC alloc] init];
+        vc.goodsId = model.modelId;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
 - (void)rotate:(NSTimer *)timer
 {
     _currentPage += 1;
@@ -420,9 +511,11 @@
     
     _pageControl.currentPage = _currentPage;
 }
+
     //
 - (void)updateScroll
 {
+    
     for (UIView *view in _topScroll2.subviews) {
         [view removeFromSuperview];
     }
@@ -432,6 +525,8 @@
         [img.button addTarget:self action:@selector(userDetails:) forControlEvents:UIControlEventTouchUpInside];
         [_topScroll2 addSubview:img];
     }
+    
+    _topScroll2.contentSize = CGSizeMake(20 + 80 * [_topImgArr2 count] + 20, _topScroll2.height);
 }
 
 - (void)userDetails:(UIButton *)btn
@@ -521,6 +616,7 @@
             leftBtn.frame = CGRectMake(20, 15, (UI_SCREEN_WIDTH - 60) / 2.0 , 150);
             BaseCellModel *model = _cellImgArr[0];
             [leftBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model.logo] forState:UIControlStateNormal];
+            [leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
             [view addSubview:leftBtn];
             UIButton *topBtn = [UIButton buttonWithType:UIButtonTypeCustom];
 
@@ -529,8 +625,9 @@
                 topBtn.frame = CGRectMake(leftBtn.right + 10, 15, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, 70);
                 BaseCellModel *model2 = _cellImgArr[1];
                 [topBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model2.logo] forState:UIControlStateNormal];
-                [view addSubview:topBtn];
+                [topBtn addTarget:self action:@selector(topBtnClick) forControlEvents:UIControlEventTouchUpInside];
 
+                [view addSubview:topBtn];
             }
             
             if ([_cellImgArr count] >= 3) {
@@ -539,6 +636,8 @@
                 bottomBtn.frame = CGRectMake(leftBtn.right + 10, topBtn.bottom + 10, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, 70);
                 BaseCellModel *model3 = _cellImgArr[2];
                 [bottomBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model3.logo] forState:UIControlStateNormal];
+                [bottomBtn addTarget:self action:@selector(bottomBtnClick) forControlEvents:UIControlEventTouchUpInside];
+
                 [view addSubview:bottomBtn];
 
             }
@@ -549,6 +648,37 @@
         return nil;
     }
     
+}
+
+- (void)topBtnClick
+{
+    if (nil != _currentDate && nil != _groupDate) {
+        NSTimeInterval aTimer = [_groupDate timeIntervalSinceDate:_currentDate];
+        
+//        if (aTimer > 0) {
+//            
+//            [[tools shared] HUDShowHideText:@"暂未开团" delay:1.5];
+//        }else {
+            //跳转到团购
+            GroupVC *vc = [[GroupVC alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+//        }
+    }
+}
+
+- (void)bottomBtnClick
+{
+    [AppDelegate shareApp].mainTabBar.selectedIndex = 2;
+}
+
+- (void)leftBtnClick
+{
+    BaseCellModel *model = _cellImgArr[0];
+    GoodsVC *vc = [[GoodsVC alloc] init];
+    vc.goodsId = model.modelId;
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
@@ -656,6 +786,7 @@
     if (!cell) {
         cell = [[BaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
         cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dorm_b.png"]];
+        
         for (id obj in cell.subviews)
         {
             if ([NSStringFromClass([obj class]) isEqualToString:@"UITableViewCellScrollView"])
@@ -755,6 +886,17 @@
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
+        case 1:
+        {
+            BaseCellModel *model = _homeworkArr[indexPath.row];
+            HomeworkVC *vc = [[HomeworkVC alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            vc.homeworkId = model.modelId;
+            vc.homworkModel = model;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+
         case 3:
         {
             if (![User shareUser].userId) {

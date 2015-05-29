@@ -157,6 +157,7 @@
 
 - (void)login
 {
+    
     if (_nameTF.text.length <= 0) {
         [[tools shared] HUDShowHideText:@"请输入手机号" delay:1.5];
         return;

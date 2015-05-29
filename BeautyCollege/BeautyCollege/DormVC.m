@@ -15,6 +15,13 @@
 #import "OrderLIstVC.h"
 #import "ShoppingcartVC.h"
 #import "CollectionVC.h"
+#import "LessonsVC.h"
+#import "HomeworkVC.h"
+#import "ChatVC.h"
+#import "InvitefriendsVC.h"
+#import "MyLessonsVC.h"
+#import "MyhomewroksVC.h"
+#import "MyMessagesVC.h"
 
 @interface DormVC ()
 @property (nonatomic, strong) BaseCellModel     *userInfo;
@@ -89,6 +96,7 @@
                     model.title = nilOrJSONObjectForKey(dic, @"title");
                     model.logo = nilOrJSONObjectForKey(dic, @"image");
                     model.name = nilOrJSONObjectForKey(dic, @"createName");
+                    model.modelId = nilOrJSONObjectForKey(dic, @"id");
                     NSString *time = nilOrJSONObjectForKey(dic, @"createTime");
                     model.date = [[time componentsSeparatedByString:@" "] firstObject];
                     [_myLessonArr addObject:model];
@@ -102,6 +110,7 @@
                     model.title = nilOrJSONObjectForKey(dic, @"title");
                     model.logo = nilOrJSONObjectForKey(dic, @"image");
                     model.name = nilOrJSONObjectForKey(dic, @"createName");
+                    model.modelId = nilOrJSONObjectForKey(dic, @"id");
                     NSString *time = nilOrJSONObjectForKey(dic, @"createTime");
                     model.date = [[time componentsSeparatedByString:@" "] firstObject];
                     [_joinLessonArr addObject:model];
@@ -116,9 +125,12 @@
                     NSDictionary *blogDic = [dic objectForKey:@"blog"];
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.title = nilOrJSONObjectForKey(blogDic, @"title");
-                    model.logo = nilOrJSONObjectForKey(dic, @"image");
-                    model.name = nilOrJSONObjectForKey(dic, @"createName");
-                    NSString *time = nilOrJSONObjectForKey(dic, @"createTime");
+                    model.modelId = nilOrJSONObjectForKey(blogDic, @"id");
+                    model.logo = nilOrJSONObjectForKey(blogDic, @"image");
+                    model.name = nilOrJSONObjectForKey(blogDic, @"createName");
+                    NSString *time = nilOrJSONObjectForKey(blogDic, @"createTime");
+                    model.likeId = [MyTool getValuesFor:dic key:@"likeId"];
+                    model.collectId = [MyTool getValuesFor:dic key:@"favouriteId"];
                     model.date = [[time componentsSeparatedByString:@" "] firstObject];
                     [_myHomeorkArr addObject:model];
                 }
@@ -141,6 +153,7 @@
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.name = nilOrJSONObjectForKey(dict, @"nickName");
                     model.logo = nilOrJSONObjectForKey(dict, @"img");
+                    model.modelId = nilOrJSONObjectForKey(dict, @"id");
                     model.lastMessage = nilOrJSONObjectForKey(dict, @"lastMessage");
                     [_RepArr addObject:model];
                 }
@@ -170,7 +183,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initData];
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 49) style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 46) style:UITableViewStyleGrouped];
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
     [self.view addSubview:self.tableView];
@@ -225,6 +238,7 @@
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(UI_SCREEN_WIDTH - 43, 5, 33, 20);
             [btn setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
+            [btn addTarget:self action:@selector(viewMore) forControlEvents:UIControlEventTouchUpInside];
             [view addSubview:btn];
             
             return view;
@@ -233,6 +247,47 @@
     }
     return nil;
 }
+
+- (void)viewMore
+{
+
+    switch (_currentBtn.tag) {
+        case 0:
+        case 1:
+        {
+            MyLessonsVC *vc = [[MyLessonsVC alloc] init];
+            vc.type = _currentBtn.tag;
+            vc.userId = [User shareUser].userId;
+
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        case 2:
+        {
+            MyhomewroksVC *vc = [[MyhomewroksVC alloc] init];
+            vc.userId = [User shareUser].userId;
+
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+
+        }
+            break;
+        case 3:
+        {
+            MyMessagesVC *vc = [[MyMessagesVC alloc] init];
+            vc.userId = [User shareUser].userId;
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
@@ -253,7 +308,7 @@
         [view addSubview:img];
         
         UIImageView *logo = [[UIImageView alloc] initWithFrame:CGRectMake((UI_SCREEN_WIDTH - 80) / 2.0, img.bottom - 40, 80, 80)];
-        [logo sd_setImageWithURL:[NSURL URLWithString:[User shareUser].logo] placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
+         [MyTool setImgWithURLStr:[User shareUser].logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:logo];
         logo.layer.cornerRadius = 40;
         logo.layer.masksToBounds = YES;
         [view addSubview:logo];
@@ -442,11 +497,9 @@
         
         cell = [[BaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
         cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dorm_b.png"]];
-
     }
     if (indexPath.section == 0) {
         if (_currentBtn.tag == 3) {
-            
             cell.type = 32;
             NSMutableArray *array = [self getArr];
             cell.model = array[indexPath.row];
@@ -455,7 +508,6 @@
             cell.type = 20;
             NSMutableArray *array = [self getArr];
             cell.model = array[indexPath.row];
-
         }
     }
     
@@ -484,7 +536,54 @@
     switch (indexPath.section) {
         case 0:
         {
+            switch (_currentBtn.tag) {
+                case 0:
+                {
+                    BaseCellModel *model = _myLessonArr[indexPath.row];
+                    LessonsVC *vc = [[LessonsVC alloc] init];
+                    vc.lessonsId = model.modelId;
+                    vc.hidesBottomBarWhenPushed = YES;
+
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
+                case 1:
+                {
+                    BaseCellModel *model = _joinLessonArr[indexPath.row];
+                    LessonsVC *vc = [[LessonsVC alloc] init];
+                    vc.lessonsId = model.modelId;
+                    vc.hidesBottomBarWhenPushed = YES;
+
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
+                case 2:
+                {
+                    BaseCellModel *model = _myHomeorkArr[indexPath.row];
+                    HomeworkVC *vc = [[HomeworkVC alloc] init];
+                    vc.homeworkId = model.modelId;
+                    vc.homworkModel = model;
+                    vc.hidesBottomBarWhenPushed = YES;
+
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
+                case 3:
+                {
+                    BaseCellModel *model = _RepArr[indexPath.row];
+                    ChatVC *vc = [[ChatVC alloc] init];
+                    vc.name = model.name;
+                    vc.userId = model.modelId;
+                    vc.hidesBottomBarWhenPushed = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
+
+                default:
+                    break;
+            }
             
+        
         }
             break;
         case 1:
@@ -542,7 +641,7 @@
                     break;
                 case 1:
                 {
-                    //美娘小助手
+                    //收藏
                     CollectionVC *vc = [[CollectionVC alloc] init];
                     vc.hidesBottomBarWhenPushed = YES;
                     [self.navigationController pushViewController:vc animated:YES];
@@ -550,14 +649,19 @@
                     break;
                 case 2:
                 {
-                    //美娘小助手
+                    //分享
                     ShareVC *vc = [[ShareVC alloc] init];
                     vc.hidesBottomBarWhenPushed = YES;
                     [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
-
-                    
+                case 3:
+                {
+                    InvitefriendsVC *vc = [[InvitefriendsVC alloc] init];
+                    vc.hidesBottomBarWhenPushed = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
                 default:
                     break;
             }

@@ -62,6 +62,30 @@
     [self.contentView addSubview:self.btn3];
     [self.contentView addSubview:self.cellView];
     [self.contentView addSubview:self.cellView2];
+    
+    [self.label1 addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+    [self.label2 addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+    [self.label3 addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+    [self.btn1 addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+    [self.btn2 addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+    [self.btn3 addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew context:nil];
+
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    UIView *view = object;
+    view.hidden = NO;
+}
+
+- (void)dealloc
+{
+    [self.label1 removeObserver:self forKeyPath:@"frame"];
+    [self.label2 removeObserver:self forKeyPath:@"frame"];
+    [self.label3 removeObserver:self forKeyPath:@"frame"];
+    [self.btn1 removeObserver:self forKeyPath:@"frame"];
+    [self.btn2 removeObserver:self forKeyPath:@"frame"];
+    [self.btn3 removeObserver:self forKeyPath:@"frame"];
 }
 
 - (void)initData
@@ -74,15 +98,21 @@
     self.btn2.frame = CGRectZero;
     self.btn3.frame = CGRectZero;
     self.logoImg.frame = CGRectZero;
-    
     self.cellView.frame = CGRectZero;
     self.cellView2.frame = CGRectZero;
     self.cellView3.frame = CGRectZero;
     self.cellView3.hidden = YES;
-    
     self.leftView.frame = CGRectZero;
     self.img1.frame = CGRectZero;
     self.img2.frame = CGRectZero;
+    
+    
+    self.label1.hidden = YES;
+    self.label2.hidden = YES;
+    self.label3.hidden = YES;
+    self.btn1.hidden = YES;
+    self.btn2.hidden = YES;
+    self.btn3.hidden = YES;
 }
 
 - (void)layoutSubviews
@@ -95,12 +125,12 @@
             self.logoImg.frame = CGRectMake(15, 10, 70, 50);
             NSString *str = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,_model.logo];
             [self.logoImg sd_setImageWithURL:[NSURL URLWithString:str] placeholderImage:[UIImage imageNamed:@"course_titbg.png"]];
-//
+            
+            
             self.btn1.frame = CGRectMake(self.width - 40, 25, 20, 20);
             [self.btn1 setImage:[UIImage imageNamed:@"jiantou.png"] forState:UIControlStateNormal];
             [self.btn1 setImage:[UIImage imageNamed:@"jiantou1.png"] forState:UIControlStateSelected];
             
-//
             self.label1.frame = CGRectMake(_logoImg.right + 5, _logoImg.top, _btn1.left - _logoImg.right - 5, 50 / 3.0);
             self.label1.font = [UIFont systemFontOfSize:14];
             self.label1.text = _model.name;
@@ -239,7 +269,9 @@
             CGFloat height = (UI_SCREEN_WIDTH / 3.0 + 20 + 10) * (([_model.cateArray count] + 2) / 3);
             self.cellView3.frame = CGRectMake(0, self.label1.bottom, UI_SCREEN_WIDTH, height);
             [self.cellView3 initWithModelArray:_model.cateArray];
-            
+            for (CellView *cell in self.cellView3.subviews) {
+                [cell addTarget:self action:@selector(cellView3Click:) forControlEvents:UIControlEventTouchUpInside];
+            }
         }
             break;
         case 7:
@@ -449,12 +481,14 @@
             break;
         case 18:
         {
-            self.bgView.frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, 80);
+            self.bgView.frame = CGRectMake(0, 10, UI_SCREEN_WIDTH, 80);
             self.bgView.image = [UIImage imageNamed:@"coursebg_16.png"];
             
-            self.logoImg.frame = CGRectMake(15, -10, 50, 50);
+            self.logoImg.frame = CGRectMake(15, 0, 50, 50);
             self.logoImg.layer.cornerRadius = 25;
             self.logoImg.layer.masksToBounds = YES;
+            
+//            self.logoImg.
             [self setImgWithURLStr:_model.logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:self.logoImg];
             
             NSString *dateStr = [Util MNdateIntervalStr:_model.date];
@@ -472,10 +506,10 @@
             }
             CGFloat width = [labelStr boundingRectWithSize:CGSizeMake(100000, 20) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
             self.label1.font = [UIFont systemFontOfSize:15];
-            self.label1.frame = CGRectMake(UI_SCREEN_WIDTH - width - 15, 10, width + 10, 20);
+            self.label1.frame = CGRectMake(UI_SCREEN_WIDTH - width - 15, 20, width + 10, 20);
             self.label1.attributedText = string;
             
-            self.label2.frame = CGRectMake(self.logoImg.right + 5, 5, self.label1.left - self.logoImg.right - 10, 30);
+            self.label2.frame = CGRectMake(self.logoImg.right + 5, 15, self.label1.left - self.logoImg.right - 10, 30);
             
 #pragma mark -- 正则匹配  文字改图片
 //            NSString *imgStr = _model.title;
@@ -500,9 +534,8 @@
             [self.btn1 setTitle:_model.likeCount forState:UIControlStateNormal];
             if ([_model.likeId isEqualToString:@"0"]) {
                 [self.btn1 setImage:[UIImage imageNamed:@"xin.png"] forState:UIControlStateNormal];
-
             }else {
-                [self.btn1 setImage:[UIImage imageNamed:@"work_06.png"] forState:UIControlStateNormal];
+                [self.btn1 setImage:[UIImage imageNamed:@"zuoye-xin.png"] forState:UIControlStateNormal];
             }
             self.btn1.imageView.contentMode = UIViewContentModeScaleAspectFit;
             
@@ -527,10 +560,10 @@
             break;
         case 19:
         {
-            self.bgView.frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, 80);
+            self.bgView.frame = CGRectMake(0, 10, UI_SCREEN_WIDTH, 80);
             self.bgView.image = [UIImage imageNamed:@"coursebg_16.png"];
             
-            self.logoImg.frame = CGRectMake(15, -10, 50, 50);
+            self.logoImg.frame = CGRectMake(15, 0, 50, 50);
             self.logoImg.layer.cornerRadius = 25;
             self.logoImg.layer.masksToBounds = YES;
             [self setImgWithURLStr:_model.logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:self.logoImg];
@@ -550,10 +583,10 @@
             }
             CGFloat width = [labelStr boundingRectWithSize:CGSizeMake(100000, 20) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
             self.label1.font = [UIFont systemFontOfSize:15];
-            self.label1.frame = CGRectMake(UI_SCREEN_WIDTH - width - 15, 10, width + 10, 20);
+            self.label1.frame = CGRectMake(UI_SCREEN_WIDTH - width - 15, 20, width + 10, 20);
             self.label1.attributedText = string;
             
-            self.label2.frame = CGRectMake(self.logoImg.right + 5, 10, self.label1.left - self.logoImg.right - 10, 20);
+            self.label2.frame = CGRectMake(self.logoImg.right + 5, 15, self.label1.left - self.logoImg.right - 10, 20);
             
 #pragma mark -- 正则匹配  文字改图片
 //            NSString *imgStr = _model.title;
@@ -594,17 +627,29 @@
             //            self.label3.frame = CGRectMake(self.logoImg.right + 5, self.label2.bottom + 10, <#CGFloat width#>, <#CGFloat height#>);
             
             self.img1.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
-            [self.img1 setImage:[UIImage imageNamed:@"baobei_b.png"]];
-            
+            [self.img1 setImage:[UIImage imageNamed:@"course_25.png"]];
+
             self.img2.frame = CGRectMake(UI_SCREEN_WIDTH - 50, self.img1.top, 20, 20);
-            [self.img2 setImage:[UIImage imageNamed:@"course_25.png"]];
+//            [self.img2 setImage:[UIImage imageNamed:@"baobei_b.png"]];
+            if ([_model.collectId isEqualToString:@"0"]) {
+                
+                [self.img2 setImage:[UIImage imageNamed:@"baobei_b.png"]];
+            }else {
+                [self.img2 setImage:[UIImage imageNamed:@"work_03.png"]];
+                
+            }
             
             CGFloat width2 = [_model.likeCount boundingRectWithSize:CGSizeMake(100000, 20) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
             self.btn1.frame = CGRectMake(self.img2.left - 20 - width2 - 10, self.img1.top, width2 + 30, 20);
             self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
             [self.btn1 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             [self.btn1 setTitle:_model.likeCount forState:UIControlStateNormal];
-            [self.btn1 setImage:[UIImage imageNamed:@"xin.png"] forState:UIControlStateNormal];
+            if ([_model.likeId isEqualToString:@"0"]) {
+                [self.btn1 setImage:[UIImage imageNamed:@"xin.png"] forState:UIControlStateNormal];
+                
+            }else {
+                [self.btn1 setImage:[UIImage imageNamed:@"zuoye-xin.png"] forState:UIControlStateNormal];
+            }
             self.btn1.imageView.contentMode = UIViewContentModeScaleAspectFit;
             
             CGFloat width3 = [_model.name boundingRectWithSize:CGSizeMake(100000, 20) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
@@ -641,8 +686,11 @@
             self.label2.textColor = BaseColor;
             self.label2.text = self.name;
             
+            self.btn1.frame = CGRectMake(UI_SCREEN_WIDTH - 40, 5, 30, 15);
+            [self.btn1 setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
+            
             for (NSInteger i = 0; i < [_modelArray count]; i ++) {
-                LessonsCellView *view = [[LessonsCellView alloc] initWithFrame:CGRectMake(self.label2.right + 20, 10 + 54 * i, self.width - self.label2.right - 30, 54) Model:_modelArray[i]];
+                LessonsCellView *view = [[LessonsCellView alloc] initWithFrame:CGRectMake(self.label2.right + 20, 20 + 54 * i, self.width - self.label2.right - 30, 54) Model:_modelArray[i]];
                 view.btn.tag = i;
                 [view.btn addTarget:self action:@selector(lessonClick:) forControlEvents:UIControlEventTouchUpInside];
                 [self.contentView addSubview:view];
@@ -663,9 +711,12 @@
             self.label2.font = [UIFont boldSystemFontOfSize:25];
             self.label2.textColor = BaseColor;
             self.label2.text = self.name;
-            _btnArray = [[NSMutableArray alloc] initWithCapacity:[_modelArray count]];
+//            _btnArray = [[NSMutableArray alloc] initWithCapacity:[_modelArray count]];
+            self.btn1.frame = CGRectMake(UI_SCREEN_WIDTH - 40, 5, 30, 15);
+            [self.btn1 setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
+
             for (NSInteger i = 0; i < [_modelArray count]; i ++) {
-                HomeworkCellView *view = [[HomeworkCellView alloc] initWithFrame:CGRectMake(self.label2.right + 20, 10 + 30 * i, self.width - self.label2.right - 30, 30) Model:_modelArray[i]];
+                HomeworkCellView *view = [[HomeworkCellView alloc] initWithFrame:CGRectMake(self.label2.right + 20, 20 + 30 * i, self.width - self.label2.right - 30, 30) Model:_modelArray[i]];
                 view.btn.tag = i;
                 [view.btn addTarget:self action:@selector(lessonClick:) forControlEvents:UIControlEventTouchUpInside];
                 [self.contentView addSubview:view];
@@ -692,7 +743,7 @@
             self.label3.frame = CGRectMake(self.label1.left, self.label1.bottom, self.label1.width, 20);
             self.label3.font = [UIFont systemFontOfSize:12];
             self.label3.textColor = [UIColor grayColor];
-            self.label3.text = _model.lastMessage;
+            self.label3.attributedText = [MyTool textTransformEmoji:_model.lastMessage];
             
         }
             break;
@@ -736,8 +787,10 @@
         {
             NSMutableAttributedString *string = [MyTool textTransformEmoji:_title];
             self.label1.attributedText = string;
+            self.label1.font = [UIFont systemFontOfSize:17];
             self.label1.numberOfLines = 0;
-            self.label1.frame = CGRectMake(10, 10, UI_SCREEN_WIDTH - 20, self.height - 10);
+//            self.label1.adjustsFontSizeToFitWidth = YES;
+            self.label1.frame = CGRectMake(10, 5, UI_SCREEN_WIDTH - 20, self.height - 10);
         }
             break;
         case 25:
@@ -756,14 +809,15 @@
             self.btn1.frame = CGRectMake(self.width - 40, 25, 20, 20);
             [self.btn1 setImage:[UIImage imageNamed:@"shopCat-delete.png"] forState:UIControlStateNormal];
             
-            self.label1.frame = CGRectMake(15, 5, 130, 20);
+            self.label1.frame = CGRectMake(15, 5, 150, 20);
             self.label1.font = [UIFont systemFontOfSize:15];
             self.label1.attributedText = [MyTool textTransformEmoji:_model.title];
             
-            self.btn2.frame = CGRectMake(self.label1.right + 5, 0, 60, 30);
+            self.btn2.frame = CGRectMake(self.label1.right + 5, 0, 80, 30);
             [self.btn2 setImage:[UIImage imageNamed:@"ren"] forState:UIControlStateNormal];
             [self.btn2 setTitle:_model.name forState:UIControlStateNormal];
             self.btn2.titleLabel.font = [UIFont systemFontOfSize:12];
+            self.btn2.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
             [self.btn2 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             
             self.btn3.frame = CGRectMake(self.btn2.right + 10, 0, 60, 30);
@@ -806,6 +860,57 @@
             }
         }
             break;
+        case 28:
+        {
+            self.logoImg.frame = CGRectMake(10, 10, 100, 100);
+            [MyTool setImgWithURLStr:_model.logo withplaceholderImage:nil withImgView:self.logoImg];
+        
+            self.label1.frame = CGRectMake(self.logoImg.right + 10, 10, UI_SCREEN_WIDTH - self.logoImg.right - 20, 40);
+            self.label1.text = _model.name;
+            self.label1.textColor = [UIColor grayColor];
+            self.label1.numberOfLines = 0;
+            
+            self.label2.frame = CGRectMake(self.label1.left, self.label1.bottom + 10, self.label1.width, 20);
+            self.label2.textColor = BaseColor;
+            self.label2.font = [UIFont systemFontOfSize:15];
+            self.label2.text = [NSString stringWithFormat:@"￥%.2f",[_model.price doubleValue]];
+            
+            self.label3.frame = CGRectMake(self.label1.left, self.label2.bottom + 10, self.label1.width, 20);
+            self.label3.textColor = [UIColor grayColor];
+            self.label3.text = [NSString stringWithFormat:@"已售%@件",_model.buyedCount];
+            
+        }
+            break;
+        case 29:
+        {
+            self.cellView.frame = CGRectMake(10, 10, UI_SCREEN_WIDTH - 20, (UI_SCREEN_WIDTH - 20) + 70);
+            [self.cellView initGUI4WithData:_model];
+            
+        }
+            break;
+        case 30:
+        {
+            self.logoImg.frame = CGRectMake(10, 10, 60, 60);
+            self.logoImg.contentMode = UIViewContentModeScaleAspectFit;
+            [MyTool setImgWithURLStr:_model.logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:_logoImg];
+            
+            CGFloat widht = [_model.name boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - self.logoImg.right - 20 - 40, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size.width;
+            
+            self.label1.frame = CGRectMake(self.logoImg.right + 10, 10, widht, 30);
+            self.label1.textColor = BaseColor;
+            self.label1.font = [UIFont systemFontOfSize:18];
+            self.label1.text = _model.name;
+            
+            self.img1.frame = CGRectMake(self.label1.right + 10, 10, 30, 30);
+            [self.img1 setImage:[Util studentImageWithLevel:_model.level]];
+            self.img1.contentMode = UIViewContentModeScaleAspectFit;
+            
+            self.label2.frame = CGRectMake(self.label1.left, self.label1.bottom + 10, UI_SCREEN_WIDTH - self.logoImg.right - 20, 20);
+            self.label2.textColor = [UIColor grayColor];
+            self.label2.font = [UIFont systemFontOfSize:15];
+            self.label2.text = _model.date;
+        }
+            break;
 
 
         default:
@@ -817,6 +922,12 @@
 - (void)lessonClick:(UIButton *)btn
 {
     _block(btn.tag);
+}
+
+- (void)cellView3Click:(UIButton *)btn
+{
+    BaseCellModel *model = _model.cateArray[btn.tag];
+    _block2(model);
 }
 
 - (void)goodsClick

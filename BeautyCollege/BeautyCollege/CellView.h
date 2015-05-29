@@ -19,6 +19,7 @@
 @property (strong, nonatomic) UIImageView   *lineimg1;
 
 - (void)initGUI;
+- (void)initGUI4WithData:(BaseCellModel *)model;
 - (void)initGUIWithData:(BaseCellModel *)model;
 - (void)initGUI2WithData:(BaseCellModel *)model;
 - (void)initGUI3WithData:(BaseCellModel *)model;

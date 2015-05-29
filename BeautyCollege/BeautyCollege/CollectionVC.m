@@ -128,6 +128,8 @@
                 NSNumber *number = nilOrJSONObjectForKey(blogDic, @"ct");
                 model.date = [number stringValue];
                 model.job = nilOrJSONObjectForKey(memberDic, @"levelName");
+                model.likeId = [MyTool getValuesFor:dict key:@"likeId"];
+                model.collectId = [MyTool getValuesFor:dict key:@"favouriteId"];
 
             }
         }

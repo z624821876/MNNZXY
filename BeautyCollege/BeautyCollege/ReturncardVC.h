@@ -15,5 +15,6 @@
 @property (nonatomic, strong) NSString          *homeworkId;
 @property (strong, nonatomic) FaceBoard         *faceBoard;
 @property (strong, nonatomic) CustomScrollView  *scrollView;
-
+@property (assign, nonatomic) NSInteger         type;
+@property (strong, nonatomic) NSString          *replyId;
 @end

@@ -64,7 +64,7 @@
     _labelArr = [[NSMutableArray alloc] init];
     [self buildTopView];
     
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 40 + 15 * UI_scaleY + 64, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 49 - 64 - (40 + 15 * UI_scaleY)) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 40 + 15 * UI_scaleY + 64, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 45 - 64 - (40 + 15 * UI_scaleY)) style:UITableViewStyleGrouped];
     _tableView.delegate =self;
     _tableView.dataSource =self;
     _tableView.sectionIndexBackgroundColor = [UIColor clearColor];
@@ -117,7 +117,7 @@
         {
             string = @"newfriends";
             pagesize = @"10";
-            pageNo = [NSString stringWithFormat:@"%ld",_currentPage];
+//            pageNo = [NSString stringWithFormat:@"%ld",_currentPage];
         }
             break;
         case 2:
@@ -125,7 +125,8 @@
             string = @"schoolmate";
             pagesize = @"10";
             pageNo = [NSString stringWithFormat:@"%ld",_currentPage];
-            sex = [NSString stringWithFormat:@"%ld",_currentBtn2.tag];
+            NSArray *array = @[@"女",@"无",@"男"];
+            sex = array[_currentBtn2.tag];
             
         }
             break;
@@ -542,6 +543,29 @@
         vc.ClassmateId = model.modelId;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
+    }else if (_currentBtn.tag == 2) {
+        BaseCellModel *model = _dataArray[indexPath.row];
+        ClassmateInfoVC *vc = [[ClassmateInfoVC alloc] init];
+        vc.ClassmateId = model.modelId;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else {
+        BaseCellModel *model = _dataArray[indexPath.row];
+
+        //添加好友
+        NSString *str = [NSString stringWithFormat:@"mobi/user/add?memberId=%@&friendId=%@&content=",[User shareUser].userId,model.modelId];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                
+                [[tools shared] HUDShowHideText:@"添加成功" delay:1.0];
+                [self loadData];
+            }else {
+                [[tools shared] HUDShowHideText:@"添加失败" delay:1.0];
+
+            }
+            
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
     }
 }
 

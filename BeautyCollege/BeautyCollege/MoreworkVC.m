@@ -8,6 +8,7 @@
 
 #import "MoreworkVC.h"
 #import "MJRefresh.h"
+#import "HomeworkVC.h"
 
 @interface MoreworkVC ()
 @property (nonatomic, strong) NSMutableArray            *dataArray;
@@ -69,6 +70,8 @@
                 BaseCellModel *model = [[BaseCellModel alloc] init];
                 model.modelId = nilOrJSONObjectForKey(blogDic, @"id");
                 model.title = nilOrJSONObjectForKey(blogDic, @"title");
+                model.likeId = [MyTool getValuesFor:dic key:@"likeId"];
+                model.collectId = [MyTool getValuesFor:dic key:@"favouriteId"];
                 NSNumber *number = nilOrJSONObjectForKey(blogDic, @"ct");
                 NSDate *date = [NSDate dateWithTimeIntervalSince1970:[number floatValue] / 1000.0];
                 NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -127,7 +130,12 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    BaseCellModel *model = _dataArray[indexPath.row];
     
+    HomeworkVC *vc = [[HomeworkVC alloc] init];
+    vc.homeworkId = model.modelId;
+    vc.homworkModel = model;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 

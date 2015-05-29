@@ -70,17 +70,24 @@
 
 - (void)share
 {
-    UIActionSheet * editActionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
-    for (NSString *snsName in UMarr) {
-        NSString *displayName = [UMdic valueForKey:snsName];
-        [editActionSheet addButtonWithTitle:displayName];
-    }
+    [UMSocialData defaultData].extConfig.wechatSessionData.url = [[User shareUser] regLink];
+    [UMSocialData defaultData].extConfig.wechatTimelineData.url = [[User shareUser] regLink];
+    [UMSocialSnsService presentSnsIconSheetView:self
+                                         appKey:@"54c7576ffd98c5acfd0007ce"
+                                      shareText:@"美娘女子学院"
+                                     shareImage:[UIImage imageNamed:@"icon.png"]
+                                shareToSnsNames:[NSArray arrayWithObjects:UMShareToWechatSession,UMShareToWechatTimeline,nil]
+                                       delegate:self];
     
-    [editActionSheet addButtonWithTitle:@"取消"];
-    editActionSheet.cancelButtonIndex = editActionSheet.numberOfButtons - 1;
-    
-    [editActionSheet showInView:self.view];
-    
+//    UIActionSheet * editActionSheet = [[UIActionSheet alloc] initWithTitle:@"" delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil];
+//    for (NSString *snsName in UMarr) {
+//        NSString *displayName = [UMdic valueForKey:snsName];
+//        [editActionSheet addButtonWithTitle:displayName];
+//    }
+//    
+//    [editActionSheet addButtonWithTitle:@"取消"];
+//    editActionSheet.cancelButtonIndex = editActionSheet.numberOfButtons - 1;
+//    [editActionSheet showInView:self.view];
 }
 
 - (void)shareWith:(NSString *)snsName

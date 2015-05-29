@@ -12,18 +12,23 @@
 #import "CateCellView.h"
 
 typedef void(^PushBlock)(NSInteger i);
+typedef void(^PushBlock2)(id model);
+
 
 @interface BaseCell : UITableViewCell
 
 @property (copy, nonatomic) PushBlock block;
-@property (strong, nonatomic) NSMutableArray      *btnArray;
-@property (strong, nonatomic) UILabel       *label1;
-@property (strong, nonatomic) UILabel       *label2;
-@property (strong, nonatomic) UILabel       *label3;
-@property (strong, nonatomic) UIImageView   *logoImg;
+@property (copy, nonatomic) PushBlock2 block2;
 
-@property (strong, nonatomic) UIImageView   *img1;
-@property (strong, nonatomic) UIImageView   *img2;
+@property (strong, nonatomic) NSMutableArray      *btnArray;
+
+@property (strong, nonatomic) UILabel           *label1;
+@property (strong, nonatomic) UILabel           *label2;
+@property (strong, nonatomic) UILabel           *label3;
+@property (strong, nonatomic) UIImageView       *logoImg;
+
+@property (strong, nonatomic) UIImageView       *img1;
+@property (strong, nonatomic) UIImageView       *img2;
 //@property (strong, nonatomic) UIImageView   *img3;
 
 @property (strong, nonatomic) UIImageView   *bgView;

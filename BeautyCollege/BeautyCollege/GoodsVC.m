@@ -44,6 +44,7 @@
 
 @property (nonatomic, strong) UIButton              *numBtn;
 @property (nonatomic, strong) MyCustomView          *topView;
+@property (nonatomic, assign) NSInteger             refrenshCount;
 @end
 
 @implementation GoodsVC
@@ -53,10 +54,28 @@
     [super viewWillAppear:YES];
     self.navigationItem.title = @"宝贝";
     
-    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"baobei_c.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(shoppingcart)];
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btn setImage:[UIImage imageNamed:@"baobei_c.png"] forState:UIControlStateNormal];
+    btn.frame = CGRectMake(0, 0, 60, 60);
+    [btn setTitle:@"0" forState:UIControlStateNormal];
+    btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
+    btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [btn addTarget:self action:@selector(toShoppingcart) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:btn];
     self.navigationItem.rightBarButtonItem = item;
+    
     self.view.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
+    
 }
+
+//查看购物车
+- (void)toShoppingcart
+{
+    ShoppingcartVC *vc = [[ShoppingcartVC alloc] init];
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _sizeArray = [[NSMutableArray alloc] init];
@@ -213,8 +232,40 @@
     _bgScroll.contentSize = CGSizeMake(UI_SCREEN_WIDTH, _bgView3.bottom + 20);
     [self buildFootView];
 }
+- (void)stopHUD
+{
+    if (_refrenshCount >= 3) {
+        [[tools shared] HUDHide];
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
+    [super viewDidAppear:YES];
+    _refrenshCount = 0;
+    [[tools shared] HUDShowText:@"正在加载..."];
+    NSString *str0 = [NSString stringWithFormat:@"mobi/pro/getShoppingCartCount?memberId=%@",[User shareUser].userId];
+    [[HttpManager shareManger] getWithStr:str0 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [btn setImage:[UIImage imageNamed:@"baobei_c.png"] forState:UIControlStateNormal];
+            btn.frame = CGRectMake(0, 0, 60, 60);
+            [btn setTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"result"]] forState:UIControlStateNormal];
+            btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
+            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+            [btn addTarget:self action:@selector(toShoppingcart) forControlEvents:UIControlEventTouchUpInside];
+
+            UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:btn];
+            self.navigationItem.rightBarButtonItem = item;
+            
+            _refrenshCount += 1;
+            [self stopHUD];
+        }
+        
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+
     
     NSString *str = [NSString stringWithFormat:@"mobi/pro/getProductDetail?productId=%@&memberId=%@",self.goodsId,[User shareUser].userId];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
@@ -273,6 +324,9 @@
             
             
             [self updateGUI];
+            
+            _refrenshCount += 1;
+            [self stopHUD];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
@@ -298,17 +352,14 @@
                 [_goodsArray addObject:model];
             }
             [self addRecommendGoods];
+            _refrenshCount += 1;
+            [self stopHUD];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLog(@"%@",error);
     }];
     
     
-}
-    //查看购物车
-- (void)shoppingcart
-{
-    NSLog(@"我的购物车");
 }
 
     //喜欢和收藏
@@ -631,8 +682,6 @@
     //刷新视图
 - (void)updateGUI
 {
-    
-    
     _nameLabel.text = _productModel.name;
     [_timer invalidate];
     _timer = nil;
@@ -662,7 +711,7 @@
     [string2 addAttributes:@{NSForegroundColorAttributeName:BaseColor} range:[str2 rangeOfString:_productModel.collectCount]];
     [_collectCountBtn setAttributedTitle:string2 forState:UIControlStateNormal];
     
-    NSString *str3 = [NSString stringWithFormat:@"￥%@",_productModel.discountPrice];
+    NSString *str3 = [NSString stringWithFormat:@"￥%.2f",[_productModel.discountPrice doubleValue]];
     
     //    NSString *str3 = [NSString stringWithFormat:@"￥%@ %@",_productModel.price,_productModel.discountPrice];
     //    NSMutableAttributedString *string3 = [[NSMutableAttributedString alloc] initWithString:str3];
@@ -678,7 +727,7 @@
     labelRect.origin.x = _priceLabel.left + priceLabelWidth + 3;
     labelRect.size.width = 150 - priceLabelWidth - 3;
     _discountLabel.frame = labelRect;
-    NSString *str4 = _productModel.price;
+    NSString *str4 = [NSString stringWithFormat:@"%.2f",[_productModel.price doubleValue]];
     NSMutableAttributedString *string3 = [[NSMutableAttributedString alloc] initWithString:str4 attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
     _discountLabel.attributedText = string3;
     
@@ -799,15 +848,20 @@
 {
     CustomCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.backgroundColor = [UIColor grayColor];
+    cell.titleLabel.textColor = [UIColor blackColor];
     BaseCellModel *model;
     if (collectionView.tag == 10) {
         model = _attributeArray[indexPath.row];
         if ([_currentAttributeIndex isEqual:indexPath]) {
             cell.backgroundColor = BaseColor;
+            cell.titleLabel.textColor = [UIColor whiteColor];
+
         }
     }else {
         if ([_currentSizeIndex isEqual:indexPath]) {
             cell.backgroundColor = BaseColor;
+            cell.titleLabel.textColor = [UIColor whiteColor];
+
         }
         model = _sizeArray[indexPath.row];
     }

@@ -10,6 +10,10 @@
 #import "ChatVC.h"
 #import "LessonsVC.h"
 #import "HomeworkVC.h"
+#import "MyCustomView.h"
+#import "MyTextView.h"
+#import "MyLessonsVC.h"
+#import "MyhomewroksVC.h"
 
 @interface ClassmateInfoVC ()
 
@@ -34,7 +38,11 @@
 @property (nonatomic, strong) NSString          *myHomeorkCount;
 @property (nonatomic, strong) NSString          *likeCount;
 
+@property (nonatomic, strong) MyCustomView      *topBgView;
 @property (nonatomic, strong) NSString          *applyStatus;
+
+@property (nonatomic, strong) MyTextView        *messageTV;
+
 @end
 
 @implementation ClassmateInfoVC
@@ -158,6 +166,8 @@
                     model.name = nilOrJSONObjectForKey(dic, @"createName");
                     NSNumber *time = nilOrJSONObjectForKey(blogDic, @"ct");
                     model.modelId = nilOrJSONObjectForKey(blogDic, @"id");
+                    model.likeId = [MyTool getValuesFor:dic key:@"likeId"];
+                    model.collectId = [MyTool getValuesFor:dic key:@"favouriteId"];
                     NSDate *date = [NSDate dateWithTimeIntervalSince1970:[time doubleValue] / 1000.0];
                     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                     [formatter setDateFormat:@"yyyy-MM-dd"];
@@ -214,7 +224,7 @@
         [_sendMessage setTitle:@"发站内信" forState:UIControlStateNormal];
     }else {
         _deleteBtn.hidden = YES;
-        [_sendMessage setTitle:@"删除好友" forState:UIControlStateNormal];
+        [_sendMessage setTitle:@"添加好友" forState:UIControlStateNormal];
     }
     
     _signatureLabel.text = _classUserInfo.signature;
@@ -321,7 +331,17 @@
     //删除好友
 - (void)deleteFriend
 {
+    NSString *str = [NSString stringWithFormat:@"mobi/user/delete?memberId=%@&friendId=%@",[User shareUser].userId,_ClassmateId];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            if ([[json objectForKey:@"result"] integerValue] == 1) {
+                [[tools shared] HUDShowText:@"删除成功"];
+                [self loadData];
+            }
+        }
     
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
 
     //添加好友 、 发站内信
@@ -329,6 +349,37 @@
 {
     if ([[btn currentTitle] isEqualToString:@"添加好友"]) {
         //添加好友
+        _topBgView = [[MyCustomView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
+        _topBgView.backgroundColor = ColorWithRGBA(30.0, 32.0, 40.0, 0.5);
+        [[AppDelegate shareApp].window addSubview:_topBgView];
+        
+        UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 100, UI_SCREEN_WIDTH - 20, 200)];
+        [img setImage:[[UIImage imageNamed:@"blank_num"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
+        [_topBgView addSubview:img];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(img.left + 10, img.top + 10, 100, 30)];
+        label.text = @"附加信息:";
+        [_topBgView addSubview:label];
+        
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(img.left, img.top + 50, img.width, 0.5)];
+        lineView.backgroundColor = [UIColor grayColor];
+        [_topBgView addSubview:lineView];
+        
+        _messageTV = [[MyTextView alloc] initWithFrame:CGRectMake(img.left + 10, lineView.bottom + 10, img.width - 20, 80)];
+        _messageTV.font = [UIFont systemFontOfSize:15];
+        _messageTV.placeholder = @"在此输入";
+        _messageTV.backgroundColor = [UIColor clearColor];
+        [_topBgView addSubview:_messageTV];
+        
+        UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(lineView.left, _messageTV.bottom + 10, lineView.width, 0.5)];
+        lineView2.backgroundColor = [UIColor grayColor];
+        [_topBgView addSubview:lineView2];
+        
+        UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+        btn.frame = CGRectMake(img.right - 60, lineView2.bottom + 10, 50, 30);
+        [btn setBackgroundImage:[UIImage imageNamed:@"btn_finish.png"] forState:UIControlStateNormal];
+        [btn addTarget:self action:@selector(addFriend) forControlEvents:UIControlEventTouchUpInside];
+        [_topBgView addSubview:btn];
         
     }else {
         //发站内信
@@ -337,6 +388,28 @@
         vc.name = _classUserInfo.nickname;
         [self.navigationController pushViewController:vc animated:YES];
     }
+}
+
+- (void)addFriend
+{
+    if (_messageTV.text.length <= 0) {
+        [_topBgView removeFromSuperview];
+        return;
+    }
+    NSString *str = _messageTV.text;
+    [_topBgView removeFromSuperview];
+
+    NSString *url = [NSString stringWithFormat:@"mobi/user/add?memberId=%@&friendId=%@&content=%@",[User shareUser].userId,self.ClassmateId,str];
+    [[HttpManager shareManger] getWithStr:url ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            
+            [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];
+        }else {
+            [[tools shared] HUDShowHideText:@"添加失败" delay:1.5];
+        }
+        
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -373,6 +446,8 @@
                 vc.lessonsId = model.modelId;
                 [weakSelf.navigationController pushViewController:vc animated:YES];
             }];
+            cell.btn1.tag = 1;
+            [cell.btn1 addTarget:self action:@selector(cellBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         }
             break;
         case 1:
@@ -387,6 +462,8 @@
                 vc.lessonsId = model.modelId;
                 [weakSelf.navigationController pushViewController:vc animated:YES];
             }];
+            cell.btn1.tag = 0;
+            [cell.btn1 addTarget:self action:@selector(cellBtnClick:) forControlEvents:UIControlEventTouchUpInside];
 
         }
             break;
@@ -395,6 +472,8 @@
             cell.name = _myHomeorkCount;
             cell.modelArray = _myHomeorkArr;
             cell.type = 31;
+            cell.btn1.tag = 2;
+            [cell.btn1 addTarget:self action:@selector(cellBtnClick:) forControlEvents:UIControlEventTouchUpInside];
             __weak typeof(self) weakSelf = self;
             [cell setBlock:^(NSInteger i){
                 HomeworkVC *vc = [[HomeworkVC alloc] init];
@@ -415,21 +494,36 @@
     return cell;
 }
 
+- (void)cellBtnClick:(UIButton *)btn
+{
+    if (btn.tag < 2) {
+        MyLessonsVC *vc = [[MyLessonsVC alloc] init];
+        vc.type = btn.tag;
+        vc.userId = self.ClassmateId;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else {
+        MyhomewroksVC *vc = [[MyhomewroksVC alloc] init];
+        vc.userId = self.ClassmateId;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 2) {
         if ([_myHomeorkCount integerValue] < 3) {
-            return 90;
+            return 100;
         }else {
-            return 110;
+            return 120;
         }
     }else {
         NSArray *array = @[_myLessonCount,_joinLessonCount];
         NSString *str = array[indexPath.section];
         if ([str integerValue] < 2) {
-            return 90;
+            return 100;
         }else {
-            return 130;
+            return 140;
         }
     }
     

@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "UMSocialWechatHandler.h"
 #import <AlipaySDK/AlipaySDK.h>
+#import "GuideVC.h"
 
 @interface AppDelegate ()
 
@@ -32,14 +33,28 @@
     [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
 //    [UMSocialSinaSSOHandler openNewSinaSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
+    [self checkVersion];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor blackColor];
     [self buildMainTabBar];
-    [self.window makeKeyAndVisible];
+    NSString *isFirst = [[NSUserDefaults standardUserDefaults] objectForKey:@"isFirst"];
+    if ([isFirst isKindOfClass:[NSNull class]] || isFirst == nil) {
+        GuideVC *vc = [[GuideVC alloc] init];
+        self.window.rootViewController = vc;
+    }else {
+        [self showMainTabBar];
+    }
     
+    [self.window makeKeyAndVisible];
     [MyTool getUserInfo];
     
+    
     return YES;
+}
+
+- (void)showMainTabBar
+{
+    self.window.rootViewController = _mainTabBar;
 }
 
 
@@ -161,12 +176,10 @@
     NSArray *array=[[NSArray alloc] initWithObjects:nav1,nav2,nav3,nav4,nav5,nil];
     
     _mainTabBar.viewControllers = array;
+    _mainTabBar.tabBar.backgroundColor = [UIColor clearColor];
     _mainTabBar.tabBar.backgroundImage = [UIImage imageNamed:@"navbg.9.png"];
     UIImage *img = [UIImage new];
     [_mainTabBar.tabBar setShadowImage:img];
-    self.window.rootViewController = _mainTabBar;
-
-    [self checkVersion];
 
 }
 
@@ -436,8 +449,7 @@
                     sex = @"男";
                 }
                     break;
-                    
-                    
+
                 default:
                     break;
             }

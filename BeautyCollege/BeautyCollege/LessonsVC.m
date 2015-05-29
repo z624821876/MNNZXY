@@ -68,7 +68,6 @@
     _dataDic = [[NSMutableDictionary alloc] init];
     
     [self buildTopView];
-    
     [self loadLessonsInfo];
 }
 
@@ -83,7 +82,9 @@
     //1  精华   2   作业
     NSString *str = [NSString stringWithFormat:@"mobi/class/getHomework?lessonId=%@&type=%@&pageNo=%ld&pageSize=20&memberId=%@",self.lessonsId,type,_currentPage,[User shareUser].userId];
     
+    [[tools shared] HUDShowText:@"正在加载..."];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             NSDictionary *resultDic = nilOrJSONObjectForKey(json, @"result");
             NSDictionary *lessonDic = nilOrJSONObjectForKey(resultDic, @"lesson");
@@ -138,7 +139,8 @@
             }
             [self initData];
             [_tableView reloadData];
-
+        }else {
+            [[tools shared] HUDShowHideText:@"加载失败" delay:1.0];
         }
         
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -477,7 +479,6 @@
         NSArray *array = [_dataDic objectForKey:_allKeys[section]];
         return [array count];
     }
-
     return 1;
 }
 
@@ -489,7 +490,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.backgroundColor = tableView.backgroundColor;
     }
-
+    
     if (_currentBtn.tag == 0) {
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dorm_b.png"]];
@@ -497,7 +498,6 @@
         cell.backgroundColor = [UIColor whiteColor];
         cell.type = 17;
         cell.model = [[_dataDic objectForKey:[_allKeys objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
-
     }else if (_currentBtn.tag == 2) {
         cell.backgroundColor = tableView.backgroundColor;
         cell.model = _allDataArr[indexPath.section];
@@ -517,11 +517,9 @@
         UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 15)];
         [img setImage:[UIImage imageNamed:@"bg_down1"]];
         return img;
-        
     }
     UIView *view = [UIView new];
     return view;
-
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -539,6 +537,7 @@
         [bgView addSubview:img];
         return bgView;
     }
+    
     return nil;
 }
 
@@ -552,6 +551,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    
     if (_currentBtn.tag == 0) {
         return 15;
     }
@@ -563,7 +563,7 @@
     if (_currentBtn.tag == 0) {
         return 70;
     }
-    return 80;
+    return 100;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -589,12 +589,36 @@
         }
             break;
         case 1:
+        {
+            BaseCellModel *model = _allDataArr[indexPath.section];
+            HomeworkVC *vc = [[HomeworkVC alloc] init];
+            vc.homworkModel = model;
+            vc.homeworkId = model.modelId;
+            __weak typeof(self) weakSelf = self;
+            [vc setBlock:^{
+                if (_currentBtn.tag == 2) {
+                    [weakSelf loadLessonsInfo];
+                }else {
+                    [weakSelf changeOption:_defualtBtn];
+                }
+            }];
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
         case 2:
         {
             BaseCellModel *model = _allDataArr[indexPath.section];
             HomeworkVC *vc = [[HomeworkVC alloc] init];
             vc.homworkModel = model;
             vc.homeworkId = model.modelId;
+            __weak typeof(self) weakSelf = self;
+            [vc setBlock:^{
+                if (_currentBtn.tag == 2) {
+                    [weakSelf loadLessonsInfo];
+                }else {
+                    [weakSelf changeOption:_defualtBtn];
+                }
+            }];
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;

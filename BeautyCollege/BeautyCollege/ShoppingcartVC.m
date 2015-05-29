@@ -64,7 +64,9 @@
                 self.navigationItem.rightBarButtonItem = nil;
                 UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(set)];
                 self.navigationItem.rightBarButtonItem = item;
-                [_tableView reloadData];
+                
+                [self  loadData];
+//                [_tableView reloadData];
                 
             }else {
                 [[tools shared] HUDShowHideText:@"操作失败" delay:1.5];
@@ -120,27 +122,40 @@
     if ([array count] <= 0) {
         return;
     }
-    [[tools shared] HUDShowText:@"正在删除..."];
-    NSMutableArray *idArray = [NSMutableArray array];
-    for (BaseCellModel *model in array) {
-        [idArray addObject:model.modelId];
-        [_dataArray removeObject:model];
-    }
-    NSString *idString = [idArray componentsJoinedByString:@","];
-    NSString *url = [NSString stringWithFormat:@"mobi/pro/removeShoppingCart?memberId=%@&cartItemIds=%@",[User shareUser].userId,idString];
-    [[HttpManager shareManger] getWithStr:url ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            [[tools shared] HUDShowHideText:@"删除成功" delay:1.5];
-            for (BaseCellModel *model in array) {
-                [_dataArray removeObject:model];
-            }
-            [_tableView reloadData];
-        }else {
-            [[tools shared] HUDShowHideText:@"删除失败" delay:1.5];
+    
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"是否删除" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    [alertView show];
+    
+}
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        
+        NSString *str = [NSString stringWithFormat:@"type == 2"];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:str];
+        NSArray *array = [_dataArray filteredArrayUsingPredicate:predicate];
+        
+        [[tools shared] HUDShowText:@"正在删除..."];
+        NSMutableArray *idArray = [NSMutableArray array];
+        for (BaseCellModel *model in array) {
+            [idArray addObject:model.modelId];
+            [_dataArray removeObject:model];
         }
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+        NSString *idString = [idArray componentsJoinedByString:@","];
+        NSString *url = [NSString stringWithFormat:@"mobi/pro/removeShoppingCart?memberId=%@&cartItemIds=%@",[User shareUser].userId,idString];
+        [[HttpManager shareManger] getWithStr:url ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                [[tools shared] HUDShowHideText:@"删除成功" delay:1.5];
+                [self loadData];
+            }else {
+                [[tools shared] HUDShowHideText:@"删除失败" delay:1.5];
+                
+            }
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+
+    }
 }
 
 - (void)buildFootView

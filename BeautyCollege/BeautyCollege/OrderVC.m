@@ -41,10 +41,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    _totalPice = 0;
+    _postFee = 0;
     _dataArray = [[NSMutableArray alloc] init];
     [self buildFooterView];
     [self initGUI];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -289,8 +290,8 @@
     _label2_3.text = currentAddress.mobile;
     
     _postFeeLable.text = currentAddress.price;
-    NSString *str = _totalPriceLabel.text;
-    NSString *str1 = [NSString stringWithFormat:@"%.2f",[str doubleValue] + [currentAddress.price doubleValue]];
+    _postFee = [currentAddress.price doubleValue];
+    NSString *str1 = [NSString stringWithFormat:@"%.2f",_postFee + _totalPice];
     _totalPriceLabel.text = str1;
 }
 
@@ -318,8 +319,7 @@
     rect2.origin.y = _bgView2.bottom + 10;
     _bgView3.frame = rect2;
 
-    NSString *str = _totalPriceLabel.text;
-    NSString *str1 = [NSString stringWithFormat:@"%.2f",[str doubleValue] + _totalPice];
+    NSString *str1 = [NSString stringWithFormat:@"%.2f",_postFee + _totalPice];
     _totalPriceLabel.text = str1;
     
     [_scroll setContentSize:CGSizeMake(UI_SCREEN_WIDTH, _bgView3.bottom + 20)];

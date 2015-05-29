@@ -9,16 +9,22 @@
 #import "ChatVC.h"
 #import "ChatCell.h"
 #import "MJRefresh.h"
+#import "MyTextAttachment.h"
+#import "AFHTTPRequestOperation.h"
 
 @interface ChatVC ()
 {
     UIView      *_footView;
     NSMutableArray      *_messageArray;
     NSMutableArray      *_reserveArray;
+    UITextView          *_CalculateheightTV;
+    BOOL                _stop;
 }
 
 @property (nonatomic, assign) NSInteger currentPage;
+@property (nonatomic, strong) NSTimer       *timer;
 @end
+
 
 @implementation ChatVC
 
@@ -30,6 +36,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _CalculateheightTV = [[UITextView alloc] init];
+    [self.view addSubview:_CalculateheightTV];
+    
     [self buildFooterView];
     _currentPage = 1;
     _reserveArray = [NSMutableArray array];
@@ -47,6 +57,7 @@
     __weak typeof(self) weakSelf = self;
     [_tableView addLegendHeaderWithRefreshingBlock:^{
         weakSelf.currentPage += 1;
+        [[tools shared] HUDShowText:@"加载中..."];
         [weakSelf loadData];
     }];
     
@@ -55,23 +66,63 @@
         _faceBoard.delegate = self;
         _faceBoard.inputTextView = _textView;
     }
-    
-    [_footView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld  context:nil];
-
-
 
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    
     [super viewDidAppear:YES];
+    [_footView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld  context:nil];
+    [self performSelector:@selector(refreshMessage) withObject:self afterDelay:3];
+    [[tools shared] HUDShowText:@"加载中..."];
     [self loadData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    [_footView removeObserver:self forKeyPath:@"frame"];
+    
+    [_timer invalidate];
+    _timer = nil;
+    _stop = YES;
+}
+
+
+- (void)refreshMessage
+{
+    _stop = NO;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [_timer invalidate];
+        _timer = nil;
+        _timer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(getMessage) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+        while (!_stop) {
+            [[NSRunLoop currentRunLoop] run];
+        }
+    });
+}
+
+- (void)getMessage
+{
+    NSString *str = [NSString stringWithFormat:@"mobi/dialogue/checkMessageIOS?memberId=%@&friendId=%@",[User shareUser].userId,self.userId];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            if ([[json objectForKey:@"result"] integerValue] == 1) {
+                _currentPage = 1;
+                [self loadData];
+            }
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
 }
 
 - (void)loadData
 {
     NSString *str = [NSString stringWithFormat:@"mobi/dialogue/getMessagePage?memberId=%@&friendId=%@&pageNo=%ld&pageSize=10",[User shareUser].userId,_userId,_currentPage];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        [[tools shared] HUDHide];
         BOOL isNull = NO;;
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             if (_currentPage == 1) {
@@ -91,6 +142,8 @@
                 model.status = [MyTool getValuesFor:dic key:@"isMine"];
                 [_messageArray addObject:model];
             }
+        }else {
+            [[tools shared] HUDShowHideText:@"暂无数据" delay:1.5];
         }
         [_tableView.header endRefreshing];
         if (!isNull) {
@@ -205,8 +258,20 @@
     }
     
     [_tableView reloadData];
-    NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-    [_tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    if (_currentPage == 1) {
+        
+        if ([_reserveArray count] > 0) {
+            
+            NSIndexPath *index = [NSIndexPath indexPathForRow:[_reserveArray count] - 1 inSection:0];
+            [_tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+
+        }
+
+    }else {
+        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+        [_tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionTop animated:YES];
+
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -216,7 +281,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     ChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[ChatCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
@@ -247,17 +311,22 @@
         return labelMaxWidth + 10 + 30;
     }
     
-    NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
-    NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
+//    NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//    NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
+//    
+//    CGSize size = [string boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options  context:nil].size;
+//    CGSize size2 = [model.content boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:17]} context:nil].size;
     
-    CGSize size = [string boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options  context:nil].size;
-    CGSize size2 = [model.content boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:17]} context:nil].size;
-    CGSize labelSize;
-    if (size.height > size2.height) {
-        labelSize = size;
-    }else {
-        labelSize = size2;
-    }
+//    if (size.height > size2.height) {
+//        labelSize = size;
+//    }else {
+//        labelSize = size2;
+//    }
+    
+    NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
+    _CalculateheightTV.attributedText = string;
+    _CalculateheightTV.font = [UIFont systemFontOfSize:17];
+    CGSize labelSize = [_CalculateheightTV sizeThatFits:CGSizeMake(labelMaxWidth, MAXFLOAT)];
     return labelSize.height + 40;
 }
 
@@ -266,9 +335,11 @@
     CGRect rect3 = _tableView.frame;
     rect3.size.height = _footView.top - 64;
     _tableView.frame = rect3;
+    NSIndexPath *index = [NSIndexPath indexPathForRow:[_reserveArray count] - 1 inSection:0];
+    [_tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
 {
     _textView.inputView = nil;
     [_textView resignFirstResponder];
@@ -279,11 +350,6 @@
     
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:YES];
-    [_footView removeObserver:self forKeyPath:@"frame"];
-}
 
 - (void)keyboardChange:(NSNotification *)notification
 {
@@ -317,20 +383,81 @@
     
     UIButton *faceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     faceBtn.frame = CGRectMake(10, 10, 30, 30);
-    [faceBtn setImage:[UIImage imageNamed:@"write_work1.png"] forState:UIControlStateNormal];
+    [faceBtn setImage:[UIImage imageNamed:@"表情按钮.png"] forState:UIControlStateNormal];
     [faceBtn addTarget:self action:@selector(faceBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_footView addSubview:faceBtn];
+    
+    UIButton *imgBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    imgBtn.frame = CGRectMake(faceBtn.right + 10, 10, 30, 30);
+    [imgBtn setImage:[UIImage imageNamed:@"图片按钮.png"] forState:UIControlStateNormal];
+    [imgBtn addTarget:self action:@selector(imgBtnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_footView addSubview:imgBtn];
     
     UIButton *sendBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     sendBtn.frame = CGRectMake(_footView.right - 50, 10, 40, 30);
     [sendBtn setImage:[UIImage imageNamed:@"msg_03_07.png"] forState:UIControlStateNormal];
+    [sendBtn addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
     [_footView addSubview:sendBtn];
     
-    _textView = [[MyTextView alloc] initWithFrame:CGRectMake(faceBtn.right + 5, 10, sendBtn.left - faceBtn.right - 10, 30)];
+    _textView = [[MyTextView alloc] initWithFrame:CGRectMake(imgBtn.right + 5, 10, sendBtn.left - imgBtn.right - 10, 30)];
     _textView.layer.cornerRadius = 5;
     _textView.layer.masksToBounds = YES;
     _textView.font = [UIFont systemFontOfSize:15];
     [_footView addSubview:_textView];
+}
+
+- (void)sendMessage:(UIButton *)btn
+{
+    _textView.inputView = nil;
+    [_textView resignFirstResponder];
+
+    if (_textView.text.length <= 0) {
+        return;
+    }
+    
+    NSMutableAttributedString *titleStr = [[NSMutableAttributedString alloc] initWithAttributedString:_textView.attributedText];
+    [titleStr enumerateAttributesInRange:NSMakeRange(0, titleStr.length) options:NSAttributedStringEnumerationReverse usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+        
+        if ([[attrs objectForKey:@"NSAttachment"] isKindOfClass:[MyTextAttachment class]]) {
+            MyTextAttachment *textAttachment = (MyTextAttachment *)[attrs objectForKey:@"NSAttachment"];
+            [titleStr replaceCharactersInRange:range withString:textAttachment.imgName];
+        }
+    }];
+    
+    NSMutableAttributedString *contenStr = [[NSMutableAttributedString alloc] initWithAttributedString:_textView.attributedText];
+    [contenStr enumerateAttributesInRange:NSMakeRange(0, contenStr.length) options:NSAttributedStringEnumerationReverse usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+        
+        if ([[attrs objectForKey:@"NSAttachment"] isKindOfClass:[MyTextAttachment class]]) {
+            MyTextAttachment *textAttachment = (MyTextAttachment *)[attrs objectForKey:@"NSAttachment"];
+            [contenStr replaceCharactersInRange:range withString:textAttachment.imgName];
+        }
+    }];
+
+    _textView.text = @"";
+    [self sendWithContent:contenStr.string Type:1];
+}
+
+- (void)sendWithContent:(NSString *)string Type:(NSInteger)type
+{
+    NSString *str;
+    if (type == 1) {
+       str = [NSString stringWithFormat:@"mobi/dialogue/sendMessage?memberId=%@&friendId=%@&content=%@",[User shareUser].userId,self.userId,string];
+    }else {
+        str = [NSString stringWithFormat:@"mobi/dialogue/sendMessage?memberId=%@&friendId=%@&image=%@",[User shareUser].userId,self.userId,string];
+    }
+    
+    [[tools shared] HUDShowText:@"发送中..."];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            _currentPage = 1;
+            [[tools shared] HUDShowText:@"加载中..."];
+            [self loadData];
+        }else {
+            [[tools shared] HUDShowHideText:@"发送失败" delay:1.5];
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+
 }
 
 - (void)faceBtnClick:(UIButton *)btn
@@ -354,6 +481,84 @@
 
     }
 }
+
+- (void)imgBtnClick
+{
+    _textView.inputView = nil;
+    [_textView resignFirstResponder];
+    
+    
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:nil otherButtonTitles:@"拍照",@"从相册选择", nil];
+    [sheet showInView:self.view];
+    
+}
+
+#pragma mark - actionSheetDelegate
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 0:
+        {
+            //拍照
+            UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
+            UIImagePickerControllerSourceType sourceType = UIImagePickerControllerSourceTypeCamera;
+            //判断相机是否可用
+            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                pickerImage.sourceType = sourceType;
+                pickerImage.delegate = self;
+                pickerImage.allowsEditing = YES;
+                [self presentViewController:pickerImage animated:YES completion:nil];
+                
+            }else {
+                [[tools shared] HUDShowHideText:@"相机不可用" delay:1.5];
+            }
+            
+        }
+            break;
+        case 1:
+        {
+            //从相册获取
+            UIImagePickerController *pickerImage = [[UIImagePickerController alloc] init];
+            //判断相册是否可用
+            if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+                pickerImage.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                pickerImage.mediaTypes = [UIImagePickerController availableMediaTypesForSourceType:pickerImage.sourceType];
+                
+            }
+            pickerImage.delegate = self;
+            pickerImage.allowsEditing = YES;
+            [self presentViewController:pickerImage animated:YES completion:nil];
+            
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerEditedImage], 0.1);
+    [[tools shared] HUDShowText:@"正在上传..."];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager POST:@"http://nzxyadmin.53xsd.com/mobi/ser/saveImage" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:data name:@"Image" fileName:@"upload.jpg" mimeType:@"image/jpeg"];
+    } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"code"] integerValue] == 0)  {
+            NSDictionary *dic = nilOrJSONObjectForKey(responseObject, @"result");
+            NSString *logo = nilOrJSONObjectForKey(dic, @"imageUrl");
+            [self sendWithContent:logo Type:2];
+        }else {
+            [[tools shared] HUDShowHideText:@"上传失败" delay:1.5];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        HUDShowErrorServerOrNetwork
+    }];
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

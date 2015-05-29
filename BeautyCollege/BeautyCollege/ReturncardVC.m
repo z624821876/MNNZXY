@@ -63,10 +63,6 @@
     [_faceBtn addTarget:self action:@selector(faceBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [_scrollView addSubview:_faceBtn];
     
-    UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(_faceBtn.right + 15, _faceBtn.top, 25, 25)];
-    [image setImage:[UIImage imageNamed:@"write_work2.png"]];
-    [_scrollView addSubview:image];
-    
     _confirmBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     _confirmBtn.backgroundColor = BaseColor;
     _confirmBtn.layer.cornerRadius = 5;
@@ -76,8 +72,6 @@
     [_scrollView addSubview:_confirmBtn];
     
     [self buildImgView];
-    
-    
 }
 
 //提交作业
@@ -129,7 +123,13 @@
             [contenStr replaceCharactersInRange:range withString:textAttachment.imgName];
         }
     }];
-    NSString *urlStr = [NSString stringWithFormat:@"mobi/class/addReply?blogId=%@&memberId=%@&content=%@&img=%@",self.homeworkId,[User shareUser].userId,contenStr.string,imgs];
+    NSString *urlStr;
+    
+    if (_type == 2) {
+        urlStr = [NSString stringWithFormat:@"mobi/class/addReply?blogId=%@&memberId=%@&content=%@&img=%@&replyId=%@",self.homeworkId,[User shareUser].userId,contenStr.string,imgs,_replyId];
+    }else {
+      urlStr = [NSString stringWithFormat:@"mobi/class/addReply?blogId=%@&memberId=%@&content=%@&img=%@",self.homeworkId,[User shareUser].userId,contenStr.string,imgs];
+    }
     [[HttpManager shareManger] getWithStr:urlStr ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {

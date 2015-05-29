@@ -252,6 +252,7 @@
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             //注册成功
             [[tools shared] HUDShowHideText:@"注册成功" delay:1.5];
+            [self.navigationController popViewControllerAnimated:YES];
         }else {
             
             [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];

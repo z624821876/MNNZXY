@@ -58,7 +58,7 @@
     _lineimg1.frame = CGRectMake(0, _titleLabel2.bottom - 1, self.width, 1);
     
     _priceLabel.frame = CGRectMake(5, _titleLabel2.bottom, (self.width - 15) / 2.0, 30);
-    _priceLabel.text = [NSString stringWithFormat:@"￥%@",model.price];
+    _priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[model.price doubleValue]];
     
     _countBtn.frame = CGRectMake(_priceLabel.right + 5, _titleLabel2.bottom, (self.width - 15) / 2.0, 30);
     NSString *str = [NSString stringWithFormat:@"%@人喜欢",model.count];
@@ -119,22 +119,64 @@
     _titleLabel2.frame = CGRectMake(5, _logoImg.bottom, self.width - 10, 40);
     _titleLabel2.text = model.title;
     _lineimg1.frame = CGRectMake(0, _titleLabel2.bottom - 1, self.width, 1);
-        _countBtn.frame = CGRectMake(self.width - 30, _titleLabel2.bottom + 5, 20, 20);
-        _countBtn.backgroundColor = BaseColor;
-        _countBtn.layer.cornerRadius = 5;
-        _countBtn.layer.masksToBounds = YES;
-        [_countBtn setTitle:@"买买买" forState:UIControlStateNormal];
+    _countBtn.frame = CGRectMake(self.width - 45, _titleLabel2.bottom + 5, 40, 20);
+    _countBtn.backgroundColor = BaseColor;
+    _countBtn.layer.cornerRadius = 5;
+    _countBtn.layer.masksToBounds = YES;
+    _countBtn.userInteractionEnabled = NO;
+    _countBtn.hidden = YES;
+    [_countBtn setTitle:@"买买买" forState:UIControlStateNormal];
 
-        _discountPrice.frame = CGRectMake(5, _titleLabel2.bottom, (_countBtn.left - 10) / 2.0, 30);
-        _discountPrice.textColor = [UIColor redColor];
-        _discountPrice.text = [NSString stringWithFormat:@"￥%@",model.discountPrice];
-    
+        _discountPrice.frame = CGRectMake(5, _titleLabel2.bottom, (self.width - 15) / 2.0, 30);
+    _discountPrice.textColor = BaseColor;
+        _discountPrice.text = [NSString stringWithFormat:@"￥%.2f",[model.discountPrice doubleValue]];
+    _discountPrice.font = [UIFont systemFontOfSize:15];
         _priceLabel.frame = CGRectMake(_discountPrice.right, _titleLabel2.bottom, _discountPrice.width, 30);
         _priceLabel.font = [UIFont systemFontOfSize:14];
         _priceLabel.textColor = [UIColor grayColor];
-        NSAttributedString *string = [[NSAttributedString alloc] initWithString:model.price attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
+    NSString *str = [NSString stringWithFormat:@"%.2f",[model.price doubleValue]];
+        NSAttributedString *string = [[NSAttributedString alloc] initWithString:str attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
         _priceLabel.attributedText = string;
 }
+
+- (void)initGUI4WithData:(BaseCellModel *)model
+{
+    
+    _logoImg.frame = CGRectMake(0, 0, self.width, self.width);
+    _logoImg.contentMode = UIViewContentModeScaleAspectFit;
+    [MyTool setImgWithURLStr:model.logo withplaceholderImage:nil withImgView:_logoImg];
+    
+    _titleLabel2.frame = CGRectMake(5, _logoImg.bottom + 5, self.width - 10, 20);
+    _titleLabel2.text = model.title;
+    _titleLabel2.font = [UIFont systemFontOfSize:18];
+    
+    _lineimg1.frame = CGRectZero;
+    
+    _countBtn.frame = CGRectMake(self.width - 75, _titleLabel2.bottom + 10, 60, 30);
+    _countBtn.backgroundColor = BaseColor;
+    _countBtn.layer.cornerRadius = 5;
+    _countBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+    _countBtn.layer.masksToBounds = YES;
+    _countBtn.userInteractionEnabled = NO;
+    [_countBtn setTitle:@"买买买" forState:UIControlStateNormal];
+    
+    NSString *discountPrice = [NSString stringWithFormat:@"￥%.2f",[model.discountPrice doubleValue]];
+    CGSize size1 = [discountPrice boundingRectWithSize:CGSizeMake((_countBtn.right - 15) / 2.0, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:20]} context:nil].size;
+    
+    _discountPrice.frame = CGRectMake(5, _titleLabel2.bottom + 10, size1.width + 5, 30);
+    _discountPrice.textColor = BaseColor;
+    _discountPrice.text = [NSString stringWithFormat:@"￥%.2f",[model.discountPrice doubleValue]];
+    _discountPrice.font = [UIFont systemFontOfSize:20];
+    
+    _priceLabel.frame = CGRectMake(_discountPrice.right, _titleLabel2.bottom + 10, (_countBtn.right - 15) / 2.0, 30);
+    _priceLabel.font = [UIFont systemFontOfSize:15];
+    _priceLabel.textColor = [UIColor grayColor];
+    NSString *str = [NSString stringWithFormat:@"%.2f",[model.price doubleValue]];
+    NSAttributedString *string = [[NSAttributedString alloc] initWithString:str attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
+    _priceLabel.attributedText = string;
+}
+
+
 - (void)initGUI3WithData:(BaseCellModel *)model
 {
     _logoImg.frame = CGRectMake(0, 0, self.width, self.width);
@@ -150,13 +192,14 @@
     [_countBtn setImage:[UIImage imageNamed:@"shopCat-delete.png"] forState:UIControlStateNormal];
     
     _discountPrice.frame = CGRectMake(5, _titleLabel2.bottom, (_countBtn.left - 10) / 2.0, 30);
-    _discountPrice.textColor = [UIColor redColor];
-    _discountPrice.text = [NSString stringWithFormat:@"￥%@",model.discountPrice];
-    
+    _discountPrice.textColor = BaseColor;
+    _discountPrice.text = [NSString stringWithFormat:@"￥%.2f",[model.discountPrice doubleValue]];
+    _discountPrice.font = [UIFont systemFontOfSize:15];
+
     _priceLabel.frame = CGRectMake(_discountPrice.right, _titleLabel2.bottom, _discountPrice.width, 30);
     _priceLabel.font = [UIFont systemFontOfSize:14];
     _priceLabel.textColor = [UIColor grayColor];
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString:model.price attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
+    NSAttributedString *string = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%.2f",[model.price doubleValue]] attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
     _priceLabel.attributedText = string;
 }
 

@@ -9,6 +9,7 @@
 #import "HomeworkVC.h"
 #import "KL_ImagesZoomController.h"
 #import "ReturncardVC.h"
+#import <CoreText/CoreText.h>
 
 @interface HomeworkVC ()
 {
@@ -25,7 +26,7 @@
     UIButton                *_collectionBtn;
     
     UIImage                 *_saveImg;
-    
+    UITextView              *_textView;
 }
 
 @end
@@ -44,6 +45,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
     _currentPage = 1;
     _likeArray = [NSMutableArray array];
     _homeworkInfo = [[BaseCellModel alloc] init];
@@ -55,14 +57,18 @@
     UIView *view = [UIView new];
     _tableView.backgroundColor = [UIColor whiteColor];
     _tableView.tableFooterView = view;
+    
     UIView *view1 = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 0, 0.1)];
     _tableView.tableHeaderView = view1;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.bounces = NO;
-    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_tableView];
-    
+    _textView = [[UITextView alloc] init];
+    _textView.font = [UIFont systemFontOfSize:17];
+    [self.view addSubview:_textView];
+
 }
 
 - (void)buildFootView
@@ -87,9 +93,11 @@
         [footView addSubview:btn];
         if (i == 1) {
             _likeCountBtn = btn;
+            [_likeCountBtn setImage:[UIImage imageNamed:@"homework-0.1.png"] forState:UIControlStateSelected];
         }
         if (i == 2) {
             _collectionBtn = btn;
+            [_collectionBtn setImage:[UIImage imageNamed:@"homework-0.2.png"] forState:UIControlStateSelected];
         }
     }
 }
@@ -113,9 +121,11 @@
                     NSInteger x;
                     if ([_homworkModel.likeId isEqualToString:@"0"]) {
                         _homworkModel.likeId = @"1";
+                        _likeCountBtn.selected = YES;
                         x = 1;
                     }else {
                         _homworkModel.likeId = @"0";
+                        _likeCountBtn.selected = NO;
                         x = -1;
                     }
                     
@@ -139,12 +149,13 @@
                     NSInteger x;
                     if ([_homworkModel.collectId isEqualToString:@"0"]) {
                         _homworkModel.collectId = @"1";
+                        _collectionBtn.selected = YES;
                         x = 1;
                     }else {
                         _homworkModel.collectId = @"0";
+                        _collectionBtn.selected = NO;
                         x = -1;
                     }
-                    
                     NSInteger count = _collectionBtn.currentTitle.integerValue;
                     [_collectionBtn setTitle:[NSString stringWithFormat:@"%ld",count + x] forState:UIControlStateNormal];
                     
@@ -246,8 +257,10 @@
     CGRect rect = _markView.frame;
     rect.origin.x = btn.left;
     _markView.frame = rect;
-    
+        
     [_tableView reloadData];
+    
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -282,13 +295,12 @@
             _homeworkInfo.collectCount = [MyTool getValuesFor:blogDic key:@"field1"];
             _homeworkInfo.logo = nilOrJSONObjectForKey(blogDic, @"image");
             _homeworkInfo.modelId = nilOrJSONObjectForKey(blogDic, @"id");
-            NSDictionary *imgDic = [blogImages firstObject];
-            if ([blogImages count] >= 1) {
-                
-                NSString *str = nilOrJSONObjectForKey(imgDic, @"image");
-                _homeworkInfo.cateArray = [str componentsSeparatedByString:@","];
-
+            NSMutableArray *imgsARR = [NSMutableArray array];
+            for (NSDictionary *imgdic in blogImages) {
+                NSString *str = nilOrJSONObjectForKey(imgdic, @"image");
+                [imgsARR addObject:str];
             }
+            _homeworkInfo.cateArray = imgsARR;
 
             for (NSDictionary *likeDic in likeListarray) {
                 NSString *str = [likeDic objectForKey:@"logo"];
@@ -297,10 +309,18 @@
             
             for (NSDictionary *commentDic in replyListarray) {
                 BaseCellModel *model = [[BaseCellModel alloc] init];
-                model.modelId = nilOrJSONObjectForKey(commentDic, @"replyMemberId");
+                model.modelId = nilOrJSONObjectForKey(commentDic, @"id");
                 model.logo = nilOrJSONObjectForKey(commentDic, @"logo");
                 model.name = nilOrJSONObjectForKey(commentDic, @"nickName");
-                model.content = nilOrJSONObjectForKey(commentDic, @"content");
+                NSString *content = nilOrJSONObjectForKey(commentDic, @"content");
+                NSString *nickeNameOR = nilOrJSONObjectForKey(commentDic, @"nickNameOR");
+                NSString *content2;
+                if (nickeNameOR) {
+                    content2 = [NSString stringWithFormat:@"@%@:%@",nickeNameOR,content];
+                }else {
+                    content2 = content;
+                }
+                model.content = content2;
                 NSNumber *timeNum = nilOrJSONObjectForKey(commentDic, @"createTime");
                 NSDate *date = [NSDate dateWithTimeIntervalSince1970:[timeNum floatValue] / 1000.0];
                 NSDateFormatter *format = [[NSDateFormatter alloc] init];
@@ -331,12 +351,14 @@
     _titleLabel.attributedText = [MyTool textTransformEmoji:_homeworkInfo.title];
     _timeLabel.text = _homeworkInfo.date;
 
+    _likeCountBtn.selected = [_homworkModel.likeId floatValue] > 0 ? YES : NO;
     [_likeCountBtn setTitle:_homeworkInfo.likeCount forState:UIControlStateNormal];
     
     NSString *str = _homeworkInfo.collectCount;
     if (!str) {
         str = 0;
     }
+    _collectionBtn.selected = [_homworkModel.collectId floatValue] > 0 ? YES : NO;
     [_collectionBtn setTitle:str forState:UIControlStateNormal];
     [_tableView reloadData];
     
@@ -345,6 +367,9 @@
 - (void)back
 {
     [self.navigationController popViewControllerAnimated:YES];
+    if (_block) {
+        _block();
+    }
 }
 
 #pragma tableView  delegate
@@ -359,20 +384,41 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if (_currentBtn.tag == 0) {
         if (indexPath.row == 0) {
-            NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
-            NSMutableAttributedString *string = [MyTool textTransformEmoji:_homeworkInfo.content];
-            CGSize size = [string boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT) options:options  context:nil].size;
-            CGSize size2 = [_homeworkInfo.content boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size;
+//            NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//
+//            NSMutableAttributedString *string = [MyTool textTransformEmoji:_homeworkInfo.content];
+////            [string setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(0, string.length)];
+//            CGSize size = [string boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT) options:options  context:nil].size;
+//            CGSize size2 = [_homeworkInfo.content boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size;
+//            CGFloat heigth; 
+//            if (size.height > size2.height) {
+//                heigth = size.height;
+//            }else {
+//                heigth = size2.height;
+//            }
             
-            CGFloat heigth;
-            if (size.height > size2.height) {
-                heigth = size.height;
-            }else {
-                heigth = size2.height;
-            }
-            return heigth + 10;
+            NSMutableAttributedString *string = [MyTool textTransformEmoji:_homeworkInfo.content];
+            _textView.attributedText = string;
+            _textView.font = [UIFont systemFontOfSize:17];
+            CGFloat height = [_textView sizeThatFits:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT)].height;
+
+            //    [string setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(0, string.length)];
+            //
+            //    if (string.length <= 0) {
+            //        return;
+            //    }
+//            _textView.frame = CGRectMake(0, 64, UI_SCREEN_WIDTH - 20, height);
+//            NSLog(@"%f",height);
+//            NSMutableAttributedString *string = [MyTool textTransformEmoji:_homeworkInfo.content];
+//            [string setAttributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17],NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(0, string.length)];
+//            _textView.attributedText = string;
+//            _textView.frame = CGRectMake(0, 0, UI_SCREEN_WIDTH - 20, 100);
+//            
+//            CGFloat heigth = [_textView sizeThatFits:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT)].height;
+            return height + 10;
         }else {
             return UI_SCREEN_WIDTH - 20 + 20;
         }
@@ -383,24 +429,36 @@
         }else {
             BaseCellModel *model = _commentArray[indexPath.row - 1];
             CGFloat width = (UI_SCREEN_WIDTH - 80) / 7.0;
-            NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//            NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//            NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
+//            CGSize size = [string boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - width - 30, MAXFLOAT) options:options  context:nil].size;
+//            CGSize size2 = [model.content boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - width - 30, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size;
+//            CGFloat heigth;
+//            if (size.height > size2.height) {
+//                heigth = size.height + 5;
+//            }else {
+//                heigth = size2.height + 5;
+//            }
+            
             NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
-            CGSize size = [string boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - width - 30, MAXFLOAT) options:options  context:nil].size;
-            CGSize size2 = [model.content boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - width - 30, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size;
-            CGFloat heigth;
-            if (size.height > size2.height) {
-                heigth = size.height;
-            }else {
-                heigth = size2.height;
-            }
+            _textView.attributedText = string;
+            _textView.font = [UIFont systemFontOfSize:17];
+            CGFloat height = [_textView sizeThatFits:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT)].height;
+
             CGFloat imgWidth = (UI_SCREEN_WIDTH - width - 50) / 3.0;
-            CGFloat cellHeight = 10 + 20 + 10 + heigth + 10 + ([model.cateArray count] + 2) / 3 * (imgWidth + 10) + 10;
+            CGFloat imgMaxHeight = 10 + ([model.cateArray count] + 2) / 3 * (imgWidth + 10);
+            CGFloat cellHeight;
+            
+            if ([model.cateArray count] <= 0) {
+                cellHeight = 40 + height + 10;
+            }else {
+                cellHeight = 40 + height + imgMaxHeight + 10;
+            }
             if (cellHeight > width + 20) {
                 return cellHeight;
             }else {
                 return width + 20;
             }
-            
         }
     }
 
@@ -436,21 +494,23 @@
         }
         return cell;
     }else {
+        
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"comment"];
         if (!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"comment"];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }else {
             for (UIView *view in cell.contentView.subviews) {
                 [view removeFromSuperview];
             }
         }
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
         if (indexPath.row == 0) {
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(10, 10, UI_SCREEN_WIDTH - 20, 20);
             [btn setImage:[UIImage imageNamed:@"zuoye-xin.png"] forState:UIControlStateNormal];
             [btn setTitle:@"喜欢这篇文章的有" forState:UIControlStateNormal];
+            btn.titleLabel.font = [UIFont systemFontOfSize:15];
             [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
             [cell.contentView addSubview:btn];
@@ -474,10 +534,10 @@
             }
             
             UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 50 + (UI_SCREEN_WIDTH - 80) / 7.0 - 0.5, UI_SCREEN_WIDTH, 0.5)];
-            lineView.backgroundColor = [UIColor grayColor];
+            lineView.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
             [cell.contentView addSubview:lineView];
-            
         }else {
+            cell.selectionStyle = UITableViewCellSelectionStyleDefault;
             CGFloat width = (UI_SCREEN_WIDTH - 80) / 7.0;
 
             BaseCellModel *model = _commentArray[indexPath.row - 1];
@@ -494,24 +554,30 @@
             dateLabel.textColor = [UIColor grayColor];
             [cell.contentView addSubview:dateLabel];
             
-            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake( btn.right + 10, 10, dateLabel.left - btn.right - 20, 20)];
+            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(btn.right + 10, 10, dateLabel.left - btn.right - 20, 20)];
             titleLabel.text = model.name;
             [cell.contentView addSubview:titleLabel];
             
-            NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//            NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//            NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
+//            CGSize size = [string boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - btn.right - 20, MAXFLOAT) options:options  context:nil].size;
+//            CGSize size2 = [model.content boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - btn.right - 20, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:16]} context:nil].size;
+//            CGFloat heigth;
+//            if (size.height > size2.height) {
+//                heigth = size.height + 5;
+//            }else {
+//                heigth = size2.height + 5;
+//            }
             NSMutableAttributedString *string = [MyTool textTransformEmoji:model.content];
-            CGSize size = [string boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - btn.right - 20, MAXFLOAT) options:options  context:nil].size;
-            CGSize size2 = [model.content boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - btn.right - 20, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size;
-            CGFloat heigth;
-            if (size.height > size2.height) {
-                heigth = size.height;
-            }else {
-                heigth = size2.height;
-            }
-            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(btn.right + 10, titleLabel.bottom + 10, UI_SCREEN_WIDTH - btn.right - 20, heigth)];
-            label.font = [UIFont systemFontOfSize:15];
+            _textView.attributedText = string;
+            _textView.font = [UIFont systemFontOfSize:17];
+            CGFloat height = [_textView sizeThatFits:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT)].height;
+
+            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(btn.right + 10, titleLabel.bottom + 10, UI_SCREEN_WIDTH - btn.right - 20, height)];
+//            label.font = [UIFont systemFontOfSize:15];
             label.numberOfLines = 0;
             label.attributedText = [MyTool textTransformEmoji:model.content];
+            label.adjustsFontSizeToFitWidth = YES;
             [cell.contentView addSubview:label];
             
             CGFloat imgWidth = (UI_SCREEN_WIDTH - btn.right - 40) / 3.0;
@@ -534,14 +600,31 @@
                 
                 lineView.frame = CGRectMake(0, cellHeight + 9.5, UI_SCREEN_WIDTH, 0.5);
             }else {
+                
                 lineView.frame = CGRectMake(0, btn.bottom + 9.5, UI_SCREEN_WIDTH, 0.5);
             }
-            lineView.backgroundColor = [UIColor grayColor];
+            lineView.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
             [cell.contentView addSubview:lineView];
             
         }
         
         return cell;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    if (_currentBtn.tag == 1) {
+        if (indexPath.row != 0) {
+            BaseCellModel *model = _commentArray[indexPath.row - 1];
+            ReturncardVC *vc = [[ReturncardVC alloc] init];
+            vc.homeworkId = _homeworkId;
+            vc.replyId = model.modelId;
+            vc.type = 2;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
 }
 

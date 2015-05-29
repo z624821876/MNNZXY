@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SchoolVC : MyCustomVC <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface SchoolVC : MyCustomVC <UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,NSURLConnectionDataDelegate>
 
 @end

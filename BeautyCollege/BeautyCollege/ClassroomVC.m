@@ -11,6 +11,7 @@
 #import "MoreLessonVC.h"
 #import "LocationVC.h"
 #import "CreateLessonVC.h"
+#import "LessonsVC.h"
 
 @interface ClassroomVC ()
 {
@@ -67,10 +68,13 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:YES];
+    
     [self loadDataCount];
     [self loadClassCount];
     [self getAllLessons];
 }
+
+
 
     //加载学生数
 - (void)loadDataCount
@@ -97,6 +101,7 @@
                 for (NSDictionary *classDic in array) {
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.logo = nilOrJSONObjectForKey(classDic, @"image");
+                    model.modelId = nilOrJSONObjectForKey(classDic, @"id");
                     model.title = nilOrJSONObjectForKey(classDic, @"title");
                     NSNumber *studentNumber = nilOrJSONObjectForKey(classDic, @"studentCount");
                     model.studentCount = [studentNumber stringValue];
@@ -150,12 +155,12 @@
                 BaseCellModel *model = [[BaseCellModel alloc] init];
                 model.logo = nilOrJSONObjectForKey(dict, @"image");
                 model.title = nilOrJSONObjectForKey(dict, @"title");
+                model.modelId = nilOrJSONObjectForKey(dict, @"id");
                 NSNumber *studentNumber = nilOrJSONObjectForKey(dict, @"studentCount");
                 model.studentCount = [studentNumber stringValue];
                 NSNumber *homeworkNumber = nilOrJSONObjectForKey(dict, @"todayHomeworkCount");
                 model.homeworkCount = [homeworkNumber stringValue];
                 [_myLessonArr addObject:model];
-                
             }
             [_tableView reloadData];
         }
@@ -185,6 +190,7 @@
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.logo = nilOrJSONObjectForKey(dataDic, @"image");
                     model.title = nilOrJSONObjectForKey(dataDic, @"title");
+                    model.modelId = nilOrJSONObjectForKey(dataDic, @"id");
                     NSNumber *studentNumber = nilOrJSONObjectForKey(dataDic, @"studentCount");
                     model.studentCount = [studentNumber stringValue];
                     NSNumber *homeworkNumber = nilOrJSONObjectForKey(dataDic, @"todayHomeworkCount");
@@ -269,7 +275,7 @@
     _myLessonCount = @"0";
     _addLessonCount = @"0";
     _currentPage = 1;
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64 - 49) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64 - 45) style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
@@ -786,6 +792,37 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 3;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    BaseCellModel *model;
+    switch (indexPath.section) {
+        case 0:
+        {
+            model = _myLessonArr[indexPath.row];
+        }
+            break;
+        case 1:
+        {
+            model = _recommendArr[indexPath.row];
+        }
+            break;
+        case 2:
+        {
+            model = _allDataArr[indexPath.row];
+        }
+            break;
+
+        default:
+            break;
+    }
+    LessonsVC *vc = [[LessonsVC alloc] init];
+    vc.lessonsId = model.modelId;
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+    
 }
 
 - (void)didReceiveMemoryWarning {

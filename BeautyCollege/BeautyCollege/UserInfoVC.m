@@ -85,8 +85,8 @@
     [img setImage:[[UIImage imageNamed:@"blank_num.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
     [topView addSubview:img];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 150 + 10, 100, 30)];
-    label.text = @"修改昵称";
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 150 + 10, 200, 30)];
+    label.text = @"修改个性签名";
     [topView addSubview:label];
     
     UIView *lineView1 = [[UIView alloc] initWithFrame:CGRectMake(10, label.bottom + 10, img.width, 0.5)];
@@ -105,7 +105,7 @@
     
     placeLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, lineView1.top + 10, 120, 30)];
     placeLabel.textColor = [UIColor grayColor];
-    placeLabel.text = @"再次输入";
+    placeLabel.text = @"在此输入";
     [topView addSubview:placeLabel];
 
     

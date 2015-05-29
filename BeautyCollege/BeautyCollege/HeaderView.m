@@ -36,7 +36,7 @@
         [self addSubview:lineView];
         
         _button = [UIButton buttonWithType:UIButtonTypeCustom];
-        _button.frame = self.frame;
+        _button.frame = self.bounds;
         [self addSubview:_button];
     }
     return self;

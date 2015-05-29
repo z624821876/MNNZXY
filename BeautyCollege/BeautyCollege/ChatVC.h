@@ -10,7 +10,7 @@
 #import "FaceBoard.h"
 #import "MyTextView.h"
 
-@interface ChatVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,FaceBoardDelegate>
+@interface ChatVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,FaceBoardDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
 @property (nonatomic, strong) UITableView       *tableView;
 @property (nonatomic, strong) MyTextView        *textView;
 @property (nonatomic, strong) FaceBoard         *faceBoard;

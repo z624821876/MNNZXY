@@ -21,7 +21,7 @@
         NSInteger x = i % 3;
         NSInteger y = i / 3;
         CellView *view = [[CellView alloc] initWithFrame:CGRectMake(10 + (width + 10) * x, 5 + (width + 20 + 10) * y, width, width + 20) WithData:array[i]];
-
+        view.tag = i;
         [self addSubview:view];
     }
 }

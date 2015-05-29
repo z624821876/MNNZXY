@@ -126,7 +126,7 @@
         NSTextAttachment *textAttachment = [[NSTextAttachment alloc] init];
         //给附件添加图片
         textAttachment.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@.png",imgName]];
-        textAttachment.bounds = CGRectMake(0, - 10, 30, 30);
+//        textAttachment.bounds = CGRectMake(0, 0, 25, 25);
         //把附件转换成可变字符串，用于替换掉源字符串中的表情文字
         NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:textAttachment];
         NSMutableDictionary *imageDic = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -143,7 +143,6 @@
         //进行替换
         [imgStr1 replaceCharactersInRange:range22 withAttributedString:[rangeDic objectForKey:@"image"]];
     }
-
     return imgStr1;
 }
 

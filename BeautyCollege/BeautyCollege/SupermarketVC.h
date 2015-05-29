@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MZTimerLabel.h"
 
-@interface SupermarketVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface SupermarketVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,MZTimerLabelDelegate,NSURLConnectionDelegate,NSURLConnectionDataDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 

@@ -9,7 +9,9 @@
 #import "ChatCell.h"
 
 @implementation ChatCell
-
+{
+    UITextView *_CalculateheightTV;
+}
 - (void)awakeFromNib {
     // Initialization code
 }
@@ -23,6 +25,8 @@
         _logo = [[UIImageView alloc] initWithFrame:CGRectZero];
         _contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         _image = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _CalculateheightTV = [[UITextView alloc] init];
+        [self addSubview:_CalculateheightTV];
         [self addSubview:_logo];
         [self addSubview:_mark];
         [self addSubview:_bgView];
@@ -40,8 +44,7 @@
     _bgView.frame = CGRectZero;
     _logo.frame = CGRectZero;
     _image.frame = CGRectZero;
-    
-    NSLog(@"%@",_date);
+    _contentLabel.frame = CGRectZero;
     
     if (_date) {
         _contentLabel.frame = CGRectMake(0, 10, UI_SCREEN_WIDTH, 20);
@@ -54,18 +57,23 @@
     
     CGFloat labelMaxWidth = UI_SCREEN_WIDTH - (75 * 2.0) - 10;
     
-    NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//    NSStringDrawingOptions options =  NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading;
+//    NSMutableAttributedString *string = [MyTool textTransformEmoji:_model.content];
+//    
+//    CGSize size = [string boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options  context:nil].size;
+//    CGSize size2 = [_model.content boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:17]} context:nil].size;
+    
+    
     NSMutableAttributedString *string = [MyTool textTransformEmoji:_model.content];
-    
-    CGSize size = [string boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options  context:nil].size;
-    CGSize size2 = [_model.content boundingRectWithSize:CGSizeMake(labelMaxWidth, MAXFLOAT) options:options attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:17]} context:nil].size;
-    
-    CGSize labelSize;
-    if (size.height > size2.height) {
-        labelSize = size;
-    }else {
-        labelSize = size2;
-    }
+    _CalculateheightTV.attributedText = string;
+    _CalculateheightTV.font = [UIFont systemFontOfSize:17];
+    CGSize labelSize = [_CalculateheightTV sizeThatFits:CGSizeMake(labelMaxWidth, MAXFLOAT)];
+
+//    if (size.height > size2.height) {
+//        labelSize = size;
+//    }else {
+//        labelSize = size2;
+//    }
     
     if (_model.url != nil && _model.url.length > 0) {
         labelSize = CGSizeMake(labelMaxWidth, labelMaxWidth);
@@ -89,7 +97,7 @@
         if (_model.url != nil && _model.url.length > 0) {
             _image.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
             [MyTool setImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
-            _image.contentMode = UIViewContentModeScaleAspectFit;
+            _image.contentMode = UIViewContentModeScaleAspectFill;
             _image.clipsToBounds = YES;
         }else {
             _contentLabel.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
@@ -118,8 +126,9 @@
         if (_model.url != nil && _model.url.length > 0) {
             _image.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
             [MyTool setImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
-            _image.contentMode = UIViewContentModeScaleAspectFit;
+            _image.contentMode = UIViewContentModeScaleAspectFill;
             _image.clipsToBounds = YES;
+            
         }else {
         _contentLabel.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
         _contentLabel.numberOfLines = 0;
