@@ -4820,8 +4820,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: niu junhui (MU7BD27KRZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: niu junhui (MU7BD27KRZ)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4841,7 +4841,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "e2dadfc4-9a83-4b1e-9be8-237601e66cfc";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4863,8 +4863,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: niu junhui (MU7BD27KRZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: niu junhui (MU7BD27KRZ)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -4877,7 +4877,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "e2dadfc4-9a83-4b1e-9be8-237601e66cfc";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4888,8 +4888,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: niu junhui (MU7BD27KRZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: niu junhui (MU7BD27KRZ)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeautyCollege/umeng_ios_social_sdk_4.2-2.1_arm64_custom/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -4921,7 +4921,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e2dadfc4-9a83-4b1e-9be8-237601e66cfc";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -4931,8 +4931,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer: niu junhui (MU7BD27KRZ)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: niu junhui (MU7BD27KRZ)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeautyCollege/umeng_ios_social_sdk_4.2-2.1_arm64_custom/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -4964,7 +4964,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e2dadfc4-9a83-4b1e-9be8-237601e66cfc";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
