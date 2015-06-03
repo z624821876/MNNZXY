@@ -237,7 +237,7 @@
             if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 pickerImage.sourceType = sourceType;
                 pickerImage.delegate = self;
-                pickerImage.allowsEditing = YES;
+//                pickerImage.allowsEditing = YES;
                 [self presentViewController:pickerImage animated:YES completion:nil];
                 
             }else {
@@ -257,7 +257,7 @@
                 
             }
             pickerImage.delegate = self;
-            pickerImage.allowsEditing = YES;
+//            pickerImage.allowsEditing = YES;
             [self presentViewController:pickerImage animated:YES completion:nil];
             
         }
@@ -271,7 +271,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    [_changeImgBtn setImage:[info objectForKey:UIImagePickerControllerEditedImage] forState:UIControlStateNormal];
+    [_changeImgBtn setImage:[info objectForKey:UIImagePickerControllerOriginalImage] forState:UIControlStateNormal];
     _changeImgBtn.tag = 10086;
     [picker dismissViewControllerAnimated:YES completion:nil];
 }

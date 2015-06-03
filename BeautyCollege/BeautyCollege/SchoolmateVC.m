@@ -9,7 +9,7 @@
 #import "SchoolmateVC.h"
 #import "MJRefresh.h"
 #import "ClassmateInfoVC.h"
-
+#import "PublicSearchVC.h"
 #define NUMBERS @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 @interface SchoolmateVC ()
@@ -46,6 +46,24 @@
     [super viewWillAppear:YES];
     self.navigationItem.title = @"同学录";
     self.view.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"课堂搜索.png"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] style:UIBarButtonItemStylePlain target:self action:@selector(search)];
+    self.navigationItem.rightBarButtonItem = item;
+
+}
+//搜索
+- (void)search
+{
+    PublicSearchVC *vc = [[PublicSearchVC alloc] init];
+    vc.hidesBottomBarWhenPushed = YES;
+    vc.searchtype = 2;
+    [self.navigationController pushViewController:vc animated:YES];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    _currentPage = 1;
 }
 
 - (void)initData
@@ -177,6 +195,7 @@
                         model.city = nilOrJSONObjectForKey(dic, @"cityName");
                         model.logo = nilOrJSONObjectForKey(dic, @"logo");
                         model.modelId = nilOrJSONObjectForKey(dic, @"id");
+                        model.content = nilOrJSONObjectForKey(dic, @"applyContent");
                         [_dataArray addObject:model];
                     }
                     if (_currentBtn.tag == 0) {
@@ -395,6 +414,15 @@
         _tableView.backgroundColor = [UIColor clearColor];
         [_tableView removeHeader];
         [_tableView removeFooter];
+    }else if (btn.tag == 1) {
+        __weak typeof(self) weakSelf = self;
+        _tableView.backgroundColor = [UIColor whiteColor];
+        [_tableView addLegendHeaderWithRefreshingBlock:^{
+            weakSelf.currentPage = 1;
+            [weakSelf loadData];
+        }];
+        [_tableView removeFooter];
+
     }else {
         __weak typeof(self) weakSelf = self;
         _tableView.backgroundColor = [UIColor whiteColor];
@@ -436,7 +464,6 @@
     if (!cell) {
         cell = [[BaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
         cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dorm_b.png"]];
-
     }
 
     if (_currentBtn.tag == 0) {
@@ -446,6 +473,8 @@
     
     if (_currentBtn.tag == 1) {
         cell.type = 18;
+        cell.btn2.tag = indexPath.row;
+        [cell.btn2 addTarget:self action:@selector(addFirend:) forControlEvents:UIControlEventTouchUpInside];
         cell.model = [_dataArray objectAtIndex:indexPath.row];
     }
     
@@ -454,8 +483,29 @@
         cell.model = [_dataArray objectAtIndex:indexPath.row];
     }
     
-    
     return cell;
+    
+}
+
+- (void)addFirend:(UIButton *)btn
+{
+    BaseCellModel *model = _dataArray[btn.tag];
+    //添加好友
+    
+        NSString *str = [NSString stringWithFormat:@"mobi/user/add?memberId=%@&friendId=%@&content=",[User shareUser].userId,model.modelId];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+    
+                [[tools shared] HUDShowHideText:@"添加成功" delay:1.0];
+                [self loadData];
+            }else {
+                [[tools shared] HUDShowHideText:@"添加失败" delay:1.0];
+    
+            }
+    
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -543,30 +593,15 @@
         vc.ClassmateId = model.modelId;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
-    }else if (_currentBtn.tag == 2) {
+    }else {
         BaseCellModel *model = _dataArray[indexPath.row];
         ClassmateInfoVC *vc = [[ClassmateInfoVC alloc] init];
         vc.ClassmateId = model.modelId;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
-    }else {
-        BaseCellModel *model = _dataArray[indexPath.row];
-
-        //添加好友
-        NSString *str = [NSString stringWithFormat:@"mobi/user/add?memberId=%@&friendId=%@&content=",[User shareUser].userId,model.modelId];
-        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-            if ([[json objectForKey:@"code"] integerValue] == 0) {
-                
-                [[tools shared] HUDShowHideText:@"添加成功" delay:1.0];
-                [self loadData];
-            }else {
-                [[tools shared] HUDShowHideText:@"添加失败" delay:1.0];
-
-            }
-            
-        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        }];
     }
+    
+
 }
 
 - (void)didReceiveMemoryWarning {

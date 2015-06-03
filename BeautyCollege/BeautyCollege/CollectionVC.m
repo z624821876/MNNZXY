@@ -230,7 +230,7 @@
         return [_homeworkArray count];
     }else {
         //宝贝
-        return [_goodsArray count];
+        return ([_goodsArray count] + 1) / 2;
     }
 }
 

@@ -27,7 +27,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _array = @[@"关于美娘",@"意见反馈",@"版本更新",@"修改密码",@"清除缓存",@"退出登录"];
+    _array = @[@"关于美娘",@"意见反馈",@"修改密码",@"清除缓存",@"退出登录"];
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64) style:UITableViewStylePlain];
     UIView *view = [UIView new];
     _tableView.tableFooterView = view;
@@ -52,11 +52,11 @@
     
     cell.title = [_array objectAtIndex:indexPath.row];
     cell.type = 21;
-    if (indexPath.row == 4) {
+    if (indexPath.row == 3) {
         cell.type = 24;
     }
     
-    if (indexPath.row == 5) {
+    if (indexPath.row == 4) {
         cell.type = 23;
     }
     
@@ -84,26 +84,22 @@
             break;
         case 2:
         {
-            
-        }
-            break;
-        case 3:
-        {
             ChangePswVC *vc = [[ChangePswVC alloc] init];
             vc.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:vc animated:YES];
+
         }
             break;
-        case 4:
+        case 3:
         {
             [[SDImageCache sharedImageCache] clearMemory];
             [[SDImageCache sharedImageCache] clearDisk];
             [[tools shared] HUDShowHideText:@"缓存已清除" delay:1.5];
             [_tableView reloadData];
-            
+
         }
             break;
-        case 5:
+        case 4:
         {
             NSString *path = [PATH_OF_DOCUMENT stringByAppendingPathComponent:@"MyUser"];
             BOOL isSucceed = [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
@@ -114,10 +110,9 @@
                 vc.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:vc animated:YES];
             }
+
         }
             break;
-
-            
         default:
             break;
     }

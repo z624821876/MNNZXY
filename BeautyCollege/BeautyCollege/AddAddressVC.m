@@ -46,14 +46,14 @@
     _cityBtn.backgroundColor = BaseColor;
     [self.view addSubview:_cityBtn];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, _cityBtn.bottom + 15, 40, 30)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, _cityBtn.bottom + 9, 40, 20)];
     label.textColor = [UIColor grayColor];
     label.text = @"地址";
     [self.view addSubview:label];
     
     _addressTV = [[UITextView alloc] initWithFrame:CGRectMake(label.right + 5, _cityBtn.bottom, img.width - label.right - 15 + 10, 60)];
     _addressTV.backgroundColor = [UIColor clearColor];
-    _addressTV.font = [UIFont systemFontOfSize:15];
+    _addressTV.font = [UIFont systemFontOfSize:17];
     [self.view addSubview:_addressTV];
     
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(img.left, _addressTV.bottom + 10 * UI_scaleY - 0.5, img.width, 0.5)];
@@ -171,18 +171,17 @@
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(5, img.top + 50, img.width, 140)];
     bgView.backgroundColor = [UIColor whiteColor];
     [_topView addSubview:bgView];
-    CGFloat width = (bgView.width - 20 - 30) / 7.0;
+    CGFloat width = (bgView.width) / 7.0;
     for (NSInteger i = 0; i < [_cityArray count]; i ++) {
         NSInteger y = i / 7;
         NSInteger x = i % 7;
-        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(10 + (width + 5) * x, 10 + 25 * y, width, 20)];
+        UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(width * x, 10 + 25 * y, width, 20)];
         BaseCellModel *model = _cityArray[i];
         btn.tag = i;
-        btn.titleLabel.adjustsFontSizeToFitWidth = YES;
         [btn setTitle:model.name forState:UIControlStateNormal];
         [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-        btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-        btn.titleLabel.font = [UIFont systemFontOfSize:15];
+        btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+        btn.titleLabel.font = [UIFont systemFontOfSize:14];
         [btn addTarget:self action:@selector(selectCity:) forControlEvents:UIControlEventTouchUpInside
          ];
         [bgView addSubview:btn];

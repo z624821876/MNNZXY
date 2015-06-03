@@ -65,11 +65,12 @@
             NSArray *array = nilOrJSONObjectForKey(pageDic, @"data");
             
             for (NSDictionary *dic in array) {
-//                NSDictionary *memberDic = nilOrJSONObjectForKey(dic, @"member");
+                NSDictionary *memberDic = nilOrJSONObjectForKey(dic, @"member");
                 NSDictionary *blogDic = nilOrJSONObjectForKey(dic, @"blog");
                 BaseCellModel *model = [[BaseCellModel alloc] init];
                 model.modelId = nilOrJSONObjectForKey(blogDic, @"id");
                 model.title = nilOrJSONObjectForKey(blogDic, @"title");
+                model.logo = nilOrJSONObjectForKey(memberDic, @"logo");
                 model.likeId = [MyTool getValuesFor:dic key:@"likeId"];
                 model.collectId = [MyTool getValuesFor:dic key:@"favouriteId"];
                 NSNumber *number = nilOrJSONObjectForKey(blogDic, @"ct");
@@ -135,6 +136,7 @@
     HomeworkVC *vc = [[HomeworkVC alloc] init];
     vc.homeworkId = model.modelId;
     vc.homworkModel = model;
+    vc.logoUrl = model.logo;
     [self.navigationController pushViewController:vc animated:YES];
 }
 

@@ -19,10 +19,11 @@
 #import "GoodsVC.h"
 #import "HomeworkVC.h"
 #import "GroupVC.h"
+#import "MyTableVIew.h"
 
 @interface SchoolVC ()
 {
-    UITableView         *_tableView;
+    MyTableVIew         *_tableView;
     
     
     UIView              *_topBgView;
@@ -181,6 +182,7 @@
                 model.title = nilOrJSONObjectForKey(blogDic, @"title");
                 model.name = nilOrJSONObjectForKey(blogDic, @"createName");
                 model.url = nilOrJSONObjectForKey(memberDic, @"level");
+                model.logo = nilOrJSONObjectForKey(memberDic, @"logo");
                     //评论
                 NSNumber *commentNumber = nilOrJSONObjectForKey(blogDic, @"comment");
                 model.comment = commentNumber == nil ? @"0" : [commentNumber stringValue];
@@ -262,7 +264,7 @@
     [[HttpManager shareManger] getWithStr:str10 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             NSDictionary *dic = [json objectForKey:@"result"];
-            NSArray *topArray = [dic objectForKey:@"top"];
+//            NSArray *topArray = [dic objectForKey:@"top"];
             NSString *time = [MyTool getValuesFor:dic key:@"startTime"];
             _groupDate = [NSDate dateWithTimeIntervalSince1970:[time doubleValue] / 1000.0];
             [self updateTime];
@@ -329,7 +331,7 @@
 
 - (void)initGUI
 {
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 45) style:UITableViewStyleGrouped];
+    _tableView = [[MyTableVIew alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 45) style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     //    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -481,6 +483,7 @@
                 HomeworkVC *vc = [[HomeworkVC alloc] init];
                 vc.homeworkId = model.modelId;
                 vc.homworkModel = model;
+                vc.logoUrl = model.logo;
                 vc.hidesBottomBarWhenPushed = YES;
                 [self.navigationController pushViewController:vc animated:YES];
                 
@@ -579,12 +582,53 @@
     }
 }
 
+
+- (void)topBtnClick
+{
+    if (nil != _currentDate && nil != _groupDate) {
+        NSTimeInterval aTimer = [_groupDate timeIntervalSinceDate:_currentDate] - 8 * 60 * 60;
+        
+        if (aTimer > 0) {
+            
+            [[tools shared] HUDShowHideText:@"暂未开团" delay:1.5];
+        }else {
+            //跳转到团购
+            GroupVC *vc = [[GroupVC alloc] init];
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+    }
+}
+
+- (void)bottomBtnClick
+{
+    [AppDelegate shareApp].mainTabBar.selectedIndex = 3;
+}
+
+- (void)leftBtnClick
+{
+    BaseCellModel *model = _cellImgArr[0];
+    GoodsVC *vc = [[GoodsVC alloc] init];
+    vc.goodsId = model.modelId;
+    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (section == 2) {
+        UIView *view = [UIView new];
+        return view;
+    }
+    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 15)];
+    [img setImage:[UIImage imageNamed:@"bg_down1"]];
+    return img;
+}
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-
     if (section != 2) {
         UIView *view = [[UIView alloc] init];
-
+        
         view.backgroundColor = ColorWithRGBA(215.0, 225.0, 227.0, 1);
         
         UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 30, UI_SCREEN_WIDTH, 30)];
@@ -608,90 +652,46 @@
         
         return view;
     }else {
-        if ([_cellImgArr count] != 0) {
-            
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 180)];
-            
-            UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-            leftBtn.frame = CGRectMake(20, 15, (UI_SCREEN_WIDTH - 60) / 2.0 , 150);
-            BaseCellModel *model = _cellImgArr[0];
-            [leftBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model.logo] forState:UIControlStateNormal];
-            [leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
-            [view addSubview:leftBtn];
-            UIButton *topBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-
-            if ([_cellImgArr count] >= 2) {
-                
-                topBtn.frame = CGRectMake(leftBtn.right + 10, 15, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, 70);
-                BaseCellModel *model2 = _cellImgArr[1];
-                [topBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model2.logo] forState:UIControlStateNormal];
-                [topBtn addTarget:self action:@selector(topBtnClick) forControlEvents:UIControlEventTouchUpInside];
-
-                [view addSubview:topBtn];
-            }
-            
-            if ([_cellImgArr count] >= 3) {
-                
-                UIButton *bottomBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-                bottomBtn.frame = CGRectMake(leftBtn.right + 10, topBtn.bottom + 10, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, 70);
-                BaseCellModel *model3 = _cellImgArr[2];
-                [bottomBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model3.logo] forState:UIControlStateNormal];
-                [bottomBtn addTarget:self action:@selector(bottomBtnClick) forControlEvents:UIControlEventTouchUpInside];
-
-                [view addSubview:bottomBtn];
-
-            }
-
-            return view;
-
-        }
+//        if ([_cellImgArr count] != 0) {
+//            
+//            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 180)];
+//            
+//            UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            leftBtn.frame = CGRectMake(20, 15, (UI_SCREEN_WIDTH - 60) / 2.0 , 150);
+//            BaseCellModel *model = _cellImgArr[0];
+//            [leftBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model.logo] forState:UIControlStateNormal];
+//            [leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+//            [view addSubview:leftBtn];
+//            UIButton *topBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//            
+//            if ([_cellImgArr count] >= 2) {
+//                
+//                topBtn.frame = CGRectMake(leftBtn.right + 10, 15, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, 70);
+//                BaseCellModel *model2 = _cellImgArr[1];
+//                [topBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model2.logo] forState:UIControlStateNormal];
+//                [topBtn addTarget:self action:@selector(topBtnClick) forControlEvents:UIControlEventTouchUpInside];
+//                
+//                [view addSubview:topBtn];
+//            }
+//            
+//            if ([_cellImgArr count] >= 3) {
+//                
+//                UIButton *bottomBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+//                bottomBtn.frame = CGRectMake(leftBtn.right + 10, topBtn.bottom + 10, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, 70);
+//                BaseCellModel *model3 = _cellImgArr[2];
+//                [bottomBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model3.logo] forState:UIControlStateNormal];
+//                [bottomBtn addTarget:self action:@selector(bottomBtnClick) forControlEvents:UIControlEventTouchUpInside];
+//                
+//                [view addSubview:bottomBtn];
+//                
+//            }
+//            
+//            return view;
+//        }
         return nil;
     }
     
 }
-
-- (void)topBtnClick
-{
-    if (nil != _currentDate && nil != _groupDate) {
-        NSTimeInterval aTimer = [_groupDate timeIntervalSinceDate:_currentDate];
-        
-//        if (aTimer > 0) {
-//            
-//            [[tools shared] HUDShowHideText:@"暂未开团" delay:1.5];
-//        }else {
-            //跳转到团购
-            GroupVC *vc = [[GroupVC alloc] init];
-            vc.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:vc animated:YES];
-//        }
-    }
-}
-
-- (void)bottomBtnClick
-{
-    [AppDelegate shareApp].mainTabBar.selectedIndex = 2;
-}
-
-- (void)leftBtnClick
-{
-    BaseCellModel *model = _cellImgArr[0];
-    GoodsVC *vc = [[GoodsVC alloc] init];
-    vc.goodsId = model.modelId;
-    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    if (section == 2) {
-        UIView *view = [UIView new];
-        return view;
-    }
-    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 15)];
-    [img setImage:[UIImage imageNamed:@"bg_down1"]];
-    return img;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
     if (section == 2) {
@@ -704,10 +704,11 @@
     if (section != 2) {
         return 60;
     }else {
-        if ([_cellImgArr count] == 0) {
-            return 0.1;
-        }
-        return 180;
+        return 0.1;
+//        if ([_cellImgArr count] == 0) {
+//            return 0.1;
+//        }
+//        return 180;
     }
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -718,6 +719,14 @@
         {
             return 70;
         }
+        case 2:
+        {
+            if ([_cellImgArr count] == 0) {
+                return 0;
+            }
+            return 150 * UI_scaleY + 30;
+        }
+
             break;
         case 3:
         {
@@ -758,7 +767,10 @@
             break;
         case 2:
         {
-            return 0;
+            if ([_cellImgArr count] <= 0) {
+                return 0;
+            }
+            return 1;
         }
             break;
         case 3:
@@ -782,6 +794,49 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 2) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GROUP"];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"GROUP"];
+            cell.backgroundColor = tableView.backgroundColor;
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.separatorInset = UIEdgeInsetsMake(UI_SCREEN_WIDTH, 0, 0, 0);
+        }else {
+            
+            for (UIView *view in cell.contentView.subviews) {
+                [view removeFromSuperview];
+            }
+            
+            UIButton *leftBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            leftBtn.frame = CGRectMake(20, 15, (UI_SCREEN_WIDTH - 60) / 2.0 , 150 * UI_scaleY);
+            BaseCellModel *model = _cellImgArr[0];
+            [leftBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model.logo] forState:UIControlStateNormal];
+            [leftBtn addTarget:self action:@selector(leftBtnClick) forControlEvents:UIControlEventTouchUpInside];
+            [cell.contentView addSubview:leftBtn];
+            
+            UIButton *topBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+            if ([_cellImgArr count] >= 2) {
+            topBtn.frame = CGRectMake(leftBtn.right + 10, 15, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, (150 * UI_scaleY - 10) / 2.0);
+            BaseCellModel *model2 = _cellImgArr[1];
+            [topBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model2.logo] forState:UIControlStateNormal];
+//                [topBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model2.logo] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"login1.png"]];
+            [topBtn addTarget:self action:@selector(topBtnClick) forControlEvents:UIControlEventTouchUpInside];
+            [cell.contentView addSubview:topBtn];
+                        }
+            
+                        if ([_cellImgArr count] >= 3) {
+            
+                            UIButton *bottomBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                            bottomBtn.frame = CGRectMake(leftBtn.right + 10, topBtn.bottom + 10, (UI_SCREEN_WIDTH - 60) / 2.0 + 10, topBtn.height);
+                            BaseCellModel *model3 = _cellImgArr[2];
+                            [bottomBtn sd_setBackgroundImageWithURL:[NSURL URLWithString:model3.logo] forState:UIControlStateNormal];
+                            [bottomBtn addTarget:self action:@selector(bottomBtnClick) forControlEvents:UIControlEventTouchUpInside];
+                            
+                            [cell.contentView addSubview:bottomBtn];
+                        }
+        }
+        return cell;
+    }
     BaseCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     if (!cell) {
         cell = [[BaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
@@ -862,18 +917,30 @@
 
 - (void)tableView:(UITableView *)tableView didHighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 2) {
+        return;
+    }
+    
     BaseCell *cell = (BaseCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.btn1.selected = YES;
 }
 
 - (void)tableView:(UITableView *)tableView didUnhighlightRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 2) {
+        return;
+    }
+
     BaseCell *cell = (BaseCell *)[tableView cellForRowAtIndexPath:indexPath];
     cell.btn1.selected = NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 2) {
+        return;
+    }
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     switch (indexPath.section) {

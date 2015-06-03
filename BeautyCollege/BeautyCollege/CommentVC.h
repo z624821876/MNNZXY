@@ -8,7 +8,7 @@
 
 #import "MyCustomVC.h"
 
-@interface CommentVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate>
+@interface CommentVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UITextViewDelegate>
 
 @property (nonatomic, strong) NSString          *goodsId;
 @property (nonatomic, strong) NSArray           *dataArray;

@@ -8,7 +8,7 @@
 
 #import "MyCustomVC.h"
 
-@interface AddressList : MyCustomVC<UITableViewDataSource,UITableViewDelegate>
+@interface AddressList : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) UITableView           *tableView;
 

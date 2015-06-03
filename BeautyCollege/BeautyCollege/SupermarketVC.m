@@ -217,7 +217,7 @@
         [inputFormatter setDateFormat:@"EEE, d MMM yyyy HH:mm:ss"];
         NSDate *inputDate = [inputFormatter dateFromString:string];
         _currentDate = inputDate;
-        CGFloat aTimer = [_groupDate timeIntervalSinceDate:inputDate];
+        CGFloat aTimer = [_groupDate timeIntervalSinceDate:inputDate] - 8 * 60 * 60;
         if (aTimer > 0 && aTimer <= 60 * 60 * 24) {
             [_timelabel reset];
             [_timelabel setCountDownTime:aTimer];
@@ -454,7 +454,7 @@
     [btn addTarget:self action:@selector(pushToGroup) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btn];
     
-    CGFloat time = [_groupDate timeIntervalSinceDate:_currentDate];
+    CGFloat time = [_groupDate timeIntervalSinceDate:_currentDate] - 8 * 60 * 60;
     
     if (time > 0) {
         
@@ -518,7 +518,7 @@
     CGFloat width = UI_SCREEN_WIDTH / 3.0;
     NSArray *array = @[@"特价",@"新品",@"全部"];
     for (NSInteger i = 0; i < 3; i ++) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(width * i, _grouppurchaseView.bottom + 20 * UI_scaleY, width, 20)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(width * i, btn.bottom + 20 * UI_scaleY, width, 20)];
         label.text = [NSString stringWithFormat:@"%@",_productCount[i]];
         //        label.font = [UIFont systemFontOfSize:15];
         label.textAlignment = NSTextAlignmentCenter;
@@ -532,7 +532,7 @@
         DDLog(@"%f",label2.bottom);
         
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        button.frame = CGRectMake(width *i, _grouppurchaseView.bottom + 20 * UI_scaleY, width, 40 + 10 * UI_scaleY);
+        button.frame = CGRectMake(width *i, btn.bottom + 20 * UI_scaleY, width, 40 + 10 * UI_scaleY);
         button.tag = 10 + i;
         if (button.tag == _currentBtn.tag || button.tag - 10 == _currentBtn.tag) {
             button.selected = YES;

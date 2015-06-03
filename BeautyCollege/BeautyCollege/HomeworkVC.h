@@ -13,6 +13,7 @@ typedef void(^UpdateBlock)();
 @property (nonatomic, strong) NSString      *homeworkId;
 @property (nonatomic, strong) BaseCellModel *homworkModel;
 @property (nonatomic, strong) UITableView   *tableView;
+@property (nonatomic, strong) NSString      *logoUrl;
 
 @property (copy, nonatomic) UpdateBlock block;
 

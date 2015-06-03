@@ -506,7 +506,7 @@
             if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 pickerImage.sourceType = sourceType;
                 pickerImage.delegate = self;
-                pickerImage.allowsEditing = YES;
+//                pickerImage.allowsEditing = YES;
                 [self presentViewController:pickerImage animated:YES completion:nil];
                 
             }else {
@@ -526,7 +526,7 @@
                 
             }
             pickerImage.delegate = self;
-            pickerImage.allowsEditing = YES;
+//            pickerImage.allowsEditing = YES;
             [self presentViewController:pickerImage animated:YES completion:nil];
             
         }
@@ -540,7 +540,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerEditedImage], 0.1);
+    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerOriginalImage], 0.1);
     [[tools shared] HUDShowText:@"正在上传..."];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager POST:@"http://nzxyadmin.53xsd.com/mobi/ser/saveImage" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {

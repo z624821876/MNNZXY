@@ -80,9 +80,9 @@
     NSString * CU = @"^1(3[0-2]|5[256]|8[56])\\d{8}$";
     /**
      20         * 中国电信：China Telecom
-     21         * 133,1349,153,180,189
+     21         * 133,1349,153,180,189,177
      22         */
-    NSString * CT = @"^1((33|53|8[09])[0-9]|349)\\d{7}$";
+    NSString * CT = @"^1((33|77|53|8[09])[0-9]|349)\\d{7}$";
     /**
      25         * 大陆地区固话及小灵通
      26         * 区号：010,020,021,022,023,024,025,027,028,029
@@ -174,11 +174,14 @@
 
 + (NSString *)getValuesFor:(NSDictionary *)dic key:(NSString *)str
 {
-    id value = nilOrJSONObjectForKey(dic, str);
-    if ([value isKindOfClass:[NSNumber class]]) {
-        return [value stringValue];
+    if ([dic isKindOfClass:[NSDictionary class]]) {
+        id value = nilOrJSONObjectForKey(dic, str);
+        if ([value isKindOfClass:[NSNumber class]]) {
+            return [value stringValue];
+        }
+        return value;
     }
-    return value;
+    return nil;
 }
 @end
 

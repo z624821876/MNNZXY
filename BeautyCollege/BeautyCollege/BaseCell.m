@@ -285,7 +285,8 @@
             
             self.label1.frame = CGRectMake(self.logoImg.right + 5, 30, UI_SCREEN_WIDTH - self.logoImg.right - 20, 30);
             self.label1.text = _model.name;
-            
+            self.label1.font = [UIFont systemFontOfSize:17];
+
         }
             break;
         case 8:
@@ -297,17 +298,19 @@
             self.logoImg.layer.cornerRadius = 5;
             self.logoImg.layer.masksToBounds = YES;
             
-            self.btn1.frame = CGRectMake(UI_SCREEN_WIDTH - 60, 4, 40, 30);
-            self.btn1.backgroundColor = BaseColor;
-            self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
-            self.btn1.layer.cornerRadius = 5;
-            self.btn1.layer.masksToBounds = YES;
-            [self.btn1 setTitle:@"添加" forState:UIControlStateNormal];
+            self.btn2.frame = CGRectMake(UI_SCREEN_WIDTH - 60, 7, 40, 30);
+            self.btn2.backgroundColor = BaseColor;
+            self.btn2.titleLabel.font = [UIFont systemFontOfSize:15];
+            self.btn2.layer.cornerRadius = 5;
+            self.btn2.layer.masksToBounds = YES;
+            [self.btn2 setTitle:@"添加" forState:UIControlStateNormal];
             
-            self.label1.frame = CGRectMake(self.logoImg.right + 10,7,self.btn1.left - self.logoImg.right - 20,30);
-
-                        self.label1.text = _model.name;
+            self.label1.frame = CGRectMake(self.logoImg.right + 10,2,self.btn2.left - self.logoImg.right - 20,20);
+            self.label1.font = [UIFont systemFontOfSize:15];
+            self.label1.text = _model.name;
             
+            self.label2.frame = CGRectMake(self.label1.left, self.label1.bottom, self.label1.width, 20);
+            self.label2.font = [UIFont systemFontOfSize:12];
         }
             break;
             
@@ -321,7 +324,7 @@
             self.logoImg.layer.masksToBounds = YES;
             
             self.btn1.frame = CGRectMake(UI_SCREEN_WIDTH - 120, 4, 100, 30);
-            
+            self.btn1.backgroundColor = [UIColor clearColor];
             [self.btn1 setImage:[UIImage imageNamed:@"yue_09.png"] forState:UIControlStateNormal];
             self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
             NSString *cityName;
@@ -333,8 +336,10 @@
             [self.btn1 setTitle:cityName forState:UIControlStateNormal];
             self.btn1.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
             [self.btn1 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-            self.label1.frame = CGRectMake(self.logoImg.right + 10,7,self.btn1.left - self.logoImg.right - 20,30);
             
+            self.label1.frame = CGRectMake(self.logoImg.right + 10,7,self.btn1.left - self.logoImg.right - 20,30);
+            self.label1.font = [UIFont systemFontOfSize:17];
+
             self.label1.text = _model.name;
             
         }
@@ -475,6 +480,7 @@
             self.btn1.backgroundColor = BaseColor;
             self.btn1.layer.cornerRadius = 5;
             self.btn1.layer.masksToBounds = YES;
+            self.btn1.userInteractionEnabled = NO;
             self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
             [self.btn1 setTitle:@"举手" forState:UIControlStateNormal];
         }
@@ -535,7 +541,7 @@
             if ([_model.likeId isEqualToString:@"0"]) {
                 [self.btn1 setImage:[UIImage imageNamed:@"xin.png"] forState:UIControlStateNormal];
             }else {
-                [self.btn1 setImage:[UIImage imageNamed:@"zuoye-xin.png"] forState:UIControlStateNormal];
+                [self.btn1 setImage:[UIImage imageNamed:@"作业-心.png"] forState:UIControlStateNormal];
             }
             self.btn1.imageView.contentMode = UIViewContentModeScaleAspectFit;
             
@@ -644,11 +650,12 @@
             self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
             [self.btn1 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
             [self.btn1 setTitle:_model.likeCount forState:UIControlStateNormal];
+            
             if ([_model.likeId isEqualToString:@"0"]) {
                 [self.btn1 setImage:[UIImage imageNamed:@"xin.png"] forState:UIControlStateNormal];
                 
             }else {
-                [self.btn1 setImage:[UIImage imageNamed:@"zuoye-xin.png"] forState:UIControlStateNormal];
+                [self.btn1 setImage:[UIImage imageNamed:@"作业-心.png"] forState:UIControlStateNormal];
             }
             self.btn1.imageView.contentMode = UIViewContentModeScaleAspectFit;
             
@@ -742,8 +749,16 @@
             
             self.label3.frame = CGRectMake(self.label1.left, self.label1.bottom, self.label1.width, 20);
             self.label3.font = [UIFont systemFontOfSize:12];
-            self.label3.textColor = [UIColor grayColor];
+//            self.label3.textColor = [UIColor grayColor];
             self.label3.attributedText = [MyTool textTransformEmoji:_model.lastMessage];
+            
+            if ([_model.count integerValue] > 0) {
+                self.label1.textColor = BaseColor;
+                self.label3.textColor = BaseColor;
+            }else {
+                self.label1.textColor = [UIColor blackColor];
+                self.label3.textColor = [UIColor blackColor];
+            }
             
         }
             break;

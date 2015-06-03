@@ -147,6 +147,13 @@
 		B582716E1AE4D4FC007DA672 /* login8@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B582716B1AE4D4FC007DA672 /* login8@2x.png */; };
 		B58271701AE4F901007DA672 /* 三角.png in Resources */ = {isa = PBXBuildFile; fileRef = B582716F1AE4F901007DA672 /* 三角.png */; };
 		B58271721AE4F9D7007DA672 /* 04_06@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B58271711AE4F9D7007DA672 /* 04_06@2x.png */; };
+		B583238B1B1EA17000C9CB0B /* lessonsBack.png in Resources */ = {isa = PBXBuildFile; fileRef = B583238A1B1EA17000C9CB0B /* lessonsBack.png */; };
+		B583238D1B1EA1F400C9CB0B /* 作业-心.png in Resources */ = {isa = PBXBuildFile; fileRef = B583238C1B1EA1F400C9CB0B /* 作业-心.png */; };
+		B58323901B1EB29900C9CB0B /* MyTableVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = B583238F1B1EB29900C9CB0B /* MyTableVIew.m */; };
+		B58323931B1EDCB600C9CB0B /* PublicSearchVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58323921B1EDCB600C9CB0B /* PublicSearchVC.m */; };
+		B58323961B1EE00500C9CB0B /* SearchResultVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58323951B1EE00500C9CB0B /* SearchResultVC.m */; };
+		B58323991B1EFCF200C9CB0B /* MyButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B58323981B1EFCF200C9CB0B /* MyButton.m */; };
+		B583239B1B1F092F00C9CB0B /* course_titbg.png in Resources */ = {isa = PBXBuildFile; fileRef = B583239A1B1F092F00C9CB0B /* course_titbg.png */; };
 		B58482AA1B1841A2007FDECA /* InvitefriendsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58482A91B1841A2007FDECA /* InvitefriendsVC.m */; };
 		B58482AD1B184B08007FDECA /* MyLessonsVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58482AC1B184B08007FDECA /* MyLessonsVC.m */; };
 		B58482B01B184FA4007FDECA /* MyhomewroksVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B58482AF1B184FA4007FDECA /* MyhomewroksVC.m */; };
@@ -590,7 +597,6 @@
 		B5CE2B9D1ADE59DE0059903D /* course_bg_more.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A241ADE59DC0059903D /* course_bg_more.png */; };
 		B5CE2B9E1ADE59DE0059903D /* course_item_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A251ADE59DD0059903D /* course_item_bg.png */; };
 		B5CE2B9F1ADE59DE0059903D /* course_item_dbg.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A261ADE59DD0059903D /* course_item_dbg.png */; };
-		B5CE2BA01ADE59DE0059903D /* course_titbg.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A271ADE59DD0059903D /* course_titbg.png */; };
 		B5CE2BA11ADE59DE0059903D /* coursebd.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A281ADE59DD0059903D /* coursebd.png */; };
 		B5CE2BA21ADE59DE0059903D /* coursebg_16.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A291ADE59DD0059903D /* coursebg_16.png */; };
 		B5CE2BA31ADE59DE0059903D /* create1.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE2A2A1ADE59DD0059903D /* create1.png */; };
@@ -1139,6 +1145,17 @@
 		B582716B1AE4D4FC007DA672 /* login8@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login8@2x.png"; sourceTree = "<group>"; };
 		B582716F1AE4F901007DA672 /* 三角.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "三角.png"; sourceTree = "<group>"; };
 		B58271711AE4F9D7007DA672 /* 04_06@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "04_06@2x.png"; sourceTree = "<group>"; };
+		B583238A1B1EA17000C9CB0B /* lessonsBack.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lessonsBack.png; sourceTree = "<group>"; };
+		B583238C1B1EA1F400C9CB0B /* 作业-心.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "作业-心.png"; sourceTree = "<group>"; };
+		B583238E1B1EB29900C9CB0B /* MyTableVIew.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyTableVIew.h; sourceTree = "<group>"; };
+		B583238F1B1EB29900C9CB0B /* MyTableVIew.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyTableVIew.m; sourceTree = "<group>"; };
+		B58323911B1EDCB600C9CB0B /* PublicSearchVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicSearchVC.h; sourceTree = "<group>"; };
+		B58323921B1EDCB600C9CB0B /* PublicSearchVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicSearchVC.m; sourceTree = "<group>"; };
+		B58323941B1EE00500C9CB0B /* SearchResultVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchResultVC.h; sourceTree = "<group>"; };
+		B58323951B1EE00500C9CB0B /* SearchResultVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchResultVC.m; sourceTree = "<group>"; };
+		B58323971B1EFCF200C9CB0B /* MyButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyButton.h; sourceTree = "<group>"; };
+		B58323981B1EFCF200C9CB0B /* MyButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyButton.m; sourceTree = "<group>"; };
+		B583239A1B1F092F00C9CB0B /* course_titbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = course_titbg.png; sourceTree = "<group>"; };
 		B58482A81B1841A2007FDECA /* InvitefriendsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvitefriendsVC.h; sourceTree = "<group>"; };
 		B58482A91B1841A2007FDECA /* InvitefriendsVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvitefriendsVC.m; sourceTree = "<group>"; };
 		B58482AB1B184B08007FDECA /* MyLessonsVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyLessonsVC.h; sourceTree = "<group>"; };
@@ -1746,7 +1763,6 @@
 		B5CE2A241ADE59DC0059903D /* course_bg_more.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = course_bg_more.png; sourceTree = "<group>"; };
 		B5CE2A251ADE59DD0059903D /* course_item_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = course_item_bg.png; sourceTree = "<group>"; };
 		B5CE2A261ADE59DD0059903D /* course_item_dbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = course_item_dbg.png; sourceTree = "<group>"; };
-		B5CE2A271ADE59DD0059903D /* course_titbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = course_titbg.png; sourceTree = "<group>"; };
 		B5CE2A281ADE59DD0059903D /* coursebd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coursebd.png; sourceTree = "<group>"; };
 		B5CE2A291ADE59DD0059903D /* coursebg_16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coursebg_16.png; sourceTree = "<group>"; };
 		B5CE2A2A1ADE59DD0059903D /* create1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = create1.png; sourceTree = "<group>"; };
@@ -3129,6 +3145,10 @@
 				B58742CC1ADF5A9F00B44FB4 /* HttpManager.m */,
 				B5922D531AEA43E100467EC7 /* User.h */,
 				B5922D541AEA43E100467EC7 /* User.m */,
+				B583238E1B1EB29900C9CB0B /* MyTableVIew.h */,
+				B583238F1B1EB29900C9CB0B /* MyTableVIew.m */,
+				B58323971B1EFCF200C9CB0B /* MyButton.h */,
+				B58323981B1EFCF200C9CB0B /* MyButton.m */,
 			);
 			name = Custom;
 			sourceTree = "<group>";
@@ -3136,6 +3156,8 @@
 		B5CE29D11ADE59DC0059903D /* drawable-hdpi */ = {
 			isa = PBXGroup;
 			children = (
+				B583238A1B1EA17000C9CB0B /* lessonsBack.png */,
+				B583238C1B1EA1F400C9CB0B /* 作业-心.png */,
 				B5F3C2CF1B14501400E71B67 /* homework-0.1@2x.png */,
 				B5F3C2D01B14501400E71B67 /* homework-0.2@2x.png */,
 				B5F3C2B21B143D3100E71B67 /* 启动页 */,
@@ -3229,6 +3251,7 @@
 				B5CE2A0E1ADE59DC0059903D /* confirm.png */,
 				B5CE2A0F1ADE59DC0059903D /* contact_list_icon.png */,
 				B5CE2A101ADE59DC0059903D /* course_003.png */,
+				B583239A1B1F092F00C9CB0B /* course_titbg.png */,
 				B5CE2A111ADE59DC0059903D /* course_006.png */,
 				B5CE2A121ADE59DC0059903D /* course_009.png */,
 				B5CE2A131ADE59DC0059903D /* course_01_36.png */,
@@ -3251,7 +3274,6 @@
 				B5CE2A241ADE59DC0059903D /* course_bg_more.png */,
 				B5CE2A251ADE59DD0059903D /* course_item_bg.png */,
 				B5CE2A261ADE59DD0059903D /* course_item_dbg.png */,
-				B5CE2A271ADE59DD0059903D /* course_titbg.png */,
 				B5CE2A281ADE59DD0059903D /* coursebd.png */,
 				B5CE2A291ADE59DD0059903D /* coursebg_16.png */,
 				B5CE2A2A1ADE59DD0059903D /* create1.png */,
@@ -3704,6 +3726,10 @@
 				B58482AF1B184FA4007FDECA /* MyhomewroksVC.m */,
 				B58482B11B185500007FDECA /* MyMessagesVC.h */,
 				B58482B21B185500007FDECA /* MyMessagesVC.m */,
+				B58323911B1EDCB600C9CB0B /* PublicSearchVC.h */,
+				B58323921B1EDCB600C9CB0B /* PublicSearchVC.m */,
+				B58323941B1EE00500C9CB0B /* SearchResultVC.h */,
+				B58323951B1EE00500C9CB0B /* SearchResultVC.m */,
 			);
 			name = "宿舍";
 			sourceTree = "<group>";
@@ -4027,6 +4053,7 @@
 				B5CE2B5B1ADE59DE0059903D /* bg_down1.png in Resources */,
 				B5CE2BC01ADE59DE0059903D /* MNTEACHER3.png in Resources */,
 				B58271071AE4B231007DA672 /* read_me.txt in Resources */,
+				B583238D1B1EA1F400C9CB0B /* 作业-心.png in Resources */,
 				B5A80A391B0450DE00E1667E /* f057@2x.png in Resources */,
 				B5A8095B1B0450DD00E1667E /* 010@2x.png in Resources */,
 				B5CE2C5C1ADE59DE0059903D /* more.png in Resources */,
@@ -4349,6 +4376,7 @@
 				B5CE2C621ADE59DE0059903D /* msg_03_18.png in Resources */,
 				B5CE2B511ADE59DE0059903D /* address_bom.png in Resources */,
 				B5CE2BFD1ADE59DE0059903D /* f041@2x.png in Resources */,
+				B583238B1B1EA17000C9CB0B /* lessonsBack.png in Resources */,
 				B5A80A131B0450DE00E1667E /* f019@2x.png in Resources */,
 				B5CE2CAD1ADE59DE0059903D /* top.png in Resources */,
 				B5CE2C251ADE59DE0059903D /* handsup.png in Resources */,
@@ -4414,6 +4442,7 @@
 				B5CE2C2A1ADE59DE0059903D /* homework_conbg_up.png in Resources */,
 				B5A809A11B0450DD00E1667E /* 045@2x.png in Resources */,
 				B5CE2C461ADE59DE0059903D /* login3.png in Resources */,
+				B583239B1B1F092F00C9CB0B /* course_titbg.png in Resources */,
 				B5CE2B701ADE59DE0059903D /* btn_store.png in Resources */,
 				B5A80A301B0450DE00E1667E /* f048@2x.png in Resources */,
 				B5CE2C5A1ADE59DE0059903D /* mm_listitem_simple.9.png in Resources */,
@@ -4434,7 +4463,6 @@
 				B5A80A381B0450DE00E1667E /* f056@2x.png in Resources */,
 				B5CE2C471ADE59DE0059903D /* login4.png in Resources */,
 				B5F3C2BD1B143D3100E71B67 /* LaunchImage-700-568h@2x.png in Resources */,
-				B5CE2BA01ADE59DE0059903D /* course_titbg.png in Resources */,
 				B5CE2BDA1ADE59DE0059903D /* f006@2x.png in Resources */,
 				B5A809C01B0450DE00E1667E /* 061.png in Resources */,
 				B5CE2C331ADE59DE0059903D /* icon.png in Resources */,
@@ -4624,11 +4652,13 @@
 				B5F1827E1AF9FC0A008FA235 /* LocationVC.m in Sources */,
 				B58742C71ADF58A500B44FB4 /* UIImageView+AFNetworking.m in Sources */,
 				B587D3D51AF764A400153F79 /* MoreCommodityVC.m in Sources */,
+				B58323991B1EFCF200C9CB0B /* MyButton.m in Sources */,
 				B59B0C541AEF1CAC00D1CC5D /* MJRefreshGifFooter.m in Sources */,
 				B58742BA1ADF58A500B44FB4 /* AFHTTPRequestOperation.m in Sources */,
 				B587428F1ADF422E00B44FB4 /* BaseCell.m in Sources */,
 				B58089C41B0EEB8F007543A3 /* KL_ImageZoomView.m in Sources */,
 				B587D3D21AF75A4400153F79 /* MoreLessonVC.m in Sources */,
+				B58323961B1EE00500C9CB0B /* SearchResultVC.m in Sources */,
 				B58482AD1B184B08007FDECA /* MyLessonsVC.m in Sources */,
 				B549A6891AE6478300C21EE9 /* MytextField.m in Sources */,
 				B5AC9C7B1AFAFE7F00B6F2AE /* AddressList.m in Sources */,
@@ -4638,6 +4668,7 @@
 				B598C54B1B058B17002F7054 /* GoodsVC.m in Sources */,
 				B55921DC1B10350A006F3349 /* ShoppingcartVC.m in Sources */,
 				B5B6C61E1B0C7B6500709FD4 /* RSADataVerifier.m in Sources */,
+				B58323901B1EB29900C9CB0B /* MyTableVIew.m in Sources */,
 				B58482B01B184FA4007FDECA /* MyhomewroksVC.m in Sources */,
 				B55921E31B105303006F3349 /* Shopcatcell.m in Sources */,
 				B5D7A0D91ADE057C00D88C42 /* ViewController.m in Sources */,
@@ -4739,6 +4770,7 @@
 				B5B6C5B11B0C6FC800709FD4 /* ChooseAddressVC.m in Sources */,
 				B5D7A11F1ADE118500D88C42 /* NSString+LLStringCategory.mm in Sources */,
 				B57558EE1AF86A1E00034439 /* FeedbackVC.m in Sources */,
+				B58323931B1EDCB600C9CB0B /* PublicSearchVC.m in Sources */,
 				B58089BB1B0EEA27007543A3 /* UIButton+WebCache.m in Sources */,
 				B5D7A0D31ADE057C00D88C42 /* main.m in Sources */,
 				B58742C61ADF58A500B44FB4 /* UIButton+AFNetworking.m in Sources */,

@@ -10,6 +10,7 @@
 #import "KL_ImagesZoomController.h"
 #import "ReturncardVC.h"
 #import <CoreText/CoreText.h>
+#import "MJRefresh.h"
 
 @interface HomeworkVC ()
 {
@@ -18,7 +19,6 @@
     UILabel                 *_timeLabel;
     UIView                  *_markView;
     UIButton                *_currentBtn;
-    NSInteger               _currentPage;
     BaseCellModel           *_homeworkInfo;
     NSMutableArray          *_likeArray;
     NSMutableArray          *_commentArray;
@@ -28,6 +28,7 @@
     UIImage                 *_saveImg;
     UITextView              *_textView;
 }
+@property (nonatomic, assign) NSInteger currentPage;
 
 @end
 
@@ -44,8 +45,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    
+
     _currentPage = 1;
     _likeArray = [NSMutableArray array];
     _homeworkInfo = [[BaseCellModel alloc] init];
@@ -63,8 +63,10 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    _tableView.bounces = NO;
+//    _tableView.bounces = NO;
     [self.view addSubview:_tableView];
+    
+        //计算高度
     _textView = [[UITextView alloc] init];
     _textView.font = [UIFont systemFontOfSize:17];
     [self.view addSubview:_textView];
@@ -117,21 +119,22 @@
             NSString *string = [NSString stringWithFormat:@"mobi/class/addLike?memberId=%@&blogId=%@",[User shareUser].userId,_homeworkId];
             [[HttpManager shareManger] getWithStr:string ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
                 if ([[json objectForKey:@"code"] integerValue] == 0) {
-                    
-                    NSInteger x;
+                    _currentPage = 1;
+
+//                    NSInteger x;
                     if ([_homworkModel.likeId isEqualToString:@"0"]) {
                         _homworkModel.likeId = @"1";
-                        _likeCountBtn.selected = YES;
-                        x = 1;
+//                        _likeCountBtn.selected = YES;
+//                        x = 1;
                     }else {
                         _homworkModel.likeId = @"0";
-                        _likeCountBtn.selected = NO;
-                        x = -1;
+//                        _likeCountBtn.selected = NO;
+//                        x = -1;
                     }
-                    
-                    NSInteger count = _likeCountBtn.currentTitle.integerValue;
-                    [_likeCountBtn setTitle:[NSString stringWithFormat:@"%ld",count + x] forState:UIControlStateNormal];
+                    [self loadData];
 
+//                    NSInteger count = _likeCountBtn.currentTitle.integerValue;
+//                    [_likeCountBtn setTitle:[NSString stringWithFormat:@"%ld",count + x] forState:UIControlStateNormal];
                 }else {
                     [[tools shared] HUDShowHideText:@"操作失败" delay:1.5];
                 }
@@ -145,20 +148,21 @@
             NSString *string = [NSString stringWithFormat:@"mobi/class/addFavourite?memberId=%@&blogId=%@",[User shareUser].userId,_homeworkId];
             [[HttpManager shareManger] getWithStr:string ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
                 if ([[json objectForKey:@"code"] integerValue] == 0) {
-                    
-                    NSInteger x;
+                    _currentPage = 1;
+//                    NSInteger x;
                     if ([_homworkModel.collectId isEqualToString:@"0"]) {
                         _homworkModel.collectId = @"1";
-                        _collectionBtn.selected = YES;
-                        x = 1;
+//                        _collectionBtn.selected = YES;
+//                        x = 1;
                     }else {
                         _homworkModel.collectId = @"0";
-                        _collectionBtn.selected = NO;
-                        x = -1;
+//                        _collectionBtn.selected = NO;
+//                        x = -1;
                     }
-                    NSInteger count = _collectionBtn.currentTitle.integerValue;
-                    [_collectionBtn setTitle:[NSString stringWithFormat:@"%ld",count + x] forState:UIControlStateNormal];
-                    
+                    [self loadData];
+
+//                    NSInteger count = _collectionBtn.currentTitle.integerValue;
+//                    [_collectionBtn setTitle:[NSString stringWithFormat:@"%ld",count + x] forState:UIControlStateNormal];
                 }else {
                     [[tools shared] HUDShowHideText:@"操作失败" delay:1.5];
                 }
@@ -196,7 +200,7 @@
     [self.view addSubview:label];
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(15, 32, 20, 20);
+    backBtn.frame = CGRectMake(10, 26, 30, 30);
     [backBtn setImage:[UIImage imageNamed:@"back_03.png"] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
@@ -247,6 +251,7 @@
 
 - (void)changeOption:(UIButton *)btn
 {
+    
     if (btn.selected) {
         return;
     }
@@ -257,6 +262,23 @@
     CGRect rect = _markView.frame;
     rect.origin.x = btn.left;
     _markView.frame = rect;
+    
+    if (btn.tag == 0) {
+        [_tableView removeHeader];
+        [_tableView removeFooter];
+    }else {
+        __weak typeof(self) weakSelf = self;
+        [_tableView addLegendHeaderWithRefreshingBlock:^{
+            weakSelf.currentPage = 1;
+            [weakSelf loadData];
+        }];
+        
+        [_tableView addLegendFooterWithRefreshingBlock:^{
+            weakSelf.currentPage += 1;
+            [weakSelf loadData];
+        }];
+    }
+    
         
     [_tableView reloadData];
     
@@ -271,9 +293,12 @@
 
 - (void)loadData
 {
+    [[tools shared] HUDShowText:@"正在加载..."];
 //    self.homeworkId = @"780";
     NSString *str = [NSString stringWithFormat:@"mobi/class/getHomeworkDetail?blogId=%@&pageNo=%ld&pageSize=20",self.homeworkId,_currentPage];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        [[tools shared] HUDHide];
+        BOOL isNull = YES;
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             [_likeArray removeAllObjects];
             if (_currentPage == 1) {
@@ -281,6 +306,7 @@
             }
             NSDictionary *resultDic = nilOrJSONObjectForKey(json, @"result");
             NSDictionary *blogDic = nilOrJSONObjectForKey(resultDic, @"blog");
+            NSDictionary *memberDic = nilOrJSONObjectForKey(resultDic, @"member");
             NSArray *likeListarray = nilOrJSONObjectForKey(resultDic, @"likeList");
             NSArray *replyListarray = nilOrJSONObjectForKey(resultDic, @"replyList");
             NSArray *blogImages = nilOrJSONObjectForKey(resultDic, @"blogImages");
@@ -293,7 +319,7 @@
             _homeworkInfo.title = nilOrJSONObjectForKey(blogDic, @"title");
             _homeworkInfo.likeCount = [MyTool getValuesFor:blogDic key:@"objId1"];
             _homeworkInfo.collectCount = [MyTool getValuesFor:blogDic key:@"field1"];
-            _homeworkInfo.logo = nilOrJSONObjectForKey(blogDic, @"image");
+            _homeworkInfo.logo = nilOrJSONObjectForKey(memberDic, @"logo");
             _homeworkInfo.modelId = nilOrJSONObjectForKey(blogDic, @"id");
             NSMutableArray *imgsARR = [NSMutableArray array];
             for (NSDictionary *imgdic in blogImages) {
@@ -308,6 +334,7 @@
             }
             
             for (NSDictionary *commentDic in replyListarray) {
+                isNull = NO;
                 BaseCellModel *model = [[BaseCellModel alloc] init];
                 model.modelId = nilOrJSONObjectForKey(commentDic, @"id");
                 model.logo = nilOrJSONObjectForKey(commentDic, @"logo");
@@ -330,17 +357,24 @@
                 model.cateArray = [imgUrl componentsSeparatedByString:@","];
                 [_commentArray addObject:model];
             }
-            
-            [self updateGUI];
-            
-            
         }else {
             [[tools shared] HUDShowHideText:@"加载失败" delay:1.5];
         }
-        
+        if ([_tableView.header isRefreshing]) {
+            [_tableView.header endRefreshing];
+        }else {
+            [_tableView.footer endRefreshing];
+        }
+        [self updateGUI];
+
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        
+        [[tools shared] HUDHide];
+        if ([_tableView.header isRefreshing]) {
+            [_tableView.header endRefreshing];
+        }else {
+            [_tableView.footer endRefreshing];
+        }
+        _currentPage -= 1;
     }];
 }
 
@@ -523,6 +557,7 @@
                 index = 6;
                 UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10 + (width + 10) * 6, btn.bottom + 10, width, width)];
                 [img setImage:[UIImage imageNamed:@"more.png"]];
+                img.contentMode = UIViewContentModeScaleAspectFit;
                 [cell.contentView addSubview:img];
             }
             for (NSInteger i = 0; i < index; i ++) {

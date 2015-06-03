@@ -123,10 +123,11 @@
             if (myHomeworkListArr) {
                 for (NSDictionary *dic in myHomeworkListArr) {
                     NSDictionary *blogDic = [dic objectForKey:@"blog"];
+                    NSDictionary *memberDic = nilOrJSONObjectForKey(dic, @"member");
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.title = nilOrJSONObjectForKey(blogDic, @"title");
                     model.modelId = nilOrJSONObjectForKey(blogDic, @"id");
-                    model.logo = nilOrJSONObjectForKey(blogDic, @"image");
+                    model.logo = nilOrJSONObjectForKey(memberDic, @"logo");
                     model.name = nilOrJSONObjectForKey(blogDic, @"createName");
                     NSString *time = nilOrJSONObjectForKey(blogDic, @"createTime");
                     model.likeId = [MyTool getValuesFor:dic key:@"likeId"];
@@ -155,6 +156,7 @@
                     model.logo = nilOrJSONObjectForKey(dict, @"img");
                     model.modelId = nilOrJSONObjectForKey(dict, @"id");
                     model.lastMessage = nilOrJSONObjectForKey(dict, @"lastMessage");
+                    model.count = [MyTool getValuesFor:dict key:@"newRepCount"];
                     [_RepArr addObject:model];
                 }
             }
@@ -176,7 +178,7 @@
     _joinLessonArr = [NSMutableArray array];
     _myHomeorkArr = [NSMutableArray array];
     _RepArr = [NSMutableArray array];
-    _titleArray1 = @[@"完善个人资料",@"我的美币",@"我的购物袋",@"我的订单",@"我的收获地址"];
+    _titleArray1 = @[@"完善个人资料",@"我的美币",@"我的购物袋",@"我的订单",@"我的收货地址"];
     _titleArray2 = @[@"美娘小助手",@"我的收藏",@"我的邀请链接",@"我邀请的好友"];
 }
 
@@ -287,7 +289,6 @@
     }
 
 }
-
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
@@ -563,6 +564,7 @@
                     HomeworkVC *vc = [[HomeworkVC alloc] init];
                     vc.homeworkId = model.modelId;
                     vc.homworkModel = model;
+                    vc.logoUrl = model.logo;
                     vc.hidesBottomBarWhenPushed = YES;
 
                     [self.navigationController pushViewController:vc animated:YES];

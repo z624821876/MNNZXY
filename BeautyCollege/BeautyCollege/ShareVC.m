@@ -48,7 +48,7 @@
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(img.left + 15, img.top + 10 * UI_scaleY, img.width - 30, 40)];
     label.numberOfLines = 2;
     label.font = [UIFont systemFontOfSize:15];
-    label.text = @"你的邀请链接已生成，没邀请一位好友就可获得10美币，想想还有点小激动呢！赶快行动吧~";
+    label.text = @"你的邀请链接已生成,每邀请一位好友就可获得10美币,想想还有点小激动呢!赶快行动吧~";
     [self.view addSubview:label];
 
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake((UI_SCREEN_WIDTH - 200 * UI_scaleX) / 2.0, img.bottom + 20, 200 * UI_scaleX, 200 * UI_scaleX)];

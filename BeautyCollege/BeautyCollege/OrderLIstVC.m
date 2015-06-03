@@ -8,6 +8,7 @@
 
 #import "OrderLIstVC.h"
 #import "CommentVC.h"
+#import "PayVC.h"
 
 @interface OrderLIstVC ()
 {
@@ -72,7 +73,6 @@
         case 0:
         {
             label2.text = @"待付款";
-
         }
             break;
         case 1:
@@ -83,12 +83,12 @@
             break;
         case 2:
         {
-            label2.text = @"已发货";
+            label2.text = @"待收货";
         }
             break;
         case 3:
         {
-            label2.text = @"交易成功";
+            label2.text = @"待评价";
 
         }
             break;
@@ -142,11 +142,11 @@
     UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
     btn.frame = CGRectMake(UI_SCREEN_WIDTH - 210, 15, 90, 30);
     btn.backgroundColor = BaseColor;
-    [btn setTitle:@"订单详情" forState:UIControlStateNormal];
     btn.layer.cornerRadius = 5;
     btn.layer.masksToBounds = YES;
     btn.tag = section;
     btn.titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    [btn addTarget:self action:@selector(leftOrderOperation:) forControlEvents:UIControlEventTouchUpInside];
     [view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -155,36 +155,41 @@
     btn2.layer.cornerRadius = 5;
     btn2.layer.masksToBounds = YES;
     btn2.tag = section;
-    NSString *str;
     BaseCellModel *model = _dataArray[section];
     switch ([model.status integerValue]) {
         case 0:
         {
-            str = @"取消订单";
-            
+            [btn setTitle:@"付款" forState:UIControlStateNormal];
+            [btn2 setTitle:@"取消订单" forState:UIControlStateNormal];
         }
             break;
         case 1:
         {
-            str = @"评价订单";
+            btn.hidden = YES;
+            btn2.hidden = YES;
         }
             break;
         case 2:
         {
-            str = @"确认收货";
+            btn.hidden = YES;
+            [btn2 setTitle:@"确认收货" forState:UIControlStateNormal];
         }
             break;
         case 3:
         {
-            str = @"删除订单";
-            
+            [btn setTitle:@"评价" forState:UIControlStateNormal];
+            [btn2 setTitle:@"删除订单" forState:UIControlStateNormal];
         }
             break;
         case 9:
+        {
+            btn.hidden = YES;
+            [btn2 setTitle:@"删除订单" forState:UIControlStateNormal];
+        }
         case 6:
         {
-            str = @"";
-            btn2.hidden = YES;
+            btn.hidden = YES;
+            [btn2 setTitle:@"删除订单" forState:UIControlStateNormal];
         }
             break;
             
@@ -192,44 +197,65 @@
             break;
     }
 
-    [btn2 setTitle:str forState:UIControlStateNormal];
-    [btn2 addTarget:self action:@selector(orderOperation:) forControlEvents:UIControlEventTouchUpInside];
+    [btn2 addTarget:self action:@selector(rightOrderOperation:) forControlEvents:UIControlEventTouchUpInside];
     btn2.titleLabel.font = [UIFont boldSystemFontOfSize:17];
     [view addSubview:btn2];
     
     return view;
 }
 
-- (void)orderOperation:(UIButton *)btn
+- (void)leftOrderOperation:(UIButton *)btn
 {
-    CommentVC *vc = [[CommentVC alloc] init];
-    
-    BaseCellModel *model = _dataArray[0];
-    vc.dataArray = model.cateArray;
-    [self.navigationController pushViewController:vc animated:YES];
-    
-    /*
+    BaseCellModel *model = _dataArray[btn.tag];
+    if ([btn.currentTitle isEqualToString:@"评价"]) {
+        CommentVC *vc = [[CommentVC alloc] init];
+        vc.goodsId = model.modelId;
+        vc.dataArray = model.cateArray;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else if ([btn.currentTitle isEqualToString:@"付款"]) {
+        PayVC *vc = [[PayVC alloc] init];
+        vc.orderDate = model.date;
+        vc.orderId = model.modelId;
+        vc.orderNo = model.orderNo;
+        vc.totalPrice = model.price;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (void)rightOrderOperation:(UIButton *)btn
+{
     BaseCellModel *model = _dataArray[btn.tag];
     if ([btn.currentTitle isEqualToString:@"取消订单"]) {
+        
         NSString *str = [NSString stringWithFormat:@"mobi/order/cancelOrder?orderId=%@",model.modelId];
         [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
             if ([[json objectForKey:@"code"] integerValue] == 0) {
                 [[tools shared] HUDShowHideText:@"取消订单成功" delay:1.5];
                 [self loadData];
             }
-            
         } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            
-            
         }];
-    }else if ([btn.currentTitle isEqualToString:@"评价订单"]) {
-        
-    }else if ([btn.currentTitle isEqualToString:@"确认收货"]) {
-        
     }else if ([btn.currentTitle isEqualToString:@"删除订单"]) {
-        
+        NSString *str = [NSString stringWithFormat:@"mobi/order/deleteOrder?orderId=%@",model.modelId];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                [[tools shared] HUDShowHideText:@"删除成功" delay:1.5];
+                [self loadData];
+            }
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+    }else if ([btn.currentTitle isEqualToString:@"确认收货"]) {
+        NSString *str = [NSString stringWithFormat:@"mobi/order/receiveConfirm?orderId=%@",model.modelId];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                [[tools shared] HUDShowHideText:@"确认收货成功" delay:1.5];
+                [self loadData];
+            }
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
     }
- */
+    
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -280,6 +306,7 @@
                 model.orderNo = nilOrJSONObjectForKey(dict, @"orderNo");
                 model.status = [MyTool getValuesFor:dict key:@"status"];
                 model.date = nilOrJSONObjectForKey(dict, @"createTime");
+                model.price = [MyTool getValuesFor:dict key:@"totalFee"];
                 NSMutableArray *array = [NSMutableArray array];
                 NSArray *itemArr = nilOrJSONObjectForKey(dict, @"items");
                 
@@ -290,6 +317,10 @@
                     model1.logo = nilOrJSONObjectForKey(dic, @"productImg");
                     model1.price = [MyTool getValuesFor:dic key:@"totalFee"];
                     model1.count = [MyTool getValuesFor:dic key:@"num"];
+                    
+                    model1.type = 1;
+                    model1.content = @"";
+                    
                     [array addObject:model1];
                 }
                 model.cateArray = array;

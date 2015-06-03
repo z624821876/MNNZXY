@@ -456,7 +456,8 @@
             user.sex = sex;
             user.regLink = nilOrJSONObjectForKey(dic, @"regLink");
             user.regLinkImg = nilOrJSONObjectForKey(dic, @"regLinkImg");
-            user.signature = nilOrJSONObjectForKey(dic, @"signature");
+            NSString *str = nilOrJSONObjectForKey(dic, @"signature");
+            user.signature = str == nil ? @"" : str;
             user.cityName = nilOrJSONObjectForKey(dic, @"cityName");
             NSMutableData *data = [[NSMutableData alloc] init];
             NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];

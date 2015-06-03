@@ -160,8 +160,8 @@
     [self.view addSubview:_logoImg];
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(15, 32, 20, 20);
-    [backBtn setImage:[UIImage imageNamed:@"back_03.png"] forState:UIControlStateNormal];
+    backBtn.frame = CGRectMake(10, 26, 30, 30);
+    [backBtn setImage:[UIImage imageNamed:@"lessonsBack.png"] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
     
@@ -308,7 +308,7 @@
             if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 pickerImage.sourceType = sourceType;
                 pickerImage.delegate = self;
-                pickerImage.allowsEditing = YES;
+//                pickerImage.allowsEditing = YES;
                 [self presentViewController:pickerImage animated:YES completion:nil];
                 
             }else {
@@ -328,7 +328,7 @@
                 
             }
             pickerImage.delegate = self;
-            pickerImage.allowsEditing = YES;
+//            pickerImage.allowsEditing = YES;
             [self presentViewController:pickerImage animated:YES completion:nil];
             
         }
@@ -342,7 +342,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerEditedImage], 0.1);
+    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerOriginalImage], 0.1);
     [[tools shared] HUDShowText:@"正在上传..."];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager POST:@"http://nzxyadmin.53xsd.com/mobi/ser/saveImage" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -494,7 +494,6 @@
     if (_currentBtn.tag == 0) {
         cell.selectionStyle = UITableViewCellSelectionStyleDefault;
         cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"dorm_b.png"]];
-
         cell.backgroundColor = [UIColor whiteColor];
         cell.type = 17;
         cell.model = [[_dataDic objectForKey:[_allKeys objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
@@ -594,6 +593,7 @@
             HomeworkVC *vc = [[HomeworkVC alloc] init];
             vc.homworkModel = model;
             vc.homeworkId = model.modelId;
+            vc.logoUrl = model.logo;
             __weak typeof(self) weakSelf = self;
             [vc setBlock:^{
                 if (_currentBtn.tag == 2) {

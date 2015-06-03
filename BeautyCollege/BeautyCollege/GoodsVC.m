@@ -729,6 +729,7 @@
     _discountLabel.frame = labelRect;
     NSString *str4 = [NSString stringWithFormat:@"%.2f",[_productModel.price doubleValue]];
     NSMutableAttributedString *string3 = [[NSMutableAttributedString alloc] initWithString:str4 attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle),NSStrikethroughColorAttributeName:[UIColor grayColor]}];
+    _discountLabel.textColor = [UIColor grayColor];
     _discountLabel.attributedText = string3;
     
     
@@ -771,6 +772,7 @@
         CellView *cellView = [CellView buttonWithType:UIButtonTypeCustom];
         cellView.frame = CGRectMake(10 + (width + 10) * [_goodsArray indexOfObject:model], 140, width, width + 70);
         [cellView initGUIWithData:model];
+        [cellView addTarget:self action:@selector(recommendGoodClick:) forControlEvents:UIControlEventTouchUpInside];
         cellView.tag = 15 + [_goodsArray indexOfObject:model];
         [_bgView3 addSubview:cellView];
         
@@ -780,6 +782,14 @@
         _bgScroll.contentSize = CGSizeMake(UI_SCREEN_WIDTH, _bgView3.bottom);
     }
     
+}
+
+- (void)recommendGoodClick:(UIButton *)btn
+{
+    BaseCellModel *model = [_goodsArray objectAtIndex:btn.tag - 15];
+    GoodsVC *vc = [[GoodsVC alloc] init];
+    vc.goodsId = model.modelId;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - webview  代理方法

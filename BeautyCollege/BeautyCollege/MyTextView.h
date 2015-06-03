@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface MyTextView : UITextView
+
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
 /*!
  * @brief 占位符文本,与UITextField的placeholder功能一致
  */

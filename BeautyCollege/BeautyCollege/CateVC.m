@@ -154,8 +154,8 @@
     
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(15, 30 * UI_scaleY, UI_SCREEN_WIDTH - 30, 35)];
     [img setImage:[UIImage imageNamed:@"07-超市_11.png"]];
-    img.contentMode = UIViewContentModeScaleAspectFill;
-    img.clipsToBounds = YES;
+    img.contentMode = UIViewContentModeScaleAspectFit;
+//    img.clipsToBounds = YES;
     [view addSubview:img];
     
     _searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.left + 30 * UI_scaleX, img.top, img.width - 30 * UI_scaleX - 10, 35)];

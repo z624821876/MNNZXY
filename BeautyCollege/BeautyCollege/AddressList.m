@@ -23,7 +23,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    self.navigationItem.title = @"我的收获地址";
+    self.navigationItem.title = @"我的收货地址";
     self.navigationController.navigationBarHidden = NO;
 }
 
@@ -59,6 +59,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
+    cell.contentView.userInteractionEnabled = YES;
     cell.deleteBnt.tag = indexPath.section;
     cell.selectBtn.tag = indexPath.section + 20;
     if (cell.selectBtn.tag == _selectIndex) {
@@ -67,6 +68,7 @@
         cell.selectBtn.selected = NO;
     }
     cell.model = [_addressListArr objectAtIndex:indexPath.section];
+//    cell.selectBtn.backgroundColor = [UIColor redColor];
     
     [cell.selectBtn addTarget:self action:@selector(selectAddress:) forControlEvents:UIControlEventTouchUpInside];
     [cell.deleteBnt addTarget:self action:@selector(deleteAddress:) forControlEvents:UIControlEventTouchUpInside];
@@ -76,22 +78,34 @@
 
 - (void)deleteAddress:(UIButton *)btn
 {
-    BaseCellModel *model = [_addressListArr objectAtIndex:btn.tag];
-    NSString *str = [NSString stringWithFormat:@"mobi/address/delete?id=%@",model.modelId];
     
-    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            
-            [[tools shared] HUDShowHideText:@"删除成功" delay:1.5];
-            [_addressListArr removeObject:model];
-            [_tableView reloadData];
-            
-        }else {
-            [[tools shared] HUDShowHideText:@"删除失败" delay:1.5];
-        }
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"是否删除此地址" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = btn.tag;
+    [alert show];
     
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        BaseCellModel *model = [_addressListArr objectAtIndex:alertView.tag];
+        NSString *str = [NSString stringWithFormat:@"mobi/address/delete?id=%@",model.modelId];
+        
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                
+                [[tools shared] HUDShowHideText:@"删除成功" delay:1.5];
+                [_addressListArr removeObject:model];
+                [_tableView reloadData];
+                
+            }else {
+                [[tools shared] HUDShowHideText:@"删除失败" delay:1.5];
+            }
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+
+        
+    }
 }
 
     //选择默认收货地址

@@ -368,6 +368,7 @@
         _messageTV = [[MyTextView alloc] initWithFrame:CGRectMake(img.left + 10, lineView.bottom + 10, img.width - 20, 80)];
         _messageTV.font = [UIFont systemFontOfSize:15];
         _messageTV.placeholder = @"在此输入";
+        _messageTV.delegate = self;
         _messageTV.backgroundColor = [UIColor clearColor];
         [_topBgView addSubview:_messageTV];
         
@@ -388,6 +389,15 @@
         vc.name = _classUserInfo.nickname;
         [self.navigationController pushViewController:vc animated:YES];
     }
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    CGFloat offY = UI_scaleY;
+    CGRect rect = _topBgView.frame;
+    rect.origin.y -= (90.0 / offY);
+    _topBgView.frame = rect;
+    return YES;
 }
 
 - (void)addFriend

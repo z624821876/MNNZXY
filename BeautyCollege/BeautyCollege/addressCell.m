@@ -57,6 +57,7 @@
         
         _selectBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         _selectBtn.frame = CGRectMake(20, _img.bottom - 30, 20, 20);
+        _selectBtn.userInteractionEnabled = YES;
         [_selectBtn setImage:[UIImage imageNamed:@"reg8.png"] forState:UIControlStateNormal];
         [_selectBtn setImage:[UIImage imageNamed:@"reg9.png"] forState:UIControlStateSelected];
         [self.contentView addSubview:_selectBtn];
@@ -64,6 +65,7 @@
         _deleteBnt = [UIButton buttonWithType:UIButtonTypeCustom];
         _deleteBnt.frame = CGRectMake(_img.width - 40, _img.bottom - 30, 20, 20);
         [_deleteBnt setImage:[UIImage imageNamed:@"ico_dustbin.png"] forState:UIControlStateNormal];
+        _deleteBnt.userInteractionEnabled = YES;
         [self.contentView addSubview:_deleteBnt];
     }
 
@@ -73,6 +75,7 @@
 
 - (void)layoutSubviews
 {
+    [super layoutSubviews];
     _addlabel.text = _model.address;
     UILabel *label1 = _labelArray[0];
     UILabel *label2 = _labelArray[1];
@@ -80,6 +83,10 @@
     label1.text = _model.postcode;
     label2.text = _model.name;
     label3.text = _model.mobile;
+    
+    _selectBtn.frame = CGRectMake(20, _img.bottom - 30, 20, 20);
+    _deleteBnt.frame = CGRectMake(_img.width - 40, _img.bottom - 30, 20, 20);
+
 }
 
 

@@ -8,7 +8,7 @@
 
 #import "MyCustomVC.h"
 
-@interface ClassmateInfoVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate>
+@interface ClassmateInfoVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UITextViewDelegate>
 
 @property (strong ,nonatomic) NSString          *ClassmateId;
 

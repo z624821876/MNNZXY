@@ -12,6 +12,7 @@
 #import "LocationVC.h"
 #import "CreateLessonVC.h"
 #import "LessonsVC.h"
+#import "PublicSearchVC.h"
 
 @interface ClassroomVC ()
 {
@@ -62,11 +63,15 @@
     //搜索
 - (void)search
 {
-    
+    PublicSearchVC *vc = [[PublicSearchVC alloc] init];
+    vc.hidesBottomBarWhenPushed = YES;
+    vc.searchtype = 1;
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
+
     [super viewDidAppear:YES];
     
     [self loadDataCount];
@@ -96,6 +101,7 @@
             
             NSArray *array = [dic objectForKey:@"recLessons"];
             [_recommendArr removeAllObjects];
+            if (_currentBtn.tag != 14) {
 
             if ([array count] > 0) {
                 for (NSDictionary *classDic in array) {
@@ -112,6 +118,7 @@
                         break;
                     }
                 }
+            }
             }
             [_tableView reloadData];
 
@@ -151,17 +158,22 @@
             NSDictionary *dataDic = nilOrJSONObjectForKey(dic, @"date");
 //            NSArray *array = [dataDic objectForKey:@"data"];
             NSArray *array = nilOrJSONObjectForKey(dataDic, @"data");
-            for (NSDictionary *dict in array) {
-                BaseCellModel *model = [[BaseCellModel alloc] init];
-                model.logo = nilOrJSONObjectForKey(dict, @"image");
-                model.title = nilOrJSONObjectForKey(dict, @"title");
-                model.modelId = nilOrJSONObjectForKey(dict, @"id");
-                NSNumber *studentNumber = nilOrJSONObjectForKey(dict, @"studentCount");
-                model.studentCount = [studentNumber stringValue];
-                NSNumber *homeworkNumber = nilOrJSONObjectForKey(dict, @"todayHomeworkCount");
-                model.homeworkCount = [homeworkNumber stringValue];
-                [_myLessonArr addObject:model];
+            if (_currentBtn.tag != 14) {
+                
+                for (NSDictionary *dict in array) {
+                    BaseCellModel *model = [[BaseCellModel alloc] init];
+                    model.logo = nilOrJSONObjectForKey(dict, @"image");
+                    model.title = nilOrJSONObjectForKey(dict, @"title");
+                    model.modelId = nilOrJSONObjectForKey(dict, @"id");
+                    NSNumber *studentNumber = nilOrJSONObjectForKey(dict, @"studentCount");
+                    model.studentCount = [studentNumber stringValue];
+                    NSNumber *homeworkNumber = nilOrJSONObjectForKey(dict, @"todayHomeworkCount");
+                    model.homeworkCount = [homeworkNumber stringValue];
+                    [_myLessonArr addObject:model];
+                }
+ 
             }
+            
             [_tableView reloadData];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -487,6 +499,7 @@
         }
         _currentLocationId = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocationId"];
         CGFloat width = [string boundingRectWithSize:CGSizeMake(10000, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
+        
         _loctionBtn.frame = CGRectMake(UI_SCREEN_WIDTH - 10 - width - 40, 10, width + 40, 20);
         [_loctionBtn setTitle:string forState:UIControlStateNormal];
         [_loctionBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -752,7 +765,7 @@
     if (!cell) {
         cell = [[BaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
-
+    
     cell.backgroundColor = [UIColor whiteColor];
     if (indexPath.section == 0) {
         cell.model = _myLessonArr[indexPath.row];

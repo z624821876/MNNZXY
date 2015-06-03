@@ -109,14 +109,9 @@
                 vc.totalPrice = totalFee;
                 [self.navigationController pushViewController:vc animated:YES];
 
-            }else {
-
-                [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];
             }
-            
-            
         }else {
-            [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];
+            [[tools shared] HUDShowHideText:@"加载失败" delay:1.5];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];

@@ -16,7 +16,7 @@
     UITextField     *NameTF;
     MyCustomView    *topView;
     UIButton        *currentBtn;
-    UILabel         *signatureLabel;
+    UITextView      *signatureLabel;
     UITextView      *textView;
     UILabel         *placeLabel;
 }
@@ -62,9 +62,12 @@
     label.font = [UIFont boldSystemFontOfSize:20];
     [self.view addSubview:label];
     
-    signatureLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, label.bottom + 10, img2.width - 20, img2.height - 60)];
+    signatureLabel = [[UITextView alloc] initWithFrame:CGRectMake(20, label.bottom, img2.width - 20, img2.height - 50)];
+    signatureLabel.font = [UIFont systemFontOfSize:17];
     signatureLabel.text = [User shareUser].signature;
     signatureLabel.textColor = [UIColor grayColor];
+    signatureLabel.backgroundColor = [UIColor clearColor];
+    signatureLabel.editable = NO;
     [self.view addSubview:signatureLabel];
     
     
@@ -101,6 +104,7 @@
     textView = [[UITextView alloc] initWithFrame:CGRectMake(20, lineView1.top + 10, img.width - 20, lineView2.top - lineView1.bottom - 20)];
     textView.backgroundColor = [UIColor clearColor];
     textView.delegate = self;
+    textView.font = [UIFont systemFontOfSize:17];
     [topView addSubview:textView];
     
     placeLabel = [[UILabel alloc] initWithFrame:CGRectMake(25, lineView1.top + 10, 120, 30)];
@@ -225,7 +229,6 @@
             
             NameTF = [[UITextField alloc] initWithFrame:CGRectMake(15, lineView1.bottom + 10, img.width - 20, lineView2.top - lineView1.bottom - 20)];
             NameTF.placeholder = @"在此输入";
-
             NameTF.delegate = self;
             [topView addSubview:NameTF];
 
@@ -251,6 +254,7 @@
             [[AppDelegate shareApp].window addSubview:topView];
             
             UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 150, UI_SCREEN_WIDTH - 20, 180)];
+
             [img setImage:[[UIImage imageNamed:@"blank_num.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
             [topView addSubview:img];
             
@@ -258,7 +262,8 @@
             label.text = @"性别";
             [topView addSubview:label];
             
-            UIView *view = [[UIView alloc] initWithFrame:CGRectMake(10, label.bottom + 10, img.width, 80)];
+            UIButton *view = [UIButton buttonWithType:UIButtonTypeCustom];
+            view.frame = CGRectMake(10, label.bottom + 10, img.width, 80);
             view.backgroundColor = [UIColor whiteColor];
             [topView addSubview:view];
             
@@ -277,8 +282,6 @@
                 [view addSubview:img];
             }
 
-            
-            
             UIView *lineView1 = [[UIView alloc] initWithFrame:CGRectMake(10, label.bottom + 10, img.width, 0.5)];
             lineView1.backgroundColor = [UIColor grayColor];
             [topView addSubview:lineView1];
@@ -346,8 +349,9 @@
 
 - (void)changeUserInfoWithUrlStr:(NSString *)str
 {
+    [[tools shared] HUDShowText:@"请稍候..."];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        
+        [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             NSDictionary *dic = [json objectForKey:@"result"];
             User *user = [User shareUser];
@@ -384,7 +388,8 @@
             user.sex = sex;
             user.regLink = nilOrJSONObjectForKey(dic, @"regLink");
             user.regLinkImg = nilOrJSONObjectForKey(dic, @"regLinkImg");
-            user.signature = nilOrJSONObjectForKey(dic, @"signature");
+            NSString *str = nilOrJSONObjectForKey(dic, @"signature");
+            user.signature = str == nil ? @"" : str;
             user.cityName = nilOrJSONObjectForKey(dic, @"cityName");
             
             signatureLabel.text = user.signature;
@@ -396,11 +401,11 @@
             [data writeToFile:path atomically:YES];
             [[tools shared] HUDShowHideText:@"信息修改成功" delay:1.5];
             [_tableView reloadData];
+        }else {
+            [[tools shared] HUDShowHideText:@"修改失败" delay:1.0];
         }
         
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        
     }];
 }
 
@@ -415,9 +420,29 @@
     
     return YES;
 }
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    return YES;
+}
+
+- (BOOL)textViewShouldBeginEditing:(UITextView *)textView
+{
+    CGFloat offY = UI_scaleY;
+    CGRect rect = topView.frame;
+    rect.origin.y -= (140.0 / offY);
+    topView.frame = rect;
+    
+    return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    CGFloat offY = UI_scaleY;
+    CGRect rect = topView.frame;
+    rect.origin.y -= (140.0 / offY);
+    topView.frame = rect;
     return YES;
 }
 
@@ -439,7 +464,7 @@
             if([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 pickerImage.sourceType = sourceType;
                 pickerImage.delegate = self;
-                pickerImage.allowsEditing = YES;
+//                pickerImage.allowsEditing = YES;
                 [self presentViewController:pickerImage animated:YES completion:nil];
 
             }else {
@@ -459,7 +484,7 @@
 
             }
             pickerImage.delegate = self;
-            pickerImage.allowsEditing = YES;
+//            pickerImage.allowsEditing = YES;
             [self presentViewController:pickerImage animated:YES completion:nil];
 
         }
@@ -473,7 +498,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerEditedImage], 0.1);
+    NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerOriginalImage], 0.1);
     [[tools shared] HUDShowText:@"正在上传..."];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager POST:@"http://nzxyadmin.53xsd.com/mobi/ser/saveImage" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -481,17 +506,9 @@
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([[responseObject objectForKey:@"code"] integerValue] == 0)  {
             NSDictionary *dic = nilOrJSONObjectForKey(responseObject, @"result");
-            [User shareUser].logo = nilOrJSONObjectForKey(dic, @"imageUrl");
-            [[tools shared] HUDShowHideText:@"上传成功" delay:1.5];
-            [_tableView reloadData];
-            
-            NSMutableData *data = [[NSMutableData alloc] init];
-            NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-            [archiver encodeObject:[User shareUser] forKey:@"user"];
-            [archiver finishEncoding];
-            NSString *path = [PATH_OF_DOCUMENT stringByAppendingPathComponent:@"MyUser"];
-            [data writeToFile:path atomically:YES];
-            
+            NSString *str = nilOrJSONObjectForKey(dic, @"imageUrl");
+            NSString *url = [NSString stringWithFormat:@"mobi/user/updateUserInfo?memberId=%@&logo=%@",[User shareUser].userId,str];
+            [self changeUserInfoWithUrlStr:url];
         }else {
             [[tools shared] HUDShowHideText:@"上传失败" delay:1.5];
         }

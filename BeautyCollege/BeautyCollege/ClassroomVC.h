@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong) UITableView       *tableView;
 
-@property (nonatomic, assign) NSString          *currentLocationId;
+@property (nonatomic, strong) NSString          *currentLocationId;
 
 @end
