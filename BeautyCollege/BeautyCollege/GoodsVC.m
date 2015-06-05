@@ -13,6 +13,7 @@
 #import "OrderVC.h"
 #import "CustomCollectionCell.h"
 #import "ShoppingcartVC.h"
+#import "CommentListVC.h"
 
 @interface GoodsVC ()
 @property (nonatomic, strong) NSMutableArray        *imgArray;
@@ -277,6 +278,17 @@
             NSDictionary *resultDic = nilOrJSONObjectForKey(json, @"result");
             NSDictionary *productDic = nilOrJSONObjectForKey(resultDic, @"product");
             NSDictionary *productTextDic = nilOrJSONObjectForKey(resultDic, @"productText");
+            NSArray *productComments = nilOrJSONObjectForKey(resultDic, @"productComments");
+            
+            NSMutableArray *commentsArray = [[NSMutableArray alloc] initWithCapacity:[productComments count]];
+            for (NSDictionary *dict in productComments) {
+                BaseCellModel *model = [[BaseCellModel alloc] init];
+                model.name = nilOrJSONObjectForKey(dict, @"title");
+                model.content = nilOrJSONObjectForKey(dict, @"content");
+                model.date = nilOrJSONObjectForKey(dict, @"createTime");
+                [commentsArray addObject:model];
+            }
+            _productModel.cateArray = commentsArray;
             _productModel.name = nilOrJSONObjectForKey(productDic, @"name");
             NSNumber *priceNum = nilOrJSONObjectForKey(productDic, @"price");
             _productModel.discountPrice = [priceNum stringValue];
@@ -416,8 +428,12 @@
     //查看用户评论
 - (void)nextbtnClick
 {
-    CommentVC *vc = [[CommentVC alloc] init];
-    vc.goodsId = self.goodsId;
+    if ([_productModel.cateArray count] <= 0) {
+        [[tools shared] HUDShowHideText:@"暂无评论" delay:1.0];
+        return;
+    }
+    CommentListVC *vc = [[CommentListVC alloc] init];
+    vc.dataArray = _productModel.cateArray;
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -858,6 +874,8 @@
 {
     CustomCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     cell.backgroundColor = [UIColor grayColor];
+    cell.titleLabel.frame = cell.bounds;
+    cell.titleLabel.font = [UIFont systemFontOfSize:15];
     cell.titleLabel.textColor = [UIColor blackColor];
     BaseCellModel *model;
     if (collectionView.tag == 10) {

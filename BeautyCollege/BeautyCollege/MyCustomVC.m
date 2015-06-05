@@ -7,6 +7,7 @@
 //
 
 #import "MyCustomVC.h"
+#import "IQKeyboardManager.h"
 @interface MyCustomVC ()
 
 @end
@@ -15,6 +16,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [IQKeyboardManager sharedManager].enable = NO;
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     self.navigationController.navigationBarHidden = NO;
     

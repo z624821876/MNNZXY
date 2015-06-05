@@ -13,8 +13,16 @@
 #import "SupermarketVC.h"
 #import "DormVC.h"
 #import "WXApi.h"
+#import "GexinSdk.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>
+typedef enum {
+    SdkStatusStoped,
+    SdkStatusStarting,
+    SdkStatusStarted
+} SdkStatus;
+
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate,GexinSdkDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *mainTabBar;
@@ -23,6 +31,16 @@
 @property (strong, nonatomic) NSString *accessToken;
 @property (strong, nonatomic) NSString *unionId;
 
+
+@property (strong, nonatomic) NSString *deviceToken;
+@property (strong, nonatomic) GexinSdk *gexinPusher;
+@property (retain, nonatomic) NSString *appKey;
+@property (retain, nonatomic) NSString *appSecret;
+@property (retain, nonatomic) NSString *appID;
+@property (retain, nonatomic) NSString *clientId;
+@property (assign, nonatomic) SdkStatus sdkStatus;
+@property (assign, nonatomic) int lastPayloadIndex;
+@property (retain, nonatomic) NSString *payloadId;
 
 
 - (NSInteger)currentPage;

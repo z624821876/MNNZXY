@@ -42,6 +42,10 @@
 @property (strong, nonatomic) NSString          *level;
 @property (strong, nonatomic) NSString          *catId;
 
+    //物流信息
+@property (strong, nonatomic) NSString          *express;
+@property (strong, nonatomic) NSString          *expressNo;
+
 @property (strong, nonatomic) NSString          *buyedCount;
 @property (strong, nonatomic) NSString          *collectId;
 @property (strong, nonatomic) NSString          *likeId;

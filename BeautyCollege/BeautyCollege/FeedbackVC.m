@@ -7,7 +7,7 @@
 //
 
 #import "FeedbackVC.h"
-
+#import "IQKeyboardManager.h"
 #define NUMBERS @"1234567890\n"
 
 @interface FeedbackVC ()
@@ -26,13 +26,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [IQKeyboardManager sharedManager].enable = YES;
     self.navigationItem.title = @"意见反馈";
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 64 + 15, UI_SCREEN_WIDTH - 20, 200 * UI_scaleY)];
+    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 64 + 15, UI_SCREEN_WIDTH - 20, 150 * UI_scaleY)];
     [img setImage:[UIImage imageNamed:@"comment_2.png"]];
     [self.view addSubview:img];
     

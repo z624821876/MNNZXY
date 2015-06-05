@@ -29,19 +29,19 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.backgroundColor = ColorWithRGBA(215.0, 225.0, 227.0, 1);
-        img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 100, 100)];
+        img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 80, 80)];
         [self.contentView addSubview:img];
         label1 = [[UILabel alloc] initWithFrame:CGRectMake(img.right + 5, img.top, UI_SCREEN_WIDTH - 20 - img.right - 5 - 45, 40)];
         label1.numberOfLines = 2;
         label1.font = [UIFont systemFontOfSize:15];
         [self.contentView addSubview:label1];
         
-        Label2 = [[UILabel alloc] initWithFrame:CGRectMake(label1.left, label1.bottom + 10, label1.width, 20)];
+        Label2 = [[UILabel alloc] initWithFrame:CGRectMake(label1.left, label1.bottom, label1.width, 20)];
         Label2.textColor = [UIColor grayColor];
         Label2.font = [UIFont systemFontOfSize:13];
         [self.contentView addSubview:Label2];
         
-        label3 = [[UILabel alloc] initWithFrame:CGRectMake(Label2.left, Label2.bottom + 10, (UI_SCREEN_WIDTH - 20 - img.right - 15) / 2.0, 20)];
+        label3 = [[UILabel alloc] initWithFrame:CGRectMake(Label2.left, Label2.bottom, (UI_SCREEN_WIDTH - 20 - img.right - 15) / 2.0, 20)];
         label3.textColor = [UIColor grayColor];
         label3.font = [UIFont systemFontOfSize:15];
         [self.contentView addSubview:label3];
@@ -52,7 +52,7 @@
         Label4.textColor = BaseColor;
         [self.contentView addSubview:Label4];
         
-        typeImg = [[UIImageView alloc] initWithFrame:CGRectMake(label1.right + 5, label1.bottom + 10, 20, 20)];
+        typeImg = [[UIImageView alloc] initWithFrame:CGRectMake(label1.right + 5, label1.bottom, 20, 20)];
         [typeImg setImage:[UIImage imageNamed:@"reg8.png"]];
         [self.contentView addSubview:typeImg];
         
@@ -61,7 +61,7 @@
         [self.contentView addSubview:lineView];
         
         _reduceBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        _reduceBtn.frame = CGRectMake(label1.left, label1.bottom + 15, 30, 30);
+        _reduceBtn.frame = CGRectMake(label1.left, label1.bottom + 10, 30, 30);
         [_reduceBtn setImage:[UIImage imageNamed:@"reduce.png"] forState:UIControlStateNormal];
         [_reduceBtn setTitle:@"r" forState:UIControlStateNormal];
         [_reduceBtn setTitleColor:[UIColor clearColor] forState:UIControlStateNormal];
@@ -104,7 +104,7 @@
     NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:str];
     [string addAttributes:@{NSForegroundColorAttributeName:BaseColor} range:[str rangeOfString:str1]];
     label3.attributedText = string;
-    Label4.text = [NSString stringWithFormat:@"￥%@",_model.price];
+    Label4.text = [NSString stringWithFormat:@"￥%.2f",[_model.price doubleValue]];
     [_numBtn setTitle:_model.count forState:UIControlStateNormal];
     
     if (_model.type == 1) {

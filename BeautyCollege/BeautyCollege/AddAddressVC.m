@@ -8,6 +8,7 @@
 
 #import "AddAddressVC.h"
 #import "MyCustomView.h"
+#import "IQKeyboardManager.h"
 
 @interface AddAddressVC ()
 
@@ -26,7 +27,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    self.navigationItem.title = @"添加收获地址";
+    [IQKeyboardManager sharedManager].enable = YES;
+    self.navigationItem.title = @"添加收货地址";
 }
 
 - (void)viewDidLoad {

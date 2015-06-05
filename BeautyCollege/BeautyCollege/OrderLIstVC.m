@@ -9,6 +9,8 @@
 #import "OrderLIstVC.h"
 #import "CommentVC.h"
 #import "PayVC.h"
+#import "LogisticsInfoVC.h"
+#import "OrderDetailVC.h"
 
 @interface OrderLIstVC ()
 {
@@ -171,7 +173,7 @@
             break;
         case 2:
         {
-            btn.hidden = YES;
+            [btn setTitle:@"物流信息" forState:UIControlStateNormal];
             [btn2 setTitle:@"确认收货" forState:UIControlStateNormal];
         }
             break;
@@ -204,6 +206,15 @@
     return view;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    BaseCellModel *model = _dataArray[indexPath.section];
+    OrderDetailVC *vc = [[OrderDetailVC alloc] init];
+    vc.orderId = model.modelId;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 - (void)leftOrderOperation:(UIButton *)btn
 {
     BaseCellModel *model = _dataArray[btn.tag];
@@ -219,6 +230,10 @@
         vc.orderId = model.modelId;
         vc.orderNo = model.orderNo;
         vc.totalPrice = model.price;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else if ([btn.currentTitle isEqualToString:@"物流信息"]) {
+        LogisticsInfoVC *vc = [[LogisticsInfoVC alloc] init];
+        vc.logisticsInfo = model;
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -307,6 +322,8 @@
                 model.status = [MyTool getValuesFor:dict key:@"status"];
                 model.date = nilOrJSONObjectForKey(dict, @"createTime");
                 model.price = [MyTool getValuesFor:dict key:@"totalFee"];
+                model.express = nilOrJSONObjectForKey(dict, @"express");
+                model.expressNo = [MyTool getValuesFor:dict key:@"expressNo"];
                 NSMutableArray *array = [NSMutableArray array];
                 NSArray *itemArr = nilOrJSONObjectForKey(dict, @"items");
                 

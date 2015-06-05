@@ -45,6 +45,7 @@
     [self.view addSubview:img];
     
     _scrollView = [[CustomScrollView alloc] initWithFrame:img.frame];
+    _scrollView.delegate = self;
     [self.view addSubview:_scrollView];
     
     _titleTV = [[MyTextView alloc] initWithFrame:CGRectMake(5, 5, _scrollView.width - 10, 35)];
@@ -87,6 +88,11 @@
     [_scrollView addSubview:_confirmBtn];
     
     [self buildImgView];
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    [self.view endEditing:YES];
 }
 
     //提交作业
@@ -199,7 +205,7 @@
         height = _faceBtn.bottom + 20 + (width + 10) * ([_imgArray count] / 3) + width + 20;
     }
     _confirmBtn.frame = CGRectMake(_scrollView.right - 70, height, 45, 25);
-    _scrollView.contentSize = CGSizeMake(_scrollView.width, _confirmBtn.bottom + 20);
+    _scrollView.contentSize = CGSizeMake(_scrollView.width, _confirmBtn.bottom + 50);
 }
 
 - (void)faceBtnClick

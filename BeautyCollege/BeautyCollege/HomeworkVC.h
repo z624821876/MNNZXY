@@ -9,7 +9,7 @@
 #import "MyCustomVC.h"
 typedef void(^UpdateBlock)();
 
-@interface HomeworkVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate>
+@interface HomeworkVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UMSocialUIDelegate>
 @property (nonatomic, strong) NSString      *homeworkId;
 @property (nonatomic, strong) BaseCellModel *homworkModel;
 @property (nonatomic, strong) UITableView   *tableView;

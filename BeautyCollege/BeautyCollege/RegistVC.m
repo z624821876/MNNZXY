@@ -8,6 +8,7 @@
 
 #import "RegistVC.h"
 #import "MytextField.h"
+#import "IQKeyboardManager.h"
 
 #define NUMBERS @"0123456789\n"
 
@@ -30,6 +31,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [IQKeyboardManager sharedManager].enable = YES;
     self.navigationItem.title = @"美娘女子学院";
 }
 

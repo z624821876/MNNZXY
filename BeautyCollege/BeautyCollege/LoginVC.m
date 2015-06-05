@@ -10,6 +10,7 @@
 #import "LoginVC.h"
 #import "RegistVC.h"
 #import "FindPswVC.h"
+#import "IQKeyboardManager.h"
 
 @interface LoginVC ()
 {
@@ -31,6 +32,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [IQKeyboardManager sharedManager].enable = YES;
+
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.title = @"美娘女子学院";
 }

@@ -280,7 +280,6 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     BaseCellModel *model = _dataArray[indexPath.row];
-
     CGFloat width = [model.content boundingRectWithSize:CGSizeMake(MAXFLOAT, 20) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:20]} context:nil].size.width;
     if (width <= collectionView.width) {
         return CGSizeMake(width + 10, 30);
@@ -300,6 +299,7 @@
     CustomCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     BaseCellModel *model = _dataArray[indexPath.row];
     cell.backgroundColor = [UIColor clearColor];
+    cell.titleLabel.frame = cell.bounds;
     cell.titleLabel.font = [UIFont systemFontOfSize:20];
     if (model.type == 1) {
         cell.titleLabel.textColor = [UIColor grayColor];
@@ -318,7 +318,7 @@
     }else {
         model.type = 1;
     }
-    [_dataArray replaceObjectAtIndex:indexPath.row withObject:model];
+//    [_dataArray replaceObjectAtIndex:indexPath.row withObject:model];
     [collectionView reloadData];
 }
 

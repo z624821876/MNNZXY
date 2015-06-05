@@ -8,6 +8,7 @@
 
 #import "FindPswVC.h"
 #import "MytextField.h"
+#import "IQKeyboardManager.h"
 #define NUMBERS @"0123456789\n"
 @interface FindPswVC ()
 
@@ -23,13 +24,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [IQKeyboardManager sharedManager].enable = YES;
     self.navigationItem.title = @"找回密码";
 
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     [self initGUI];
 }
 

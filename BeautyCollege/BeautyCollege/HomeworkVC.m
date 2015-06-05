@@ -173,9 +173,20 @@
             break;
         case 3:
         {
-            ReturncardVC *vc = [[ReturncardVC alloc] init];
-            vc.homeworkId = self.homeworkId;
-            [self.navigationController pushViewController:vc animated:YES];
+            NSString *str = [NSString stringWithFormat:@"%@mobi/class/getHomeworkLink?blogId=%@",sBaseUrlStr,self.homeworkId];
+            //分享
+            [UMSocialData defaultData].extConfig.wechatSessionData.title = @"美娘女子学院";
+            [UMSocialData defaultData].extConfig.wechatTimelineData.title = @"美娘女子学院";
+            [UMSocialData defaultData].extConfig.wechatSessionData.url = str;
+            [UMSocialData defaultData].extConfig.wechatTimelineData.url = str;
+            [UMSocialSnsService presentSnsIconSheetView:self
+                                                 appKey:@"54c7576ffd98c5acfd0007ce"
+                                              shareText:str
+                                             shareImage:[UIImage imageNamed:@"icon.png"]
+                                        shareToSnsNames:[NSArray arrayWithObjects:UMShareToWechatSession,UMShareToWechatTimeline,nil]
+                                               delegate:self];
+
+        
         }
             break;
 

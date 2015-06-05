@@ -70,10 +70,11 @@
         [img setImage:[[UIImage imageNamed:@"create1.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
         [cell.contentView addSubview:img];
         
-        OrderCell *view = [[OrderCell alloc] initWithFrame:CGRectMake(10, 0, UI_SCREEN_WIDTH - 20, 120)];
+        OrderCell *view = [[OrderCell alloc] initWithFrame:CGRectMake(10, 0, UI_SCREEN_WIDTH - 20, 100)];
         view.tag = 10;
         [cell.contentView addSubview:view];
         NSLog(@"%f",view.bottom);
+        
         MyTextView *textView = [[MyTextView alloc] initWithFrame:CGRectMake(10, view.bottom, UI_SCREEN_WIDTH - 20, 100)];
         textView.font = [UIFont systemFontOfSize:17];
         textView.tag = 11;
@@ -164,7 +165,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 270;
+    return 250;
 }
 
 - (void)viewDidLoad {

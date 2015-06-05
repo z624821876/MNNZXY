@@ -22,6 +22,7 @@
 #import "MyLessonsVC.h"
 #import "MyhomewroksVC.h"
 #import "MyMessagesVC.h"
+#import "MyMoneyVC.h"
 
 @interface DormVC ()
 @property (nonatomic, strong) BaseCellModel     *userInfo;
@@ -599,6 +600,14 @@
                     [self.navigationController pushViewController:vc animated:YES];
                 }
                     break;
+                case 1:
+                {
+                    MyMoneyVC *vc = [[MyMoneyVC alloc] init];
+                    vc.hidesBottomBarWhenPushed = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
+
                 case 2:
                 {
                     //购物车

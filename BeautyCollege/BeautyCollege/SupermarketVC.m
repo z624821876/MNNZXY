@@ -52,7 +52,7 @@
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:btn];
     self.navigationItem.rightBarButtonItem = item;
 
-    self.automaticallyAdjustsScrollViewInsets = YES;
+    self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
 - (void)shoppingcart
@@ -71,7 +71,7 @@
     [super viewDidLoad];
     [self initData];
     
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 47) style:UITableViewStyleGrouped];
     NSLog(@"%f",UI_SCREEN_HEIGHT);
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -95,7 +95,6 @@
         [[tools shared] HUDHide];
     }
 }
-
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -135,7 +134,7 @@
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.url = nilOrJSONObjectForKey(dic, @"filePath");
                     model.name = nilOrJSONObjectForKey(dic, @"orgName");
-                    model.modelId = nilOrJSONObjectForKey(dic, @"advertisementId");
+                    model.modelId = [MyTool getValuesFor:dic key:@"clickurl"];
                     [_topImgArr addObject:model];
                 }
                 _refrenshCount += 1;
@@ -400,7 +399,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    CGFloat bgHeight = 200 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY + 20;
+    CGFloat bgHeight = 200 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY;
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, bgHeight)];
     bgView.backgroundColor = [UIColor whiteColor];
     [_scrollView removeFromSuperview];
@@ -426,6 +425,8 @@
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
             btn.frame = CGRectMake(UI_SCREEN_WIDTH * i, 0, UI_SCREEN_WIDTH, _scrollView.height);
             BaseCellModel *model = [_topImgArr objectAtIndex:i];
+            btn.tag = i;
+            [btn addTarget:self action:@selector(advertisementClick:) forControlEvents:UIControlEventTouchUpInside];
             [btn sd_setImageWithURL:[NSURL URLWithString:model.url] forState:UIControlStateNormal];
             [_scrollView addSubview:btn];
         }
@@ -445,11 +446,11 @@
     
     UITextField *searchTF = [[UITextField alloc] initWithFrame:CGRectMake(15 + 25 * UI_scaleX, img.top + 5 * UI_scaleY, UI_SCREEN_WIDTH - (15 + 25 * UI_scaleX) - 25, 20)];
     searchTF.delegate = self;
+    searchTF.returnKeyType = UIReturnKeySearch;
     [bgView addSubview:searchTF];
     
-    
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(15, img.bottom + 10 * UI_scaleY, img.width, 120);
+    btn.frame = CGRectMake(15, img.bottom + 10 * UI_scaleY, img.width, 100);
     [btn sd_setImageWithURL:[NSURL URLWithString:_advImgModel.logo] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"07-超市_15.png"]];
     [btn addTarget:self action:@selector(pushToGroup) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btn];
@@ -549,6 +550,17 @@
     
 }
 
+- (void)advertisementClick:(UIButton *)btn
+{
+    if ([_topImgArr count] > 0) {
+        BaseCellModel *model = [_topImgArr objectAtIndex:btn.tag];
+        GoodsVC *vc = [[GoodsVC alloc] init];
+        vc.goodsId = model.modelId;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+}
+
 - (void)pushToGroup
 {
     GroupVC *vc = [[GroupVC alloc] init];
@@ -558,7 +570,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 200 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY + 20;
+    return 200 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -586,9 +598,22 @@
     _sLabel.text = array[2];
 }
 
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
+{
+    [self.view endEditing:YES];
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
+    
+    if (textField.text.length > 0) {
+        CateVC *vc = [[CateVC alloc] init];
+        vc.hidesBottomBarWhenPushed = YES;
+        vc.cateTitle = textField.text;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    
     return YES;
 }
 

@@ -103,6 +103,7 @@
                 model.logo = nilOrJSONObjectForKey(rightDic, @"filePath");
                 [_cellImgArr addObject:model];
             }
+            
             [_tableView reloadData];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -852,7 +853,6 @@
                 break;
             }
         }
-        
     }
     
     cell.indexPath = indexPath;

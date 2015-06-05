@@ -247,7 +247,7 @@
     [self.view addSubview:label];
     
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    backBtn.frame = CGRectMake(15, 32, 20, 20);
+    backBtn.frame = CGRectMake(10, 26, 30, 30);
     [backBtn setImage:[UIImage imageNamed:@"back_03.png"] forState:UIControlStateNormal];
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
@@ -402,10 +402,11 @@
 
 - (void)addFriend
 {
-    if (_messageTV.text.length <= 0) {
-        [_topBgView removeFromSuperview];
-        return;
-    }
+//    if (_messageTV.text.length <= 0) {
+//        [_topBgView removeFromSuperview];
+//        return;
+//    }
+    [_topBgView removeFromSuperview];
     NSString *str = _messageTV.text;
     [_topBgView removeFromSuperview];
 

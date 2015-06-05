@@ -335,8 +335,10 @@
     CGRect rect3 = _tableView.frame;
     rect3.size.height = _footView.top - 64;
     _tableView.frame = rect3;
-    NSIndexPath *index = [NSIndexPath indexPathForRow:[_reserveArray count] - 1 inSection:0];
-    [_tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    if ([_reserveArray count] > 0) {
+        NSIndexPath *index = [NSIndexPath indexPathForRow:[_reserveArray count] - 1 inSection:0];
+        [_tableView scrollToRowAtIndexPath:index atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    }
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView
@@ -441,9 +443,9 @@
 {
     NSString *str;
     if (type == 1) {
-       str = [NSString stringWithFormat:@"mobi/dialogue/sendMessage?memberId=%@&friendId=%@&content=%@",[User shareUser].userId,self.userId,string];
+        str = [NSString stringWithFormat:@"mobi/dialogue/sendMessage?memberId=%@&friendId=%@&content=%@",[User shareUser].userId,self.userId,string];
     }else {
-        str = [NSString stringWithFormat:@"mobi/dialogue/sendMessage?memberId=%@&friendId=%@&image=%@",[User shareUser].userId,self.userId,string];
+        str = [NSString stringWithFormat:@"mobi/dialogue/sendMessage?memberId=%@&friendId=%@&image=%@&content=",[User shareUser].userId,self.userId,string];
     }
     
     [[tools shared] HUDShowText:@"发送中..."];

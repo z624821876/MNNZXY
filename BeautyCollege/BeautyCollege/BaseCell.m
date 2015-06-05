@@ -926,6 +926,23 @@
             self.label2.text = _model.date;
         }
             break;
+        case 31:
+        {
+            self.label1.frame = CGRectMake(10, 10, UI_SCREEN_WIDTH - 20, 20);
+            self.label1.textColor = BaseColor;
+            self.label1.text = _model.name;
+        
+            self.label2.frame = CGRectMake(10, self.label1.bottom + 10, self.label1.width, self.height - 80);
+            self.label2.text = _model.content;
+            self.label2.textColor = [UIColor grayColor];
+            self.label2.font = [UIFont systemFontOfSize:15];
+            
+            self.label3.frame = CGRectMake(10, self.label2.bottom + 10, self.label1.width, 20);
+            self.label3.text = _model.date;
+            self.label3.textColor = [UIColor grayColor];
+            self.label3.font = [UIFont systemFontOfSize:15];
+        }
+            break;
 
 
         default:

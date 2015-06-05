@@ -264,6 +264,12 @@ typedef enum{   //4种状态, 可用于各种情况，比如异步变同步时�
     FlagSuccess,
     FlagFailure,
 }WaitFlag;
+
+//个推
+#define kGTAppId           @"zPayDHslMA9rE4MJavgI26"
+#define kGTAppKey          @"1uaQKV5DM3AECHjnSwMo8"
+#define kGTAppSecret       @"pdNd8d47AV8Wsmq34ZqFr"
+
 //友盟
 #define kUMkey          @"54c7576ffd98c5acfd0007ce"
 //微信

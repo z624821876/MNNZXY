@@ -298,7 +298,7 @@
         }
     }
     for (BaseCellModel *model in _dataArray) {
-        OrderCell *cell = [[OrderCell alloc] initWithFrame:CGRectMake(0, 10 + 120 * [_dataArray indexOfObject:model], _bgView1.width, 120) withModel:model];
+        OrderCell *cell = [[OrderCell alloc] initWithFrame:CGRectMake(0, 10 + 100 * [_dataArray indexOfObject:model], _bgView1.width, 100) withModel:model];
         [_bgView1 addSubview:cell];
     }
     
