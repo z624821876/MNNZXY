@@ -206,12 +206,11 @@
 
         [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
             if ([[json objectForKey:@"code"] integerValue] == 0) {
-                [[tools shared] HUDShowHideText:@"创建成功" delay:1.5];
+                [[tools shared] HUDShowHideText:@"创建成功" delay:1.0];
                 [self.navigationController popViewControllerAnimated:YES];
             }else {
-                [[tools shared] HUDShowHideText:@"创建失败" delay:1.5];
+                [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.0];
             }
-            
         } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             
         }];

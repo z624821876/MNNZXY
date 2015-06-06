@@ -9,7 +9,7 @@
 #import "MyCustomVC.h"
 #import "CustomScrollView.h"
 
-@interface CreateLessonVC : MyCustomVC<UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+@interface CreateLessonVC : MyCustomVC<UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UITextFieldDelegate>
 
 @property (nonatomic, assign) NSInteger         cateId;
 @property (nonatomic, strong) NSString          *mark;

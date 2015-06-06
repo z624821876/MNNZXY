@@ -218,6 +218,13 @@
 - (void)leftOrderOperation:(UIButton *)btn
 {
     BaseCellModel *model = _dataArray[btn.tag];
+    
+    
+    CommentVC *vc = [[CommentVC alloc] init];
+    vc.goodsId = model.modelId;
+    vc.dataArray = model.cateArray;
+    [self.navigationController pushViewController:vc animated:YES];
+    return;
     if ([btn.currentTitle isEqualToString:@"评价"]) {
         CommentVC *vc = [[CommentVC alloc] init];
         vc.goodsId = model.modelId;
@@ -331,11 +338,11 @@
                     BaseCellModel *model1 = [[BaseCellModel alloc] init];
                     model1.title = nilOrJSONObjectForKey(dic, @"productName");
                     model1.name = nilOrJSONObjectForKey(dic, @"elements");
+                    model1.modelId = nilOrJSONObjectForKey(dic, @"id");
                     model1.logo = nilOrJSONObjectForKey(dic, @"productImg");
                     model1.price = [MyTool getValuesFor:dic key:@"totalFee"];
                     model1.count = [MyTool getValuesFor:dic key:@"num"];
-                    
-                    model1.type = 1;
+                    model1.type = 0;
                     model1.content = @"";
                     
                     [array addObject:model1];

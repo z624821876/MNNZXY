@@ -17,10 +17,8 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-    
+
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 
     [UMSocialData setAppKey:kUMkey];
@@ -34,7 +32,7 @@
     [UMSocialSinaHandler openSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
 //    [UMSocialSinaSSOHandler openNewSinaSSOWithRedirectURL:@"http://sns.whalecloud.com/sina2/callback"];
     
-    [self checkVersion];
+//    [self checkVersion];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor blackColor];
     [self buildMainTabBar];
@@ -66,12 +64,8 @@
     
     [[UIApplication sharedApplication] cancelAllLocalNotifications];
     [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-
     
     [MyTool getUserInfo];
-    
-    
-    
     
     return YES;
 }
@@ -213,6 +207,7 @@
 
 }
 
+/*
 - (void)checkVersion
 {
     //异步检查更新版本
@@ -274,7 +269,7 @@
         [[UIApplication sharedApplication] openURL:aURL];
     }
 }
-
+*/
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -733,16 +728,16 @@
     self.payloadId = payloadId;
     NSData *payload = [_gexinPusher retrivePayloadById:payloadId];
     NSString *payloadMsg = nil;
-    if (payload) {
-        payloadMsg = [[NSString alloc] initWithBytes:payload.bytes
-                                              length:payload.length
-                                            encoding:NSUTF8StringEncoding];
-        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:payloadMsg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [alert show];
-        }
-    }
+//    if (payload) {
+//        payloadMsg = [[NSString alloc] initWithBytes:payload.bytes
+//                                              length:payload.length
+//                                            encoding:NSUTF8StringEncoding];
+//        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
+//            
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:payloadMsg delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+//            [alert show];
+//        }
+//    }
     
 //    DLog(@"%@",record);
 }

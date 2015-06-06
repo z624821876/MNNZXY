@@ -245,7 +245,6 @@
         }else {
             [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];
         }
-        
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
 }
