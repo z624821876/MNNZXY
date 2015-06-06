@@ -11,6 +11,7 @@
 #import "MJRefresh.h"
 #import "MyTextAttachment.h"
 #import "AFHTTPRequestOperation.h"
+#import "KL_ImagesZoomController.h"
 
 @interface ChatVC ()
 {
@@ -97,7 +98,7 @@
         [_timer invalidate];
         _timer = nil;
         _timer = [NSTimer timerWithTimeInterval:3.0 target:self selector:@selector(getMessage) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSDefaultRunLoopMode];
+        [[NSRunLoop currentRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
         while (!_stop) {
             [[NSRunLoop currentRunLoop] run];
         }
@@ -294,8 +295,19 @@
         cell.date = nil;
         cell.model = model;
     }
+    cell.image.tag = indexPath.row;
+    [cell.image addTarget:self action:@selector(toViewImg:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
+}
+
+- (void)toViewImg:(UIButton *)btn
+{
+    BaseCellModel *model = _reserveArray[btn.tag];
+    NSArray *array = @[model.url];
+    KL_ImagesZoomController *img = [[KL_ImagesZoomController alloc] initWithFrame:CGRectMake(0, 64, self.view.frame.size.width, self.view.frame.size.height - 64)imgViewSize:CGSizeZero];
+    [self.view addSubview:img];
+    [img updateImageDate:array selectIndex:btn.tag];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -351,7 +363,6 @@
 {
     
 }
-
 
 - (void)keyboardChange:(NSNotification *)notification
 {

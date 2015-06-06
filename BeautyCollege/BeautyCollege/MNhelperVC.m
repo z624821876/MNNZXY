@@ -148,7 +148,7 @@
         [cell.contentView addSubview:label];
     }
     
-    BaseCellModel *model = _dataArr[indexPath.row];
+    BaseCellModel *model = _dataArr[indexPath.section];
     NSString *str = model.content;
     CGFloat size = [str boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size.height;
     
@@ -168,7 +168,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    BaseCellModel *model = _dataArr[indexPath.row];
+    BaseCellModel *model = _dataArr[indexPath.section];
     NSString *str = model.content;
     CGFloat size = [str boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 20, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size.height;
     return size + 20;

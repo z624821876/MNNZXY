@@ -14,6 +14,7 @@
 #import "MyTextView.h"
 #import "MyLessonsVC.h"
 #import "MyhomewroksVC.h"
+#import "IQKeyboardManager.h"
 
 @interface ClassmateInfoVC ()
 
@@ -50,6 +51,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    
+    [IQKeyboardManager sharedManager].enable = YES;
     self.navigationController.navigationBarHidden = YES;
     [UIApplication sharedApplication].statusBarHidden = YES;
     self.view.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
@@ -351,7 +354,8 @@
         //添加好友
         _topBgView = [[MyCustomView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
         _topBgView.backgroundColor = ColorWithRGBA(30.0, 32.0, 40.0, 0.5);
-        [[AppDelegate shareApp].window addSubview:_topBgView];
+//        [[AppDelegate shareApp].window addSubview:_topBgView];
+        [self.view addSubview:_topBgView];
         
         UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 100, UI_SCREEN_WIDTH - 20, 200)];
         [img setImage:[[UIImage imageNamed:@"blank_num"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
@@ -393,6 +397,7 @@
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    return YES;
     CGFloat offY = UI_scaleY;
     CGRect rect = _topBgView.frame;
     rect.origin.y -= (90.0 / offY);

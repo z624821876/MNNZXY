@@ -32,7 +32,7 @@
     //    img.clipsToBounds = YES;
     [self.view addSubview:img];
     
-    _searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.left + 30 * UI_scaleX, img.top, img.width - 30 * UI_scaleX - 10, 35)];
+    _searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.left + 40 * UI_scaleX, img.top, img.width - 40 * UI_scaleX - 10, 35)];
 //    _searchTF.text = _cateTitle;
     _searchTF.placeholder = @"搜索";
     _searchTF.delegate = self;

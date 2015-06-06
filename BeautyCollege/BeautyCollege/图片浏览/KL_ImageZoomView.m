@@ -228,7 +228,7 @@
     self.imageView.image = img;
     CGSize showSize = [self newSizeByoriginalSize:img.size maxSize:self.bounds.size];
     self.imageView.frame = CGRectMake(0, 0, showSize.width, showSize.height);
-    
+    self.contentMode = UIViewContentModeScaleAspectFit;
     _scrollView.zoomScale = 1;
     _scrollView.contentOffset = CGPointZero;
     _containerView.bounds = _imageView.bounds;

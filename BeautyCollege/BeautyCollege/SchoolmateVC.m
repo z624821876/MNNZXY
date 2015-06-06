@@ -145,10 +145,8 @@
             pageNo = [NSString stringWithFormat:@"%ld",_currentPage];
             NSArray *array = @[@"女",@"无",@"男"];
             sex = array[_currentBtn2.tag];
-            
         }
             break;
-            
             
         default:
             break;

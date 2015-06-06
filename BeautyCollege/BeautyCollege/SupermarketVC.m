@@ -405,12 +405,12 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    CGFloat bgHeight = 200 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY;
+    CGFloat bgHeight = UI_SCREEN_WIDTH * 405 / 640 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY;
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, bgHeight)];
     bgView.backgroundColor = [UIColor whiteColor];
     [_scrollView removeFromSuperview];
     _scrollView = nil;
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 200)];
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_WIDTH * 405 / 640)];
     _scrollView.pagingEnabled = YES;
     [bgView addSubview:_scrollView];
     
@@ -445,12 +445,11 @@
     _timer = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(rotate:) userInfo:nil repeats:YES];
     _currentScrollPage = 0;
     
-    
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(15, _scrollView.bottom + 20 * UI_scaleY, UI_SCREEN_WIDTH - 30, 20 + 10 * UI_scaleY)];
     [img setImage:[UIImage imageNamed:@"07-超市_11.png"]];
     [bgView addSubview:img];
     
-    UITextField *searchTF = [[UITextField alloc] initWithFrame:CGRectMake(15 + 25 * UI_scaleX, img.top + 5 * UI_scaleY, UI_SCREEN_WIDTH - (15 + 25 * UI_scaleX) - 25, 20)];
+    UITextField *searchTF = [[UITextField alloc] initWithFrame:CGRectMake(15 + 30 * UI_scaleX, img.top + 5 * UI_scaleY, UI_SCREEN_WIDTH - (15 + 30 * UI_scaleX) - 25, 20)];
     searchTF.delegate = self;
     searchTF.returnKeyType = UIReturnKeySearch;
     [bgView addSubview:searchTF];
@@ -576,7 +575,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 200 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY;
+    return UI_SCREEN_WIDTH * 405 / 640 + 20 * UI_scaleY + 20 + 10 * UI_scaleY + 10 * UI_scaleY + 100 + 20 * UI_scaleY + 40 + 10 * UI_scaleY;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

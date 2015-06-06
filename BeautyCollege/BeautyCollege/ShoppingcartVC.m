@@ -36,7 +36,8 @@
 }
 
 - (void)set
-{    if (_type == 1) {
+{
+    if (_type == 1) {
         
                 _type = 2;
                 self.navigationItem.rightBarButtonItem = nil;

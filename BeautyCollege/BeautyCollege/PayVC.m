@@ -12,6 +12,7 @@
 #import "DataSigner.h"
 #import "TemporaryVC.h"
 #import "OrderLIstVC.h"
+#import "IQKeyboardManager.h"
 
 @interface PayVC ()
 {
@@ -26,6 +27,7 @@
 {
     [super viewWillAppear:YES];
     self.navigationItem.title = @"支付";
+    [IQKeyboardManager sharedManager].enable = YES;
 }
 
 - (void)viewDidLoad {
@@ -53,7 +55,7 @@
     UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(label2.left, label2.bottom + 10, label2.width, 30)];
     label3.textColor = BaseColor;
     label3.font = [UIFont systemFontOfSize:15];
-    label3.text = [NSString stringWithFormat:@"实付款:￥%@",self.totalPrice];
+    label3.text = [NSString stringWithFormat:@"实付款:￥%.2f",[self.totalPrice doubleValue]];
     [self.view addSubview:label3];
     
     UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(img.left, label3.bottom + 10, img.width, 0.5)];
@@ -116,6 +118,7 @@
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
+    return YES;
     CGRect rect = self.view.frame;
     rect.origin.y = rect.origin.y - _textView.top + 74;
     self.view.frame = rect;
@@ -124,6 +127,7 @@
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
+    return YES;
     CGRect rect = self.view.frame;
     rect.origin.y = 0;
     self.view.frame = rect;

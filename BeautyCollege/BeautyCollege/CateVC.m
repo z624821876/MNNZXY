@@ -102,7 +102,7 @@
 - (void)loadData
 {
     NSArray *orderByArr = @[@"sold",@"price",@"hot"];
-    NSString *str = [NSString stringWithFormat:@"mobi/pro/getProductList?type=all&category=%@&keyword=%@&orderBy=%@&page=%ld&rows=10",_cateId,_cateTitle,orderByArr[_currentBtn.tag],_currentPage];
+    NSString *str = [NSString stringWithFormat:@"mobi/pro/getProductList?type=all&category=%@&keywords=%@&orderBy=%@&page=%ld&rows=10",_cateId,_cateTitle,orderByArr[_currentBtn.tag],_currentPage];
     [[tools shared] HUDShowText:@"正在加载..."];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         [[tools shared] HUDHide];
@@ -158,7 +158,7 @@
 //    img.clipsToBounds = YES;
     [view addSubview:img];
     
-    _searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.left + 30 * UI_scaleX, img.top, img.width - 30 * UI_scaleX - 10, 35)];
+    _searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.left + 40 * UI_scaleX, img.top, img.width - 40 * UI_scaleX - 10, 35)];
     _searchTF.text = _cateTitle;
     _searchTF.delegate = self;
     _searchTF.returnKeyType = UIReturnKeySearch;

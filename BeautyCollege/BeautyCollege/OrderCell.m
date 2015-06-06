@@ -73,7 +73,7 @@
             NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:str];
             [string addAttributes:@{NSForegroundColorAttributeName:BaseColor} range:[str rangeOfString:str1]];
             label3.attributedText = string;
-            Label4.text = [NSString stringWithFormat:@"￥%@",model.price];
+            Label4.text = [NSString stringWithFormat:@"￥%.2f",[model.price doubleValue]];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame withModel:(BaseCellModel *)model
@@ -111,7 +111,7 @@
         Label4.font = [UIFont systemFontOfSize:15];
         Label4.textAlignment = NSTextAlignmentRight;
         Label4.textColor = BaseColor;
-        Label4.text = [NSString stringWithFormat:@"￥%@",model.price];
+        Label4.text = [NSString stringWithFormat:@"￥%.2f",[model.price doubleValue]];
         [self addSubview:Label4];
         
         lineView = [[UIView alloc] initWithFrame:CGRectMake(0 , img.bottom + 9.5, frame.size.width, 0.5)];

@@ -45,6 +45,7 @@
     }
     [imageView resetViewFrame:CGRectMake(0, 0, self.size.width, self.size.height)];
     [imageView uddateImageWithUrl:imgName];
+    imageView.contentMode = UIViewContentModeScaleAspectFit;
 //    [imageView sd]
 }
 

@@ -24,7 +24,8 @@
         _bgView = [[UIView alloc] initWithFrame:CGRectZero];
         _logo = [[UIImageView alloc] initWithFrame:CGRectZero];
         _contentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-        _image = [[UIImageView alloc] initWithFrame:CGRectZero];
+//        _image = [[UIImageView alloc] initWithFrame:CGRectZero];
+        _image = [UIButton buttonWithType:UIButtonTypeCustom];
         _CalculateheightTV = [[UITextView alloc] init];
         [self addSubview:_CalculateheightTV];
         [self addSubview:_logo];
@@ -43,7 +44,8 @@
     _mark.frame = CGRectZero;
     _bgView.frame = CGRectZero;
     _logo.frame = CGRectZero;
-    _image.frame = CGRectZero;
+//    _image.frame = CGRectZero;
+    _image.hidden = YES;
     _contentLabel.frame = CGRectZero;
     
     if (_date) {
@@ -95,9 +97,11 @@
         _bgView.layer.masksToBounds = YES;
         
         if (_model.url != nil && _model.url.length > 0) {
+            _image.hidden = NO;
             _image.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
-            [MyTool setImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
-            _image.contentMode = UIViewContentModeScaleAspectFill;
+            [MyTool setBtnImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
+//            [MyTool setImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
+            _image.imageView.contentMode = UIViewContentModeScaleAspectFill;
             _image.clipsToBounds = YES;
         }else {
             _contentLabel.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
@@ -124,9 +128,10 @@
         _bgView.layer.masksToBounds = YES;
         
         if (_model.url != nil && _model.url.length > 0) {
+            _image.hidden = NO;
             _image.frame = CGRectMake(_bgView.left + 5, _bgView.top + 5, labelSize.width, labelSize.height);
-            [MyTool setImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
-            _image.contentMode = UIViewContentModeScaleAspectFill;
+            [MyTool setBtnImgWithURLStr:_model.url withplaceholderImage:nil withImgView:_image];
+            _image.imageView.contentMode = UIViewContentModeScaleAspectFill;
             _image.clipsToBounds = YES;
             
         }else {

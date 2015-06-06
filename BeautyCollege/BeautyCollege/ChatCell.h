@@ -14,7 +14,7 @@
 @property (strong, nonatomic) UIImageView       *mark;
 @property (strong, nonatomic) UIView            *bgView;
 @property (strong, nonatomic) UILabel           *contentLabel;
-@property (strong, nonatomic) UIImageView       *image;
+@property (strong, nonatomic) UIButton          *image;
 
 @property (strong, nonatomic) BaseCellModel     *model;
 @property (strong, nonatomic) NSString          *date;

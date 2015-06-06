@@ -355,11 +355,12 @@
         }
     }
     
+    
     //区头背景图
-    _topBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 408)];
+    _topBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_WIDTH * 814 / 640)];
 
         //轮播图
-    _topScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 408)];
+    _topScroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, _topBgView.height)];
     _topScroll.backgroundColor = [UIColor whiteColor];
     _topScroll.pagingEnabled = YES;
     [_topBgView addSubview:_topScroll];
@@ -367,7 +368,7 @@
     [self updateBgScroll];
     
         //区头覆盖层
-    _topBgView2 = [[UIView alloc] initWithFrame:CGRectMake(0, 408 - 180, UI_SCREEN_WIDTH, 180)];
+    _topBgView2 = [[UIView alloc] initWithFrame:CGRectMake(0, _topBgView.height - 180, UI_SCREEN_WIDTH, 180)];
     _topBgView2.backgroundColor = [UIColor blackColor];
     _topBgView2.alpha = 0.8;
     [_topBgView addSubview:_topBgView2];
@@ -515,7 +516,6 @@
     
     _pageControl.currentPage = _currentPage;
 }
-
     //
 - (void)updateScroll
 {
