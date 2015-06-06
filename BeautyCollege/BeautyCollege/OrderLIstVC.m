@@ -217,14 +217,9 @@
 
 - (void)leftOrderOperation:(UIButton *)btn
 {
+    
     BaseCellModel *model = _dataArray[btn.tag];
-    
-    
-    CommentVC *vc = [[CommentVC alloc] init];
-    vc.goodsId = model.modelId;
-    vc.dataArray = model.cateArray;
-    [self.navigationController pushViewController:vc animated:YES];
-    return;
+
     if ([btn.currentTitle isEqualToString:@"评价"]) {
         CommentVC *vc = [[CommentVC alloc] init];
         vc.goodsId = model.modelId;

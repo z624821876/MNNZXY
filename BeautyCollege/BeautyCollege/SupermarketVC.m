@@ -255,7 +255,7 @@
         str3 = @"mobi/pro/getCategorys";
     }
     [_dataArray removeAllObjects];
-    [[tools shared] HUDShowText:@"请稍后..."];
+    [[tools shared] HUDShowText:@"请稍候..."];
     [[HttpManager shareManger] getWithStr:str3 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {
