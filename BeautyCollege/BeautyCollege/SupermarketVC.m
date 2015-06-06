@@ -254,7 +254,10 @@
         
         str3 = @"mobi/pro/getCategorys";
     }
+    [_dataArray removeAllObjects];
+    [[tools shared] HUDShowText:@"请稍后..."];
     [[HttpManager shareManger] getWithStr:str3 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             [_dataArray removeAllObjects];
                 //特价和新品
@@ -295,9 +298,12 @@
                 }
                 [_tableView reloadData];
             }
+        }else {
+            [_tableView reloadData];
+            [[tools shared] HUDShowHideText:@"加载失败" delay:1.0];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
+        [_tableView reloadData];
     }];
 
 }
