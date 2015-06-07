@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9A44B71A1B21766A002B9B33 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A44B7191B21766A002B9B33 /* libsqlite3.0.dylib */; };
 		9A44B7201B2177CD002B9B33 /* libGexinSdk-1.1.1.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A44B71F1B2177CD002B9B33 /* libGexinSdk-1.1.1.a */; };
+		9A4DF9D91B240400006872F1 /* MRZoomScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A4DF9D81B240400006872F1 /* MRZoomScrollView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B507CAF21AFA0EBB00E9DA18 /* yue_09.png in Resources */ = {isa = PBXBuildFile; fileRef = B507CAF11AFA0EBB00E9DA18 /* yue_09.png */; };
 		B507CAF41AFA0F1000E9DA18 /* locaitonMar.png in Resources */ = {isa = PBXBuildFile; fileRef = B507CAF31AFA0F1000E9DA18 /* locaitonMar.png */; };
 		B507CAF61AFA0FB200E9DA18 /* locaitonMar.png in Resources */ = {isa = PBXBuildFile; fileRef = B507CAF51AFA0FB200E9DA18 /* locaitonMar.png */; };
@@ -953,6 +954,8 @@
 		9A44B71D1B2177C9002B9B33 /* GexinSdk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GexinSdk.h; sourceTree = "<group>"; };
 		9A44B71E1B2177C9002B9B33 /* GXSdkError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GXSdkError.h; sourceTree = "<group>"; };
 		9A44B71F1B2177CD002B9B33 /* libGexinSdk-1.1.1.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libGexinSdk-1.1.1.a"; path = "include/libGexinSdk-1.1.1.a"; sourceTree = "<group>"; };
+		9A4DF9D71B240400006872F1 /* MRZoomScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRZoomScrollView.h; sourceTree = "<group>"; };
+		9A4DF9D81B240400006872F1 /* MRZoomScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRZoomScrollView.m; sourceTree = "<group>"; };
 		B507CAF11AFA0EBB00E9DA18 /* yue_09.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yue_09.png; sourceTree = "<group>"; };
 		B507CAF31AFA0F1000E9DA18 /* locaitonMar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locaitonMar.png; sourceTree = "<group>"; };
 		B507CAF51AFA0FB200E9DA18 /* locaitonMar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = locaitonMar.png; sourceTree = "<group>"; };
@@ -3842,6 +3845,8 @@
 		B5D7A10F1ADE117600D88C42 /* ThreeFrameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9A4DF9D71B240400006872F1 /* MRZoomScrollView.h */,
+				9A4DF9D81B240400006872F1 /* MRZoomScrollView.m */,
 				9A44B71B1B21779A002B9B33 /* dist */,
 				9A44B7191B21766A002B9B33 /* libsqlite3.0.dylib */,
 				B589F18F1B213326005DEC69 /* IQKeyBoardManager */,
@@ -4784,6 +4789,7 @@
 				B55921E31B105303006F3349 /* Shopcatcell.m in Sources */,
 				B5D7A0D91ADE057C00D88C42 /* ViewController.m in Sources */,
 				B5CE2CC81ADE60F30059903D /* HeaderView.m in Sources */,
+				9A4DF9D91B240400006872F1 /* MRZoomScrollView.m in Sources */,
 				B58270931AE4A58E007DA672 /* MyTool.m in Sources */,
 				B58089CC1B0F05F3007543A3 /* CustomScrollView.m in Sources */,
 				B5BF15F91AF70227008167A3 /* MyWebVC.m in Sources */,

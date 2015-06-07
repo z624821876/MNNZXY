@@ -9,6 +9,7 @@
 #import "UserInfoVC.h"
 #import "MyCustomView.h"
 #import "LocationVC.h"
+#import "IQKeyboardManager.h"
 
 @interface UserInfoVC ()
 {
@@ -28,6 +29,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
+    [IQKeyboardManager sharedManager].enable = YES;
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.title = @"个人资料";
 }
@@ -82,7 +84,8 @@
 {
     topView = [[MyCustomView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
     topView.backgroundColor = ColorWithRGBA(30.0, 32.0, 40.0, 0.5);
-    [[AppDelegate shareApp].window addSubview:topView];
+//    [[AppDelegate shareApp].window addSubview:topView];
+    [self.view addSubview:topView];
     
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 150, UI_SCREEN_WIDTH - 20, 200)];
     [img setImage:[[UIImage imageNamed:@"blank_num.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
@@ -209,7 +212,8 @@
         {
             topView = [[MyCustomView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
             topView.backgroundColor = ColorWithRGBA(30.0, 32.0, 40.0, 0.5);
-            [[AppDelegate shareApp].window addSubview:topView];
+//            [[AppDelegate shareApp].window addSubview:topView];
+            [self.view addSubview:topView];
             
             UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 150, UI_SCREEN_WIDTH - 20, 200)];
             [img setImage:[[UIImage imageNamed:@"blank_num.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
@@ -429,20 +433,21 @@
 
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
-    CGFloat offY = UI_scaleY;
-    CGRect rect = topView.frame;
-    rect.origin.y -= (140.0 / offY);
-    topView.frame = rect;
+    
+//    CGFloat offY = UI_scaleY;
+//    CGRect rect = topView.frame;
+//    rect.origin.y -= (140.0 / offY);
+//    topView.frame = rect;
     
     return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    CGFloat offY = UI_scaleY;
-    CGRect rect = topView.frame;
-    rect.origin.y -= (140.0 / offY);
-    topView.frame = rect;
+//    CGFloat offY = UI_scaleY;
+//    CGRect rect = topView.frame;
+//    rect.origin.y -= (140.0 / offY);
+//    topView.frame = rect;
     return YES;
 }
 

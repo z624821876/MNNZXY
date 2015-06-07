@@ -15,10 +15,11 @@
 #import "MyLessonsVC.h"
 #import "MyhomewroksVC.h"
 #import "IQKeyboardManager.h"
+#import "MRZoomScrollView.h"
 
 @interface ClassmateInfoVC ()
 
-@property (nonatomic, strong) UIImageView       *logoImg;
+@property (nonatomic, strong) UIButton          *logoImg;
 @property (nonatomic, strong) UIButton          *nameBtn;
 @property (nonatomic, strong) UIButton          *cityBtn;
 @property (nonatomic, strong) UIImageView       *levelImg;
@@ -88,6 +89,7 @@
 
 - (void)loadData
 {
+    
     [[tools shared] HUDShowText:@"正在加载..."];
     NSString *str = [NSString stringWithFormat:@"mobi/user/getUserDetail?memberId=%@&selfId=%@",self.ClassmateId,[User shareUser].userId];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
@@ -195,7 +197,8 @@
 
 - (void)updateGUI
 {
-    [_logoImg sd_setImageWithURL:[NSURL URLWithString:_classUserInfo.logo] placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
+//    [_logoImg sd_setBackgroundImageWithURL:[NSURL URLWithString:_classUserInfo.logo] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
+    [_logoImg sd_setImageWithURL:[NSURL URLWithString:_classUserInfo.logo] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
     
     _nameLable.text = _classUserInfo.nickname;
     CGRect labelRect = _nameLable.frame;
@@ -255,9 +258,11 @@
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:backBtn];
     
-    _logoImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, img.bottom - 35, 70, 70)];
-    [_logoImg setImage:[UIImage imageNamed:@"default_avatar.png"]];
+    _logoImg = [UIButton buttonWithType:UIButtonTypeCustom];
+    _logoImg.frame = CGRectMake(10, img.bottom - 35, 70, 70);
+    [_logoImg setImage:[UIImage imageNamed:@"default_avatar.png"] forState:UIControlStateNormal];
     _logoImg.layer.cornerRadius = 35;
+    [_logoImg addTarget:self action:@selector(toViewImg) forControlEvents:UIControlEventTouchUpInside];
     _logoImg.layer.masksToBounds = YES;
     [self.view addSubview:_logoImg];
     
@@ -329,6 +334,23 @@
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
     [self.view addSubview:_tableView];
+}
+
+- (void)toViewImg
+{
+        MRZoomScrollView *sc = [[MRZoomScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
+        sc.backgroundColor = [UIColor blackColor];
+        NSString *url;
+        if ([_classUserInfo.logo hasPrefix:@"http"]) {
+            url = _classUserInfo.logo;
+        }else {
+            url = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,_classUserInfo.logo];
+        }
+        [sc.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
+
+        //    [self.view addSubview:sc];
+        [[AppDelegate shareApp].window addSubview:sc];
+
 }
 
     //删除好友

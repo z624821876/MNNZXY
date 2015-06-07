@@ -12,6 +12,12 @@
 {
     UIImageView         *_logo;
     UIScrollView        *_scrollView;
+
+    NSMutableArray      *_labelArr;
+    NSMutableArray      *countArr;
+    NSString            *_nowMB;
+
+
 }
 @end
 
@@ -26,8 +32,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self loadData];
+    [self initGUI];
     [self buildFootView];
+    
+    [self loadData];
 }
 
 - (void)buildFootView
@@ -41,6 +49,22 @@
 }
 
 - (void)loadData
+{
+    NSString *str = [NSString stringWithFormat:@"mobi/user/getPoints?memberId=%@",[User shareUser].userId];
+    [[tools shared] HUDShowText:@"正在加载..."];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        [[tools shared] HUDHide];
+        if ([[json  objectForKey:@"code"] integerValue] == 0) {
+            
+            
+        }else {
+            [[tools shared] HUDShowHideText:@"加载失败" delay:1.0];
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+}
+
+- (void)initGUI
 {
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 122)];
     [img setImage:[UIImage imageNamed:@"a.png"]];

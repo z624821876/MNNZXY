@@ -30,6 +30,18 @@
     self.view.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
 }
 
+- (void)back
+{
+    if (_type == 2) {
+        NSArray *array = self.navigationController.viewControllers;
+        UIViewController *vc = [array objectAtIndex:array.count - 4];
+        [self.navigationController popToViewController:vc animated:YES];
+    }else {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     _dataArray = [[NSMutableArray alloc] init];

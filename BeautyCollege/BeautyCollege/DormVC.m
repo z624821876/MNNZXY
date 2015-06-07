@@ -23,6 +23,7 @@
 #import "MyhomewroksVC.h"
 #import "MyMessagesVC.h"
 #import "MyMoneyVC.h"
+#import "MRZoomScrollView.h"
 
 @interface DormVC ()
 @property (nonatomic, strong) BaseCellModel     *userInfo;
@@ -309,10 +310,13 @@
         [img setImage:[UIImage imageNamed:@"a.png"]];
         [view addSubview:img];
         
-        UIImageView *logo = [[UIImageView alloc] initWithFrame:CGRectMake((UI_SCREEN_WIDTH - 80) / 2.0, img.bottom - 40, 80, 80)];
-         [MyTool setImgWithURLStr:[User shareUser].logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:logo];
+        UIButton *logo = [UIButton buttonWithType:UIButtonTypeCustom];
+        logo.frame = CGRectMake((UI_SCREEN_WIDTH - 80) / 2.0, img.bottom - 40, 80, 80);
+//         [MyTool setImgWithURLStr:[User shareUser].logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:logo];
+        [MyTool setBtnImgWithURLStr:[User shareUser].logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:logo];
         logo.layer.cornerRadius = 40;
         logo.layer.masksToBounds = YES;
+        [logo addTarget:self action:@selector(toViewImg) forControlEvents:UIControlEventTouchUpInside];
         [view addSubview:logo];
         
         UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, logo.bottom + 5, UI_SCREEN_WIDTH, 20)];
@@ -411,6 +415,21 @@
 
     }
     return nil;
+}
+
+- (void)toViewImg
+{
+    MRZoomScrollView *sc = [[MRZoomScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT)];
+    sc.backgroundColor = [UIColor blackColor];
+    NSString *url;
+    if ([[User shareUser].logo hasPrefix:@"http"]) {
+        url = [User shareUser].logo;
+    }else {
+        url = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,[User shareUser].logo];
+    }
+    [sc.imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
+//    [self.view addSubview:sc];
+    [[AppDelegate shareApp].window addSubview:sc];
 }
 
 - (void)changeOption:(UIButton *)btn

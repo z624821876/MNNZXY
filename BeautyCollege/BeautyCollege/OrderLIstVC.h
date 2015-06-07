@@ -10,6 +10,6 @@
 
 @interface OrderLIstVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate>
 
-@property (nonatomic, strong) UITableView *tableView;
-
+@property (nonatomic, strong) UITableView   *tableView;
+@property (nonatomic, assign) NSInteger     type;
 @end

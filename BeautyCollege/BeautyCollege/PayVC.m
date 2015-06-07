@@ -119,25 +119,26 @@
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
     return YES;
-    CGRect rect = self.view.frame;
-    rect.origin.y = rect.origin.y - _textView.top + 74;
-    self.view.frame = rect;
-    return YES;
+//    CGRect rect = self.view.frame;
+//    rect.origin.y = rect.origin.y - _textView.top + 74;
+//    self.view.frame = rect;
+//    return YES;
 }
 
 - (BOOL)textViewShouldEndEditing:(UITextView *)textView
 {
     return YES;
-    CGRect rect = self.view.frame;
-    rect.origin.y = 0;
-    self.view.frame = rect;
-    return YES;
+//    CGRect rect = self.view.frame;
+//    rect.origin.y = 0;
+//    self.view.frame = rect;
+//    return YES;
 }
 
 - (void)back
 {
     NSArray *array = self.navigationController.viewControllers;
-    [self.navigationController popToViewController:[array objectAtIndex:array.count - 3] animated:YES];
+    UIViewController *vc = [array objectAtIndex:array.count - 3];
+    [self.navigationController popToViewController:vc animated:YES];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -239,7 +240,8 @@
     order.tradeNO = self.orderNo; //订单ID（由商家自行制定）
     order.productName = @"宁波美娘女子学院"; //商品标题
     order.productDescription = @"网上购物"; //商品描述
-    order.amount = self.totalPrice; //商品价格
+//    order.amount = self.totalPrice; //商品价格
+    order.amount = @"0.01";
     order.notifyURL =  @"http://www.xxx.com"; //回调URL
     
     order.service = @"mobile.securitypay.pay";
@@ -281,10 +283,9 @@
         
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             [[tools shared] HUDShowHideText:@"支付成功" delay:1.5];
-            UINavigationController *nav = self.navigationController;
-            [self back];
-            OrderLIstVC *vc = [[OrderLIstVC alloc] init];
-            [nav pushViewController:vc animated:YES];
+            OrderLIstVC *orderList = [[OrderLIstVC alloc] init];
+            orderList.type = 2;
+            [self.navigationController pushViewController:orderList animated:YES];            
         }else {
             [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];
         }
