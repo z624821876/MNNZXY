@@ -204,7 +204,6 @@
     return YES;
 }
 
-
 - (void)changeOption:(UIButton *)btn
 {
     if (btn.selected) {

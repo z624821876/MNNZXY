@@ -422,7 +422,6 @@
         vc.keyword = textField.text;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
-        
     }
     
     return YES;

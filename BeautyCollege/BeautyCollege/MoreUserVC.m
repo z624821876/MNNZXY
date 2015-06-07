@@ -59,7 +59,7 @@
     if (_type == 1) {
         str = @"mobi/index/getRecUser?pageNo=1";
     }else {
-        str = [NSString stringWithFormat:@"mobi/user/searchUser?nickname=%@&memberId=%@&pageNo=%ld&pageSize=10",_keyword,[User shareUser].userId,_currentPage];
+        str = [NSString stringWithFormat:@"mobi/user/searchUser?nickname=%@&memberId=%@&pageNo=%ld&pageSize=10&sex=2",_keyword,[User shareUser].userId,_currentPage];
     }
     
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {

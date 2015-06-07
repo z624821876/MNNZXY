@@ -286,7 +286,7 @@
 
 + (UIImage *)sexImageWithNSString:(NSString *)str
 {
-    return [UIImage imageNamed:[NSString stringWithFormat:@"reg%ld.png",[str integerValue] + 5]];
+    return [UIImage imageNamed:[NSString stringWithFormat:@"mn-sex-%ld.png",[str integerValue]]];
 }
 
 + (UIImage *)sexImageWithNSString2:(NSString *)str

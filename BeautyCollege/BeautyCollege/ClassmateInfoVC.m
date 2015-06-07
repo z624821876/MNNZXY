@@ -209,10 +209,12 @@
         labelRect.size.width = UI_SCREEN_WIDTH - _logoImg.right - 25 - 20;
     }
     _nameLable.frame = labelRect;
+    
     [_sexImg setImage:[Util sexImageWithNSString2:_classUserInfo.sex]];
     CGRect imgRect = _sexImg.frame;
     imgRect.origin.x = _nameLable.right;
     _sexImg.frame = imgRect;
+    
     
     NSString *city;
     if (_classUserInfo.cityName) {
@@ -433,10 +435,17 @@
 //        [_topBgView removeFromSuperview];
 //        return;
 //    }
-    [_topBgView removeFromSuperview];
-    NSString *str = _messageTV.text;
-    [_topBgView removeFromSuperview];
 
+    [_topBgView removeFromSuperview];
+    
+    if ([self.ClassmateId isEqualToString:[User shareUser].userId]) {
+        return;
+    }
+
+    NSString *str = _messageTV.text;
+//    [_topBgView removeFromSuperview];
+
+    [[tools shared] HUDShowText:@"请稍候..."];
     NSString *url = [NSString stringWithFormat:@"mobi/user/add?memberId=%@&friendId=%@&content=%@",[User shareUser].userId,self.ClassmateId,str];
     [[HttpManager shareManger] getWithStr:url ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         if ([[json objectForKey:@"code"] integerValue] == 0) {
@@ -445,7 +454,6 @@
         }else {
             [[tools shared] HUDShowHideText:@"添加失败" delay:1.5];
         }
-        
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
 }
