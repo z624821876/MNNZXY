@@ -12,6 +12,8 @@
 
 @interface ReturncardVC : MyCustomVC<FaceBoardDelegate,UITextViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIScrollViewDelegate>
 
+
+@property (nonatomic, strong) NSString          *commentTitle;
 @property (nonatomic, strong) NSString          *homeworkId;
 @property (strong, nonatomic) FaceBoard         *faceBoard;
 @property (strong, nonatomic) CustomScrollView  *scrollView;

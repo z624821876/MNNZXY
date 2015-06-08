@@ -26,7 +26,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:YES];
-    self.navigationItem.title = @"写作业";
+    if (_commentTitle.length > 0) {
+        self.navigationItem.title = @"评论";
+    }else {
+        self.navigationItem.title = @"写作业";
+    }
 }
 
 - (void)viewDidLoad {

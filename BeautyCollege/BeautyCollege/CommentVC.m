@@ -54,7 +54,7 @@
         [array addObject:str];
     }
     NSString *string1 = [array componentsJoinedByString:@","];
-    NSString *string2 = [NSString stringWithFormat:@"{\"memberId\":\"%@\", \"param\":[%@]}",self.goodsId,string1];
+    NSString *string2 = [NSString stringWithFormat:@"{\"memberId\":\"%@\", \"param\":[%@]}",[User shareUser].userId,string1];
     NSLog(@"----%@",string2);
     
     NSDictionary *dict = @{@"json":string2};

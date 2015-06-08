@@ -29,7 +29,7 @@ typedef void(^PushBlock2)(id model);
 
 @property (strong, nonatomic) UIImageView       *img1;
 @property (strong, nonatomic) UIImageView       *img2;
-//@property (strong, nonatomic) UIImageView   *img3;
+@property (strong, nonatomic) UIImageView   *img3;
 
 @property (strong, nonatomic) UIImageView   *bgView;
 @property (strong, nonatomic) UIButton      *btn1;

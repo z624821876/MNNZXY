@@ -16,7 +16,7 @@
 @interface LessonsVC ()
 
 @property (nonatomic, assign) NSInteger     currentPage;
-@property (nonatomic, strong) NSString      *title;
+//@property (nonatomic, strong) NSString      *title;
 @property (nonatomic, strong) NSString      *todayWorkCount;
 @property (nonatomic, strong) NSString      *creatName;
 @property (nonatomic, strong) NSString      *level;
@@ -41,6 +41,7 @@
 
 @property (nonatomic, strong) UIButton      *defualtBtn;
 
+@property (nonatomic, strong) NSString      *teacheId;
 @property (nonatomic, strong) UILongPressGestureRecognizer *longpressGR;
 
 @end
@@ -108,7 +109,7 @@
             
             NSNumber *levelNum = nilOrJSONObjectForKey(teachDic, @"level");
             self.level = [levelNum stringValue];
-            
+            self.teacheId = [MyTool getValuesFor:teachDic key:@"memberId"];
             if (_currentPage == 1) {
                 [_allDataArr removeAllObjects];
             }
@@ -118,7 +119,6 @@
                 NSDictionary *memberDic = nilOrJSONObjectForKey(dict, @"member");
                 NSDictionary *blogDic = nilOrJSONObjectForKey(dict, @"blog");
                 BaseCellModel *model = [[BaseCellModel alloc] init];
-                
                 model.likeId = [MyTool getValuesFor:dict key:@"likeId"];
                 model.collectId = [MyTool getValuesFor:dict key:@"favouriteId"];
                 NSNumber *num = nilOrJSONObjectForKey(blogDic, @"ct");
@@ -135,6 +135,7 @@
                 model.commentCount = [comment stringValue];
                 NSNumber *likeCount = nilOrJSONObjectForKey(blogDic, @"objId1");
                 model.likeCount = [likeCount stringValue];
+                model.catId = self.teacheId;
                 [_allDataArr addObject:model];
             }
             [self initData];
@@ -501,13 +502,35 @@
         cell.backgroundColor = tableView.backgroundColor;
         cell.model = _allDataArr[indexPath.section];
         cell.type = 28;
+        cell.btn3.tag = indexPath.section;
+        [cell.btn3 addTarget:self action:@selector(deleteHomeWork:) forControlEvents:UIControlEventTouchUpInside];
     }else {
         cell.backgroundColor = tableView.backgroundColor;
         cell.model = _allDataArr[indexPath.section];
         cell.type = 29;
+        cell.btn3.tag = indexPath.section;
+        [cell.btn3 addTarget:self action:@selector(deleteHomeWork:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     return cell;
+}
+
+- (void)deleteHomeWork:(UIButton *)btn
+{
+    BaseCellModel *model = _allDataArr[btn.tag];
+    NSString *str = [NSString stringWithFormat:@"/mobi/class/deleteHomework?blogId=%@",model.modelId];
+    [[tools shared] HUDShowText:@"正在删除..."];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
+            _currentPage = 1;
+            [self loadLessonsInfo];
+        }else {
+            [[tools shared] HUDShowHideText:@"操作失败" delay:1.0];
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+    
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section

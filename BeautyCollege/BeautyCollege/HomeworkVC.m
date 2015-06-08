@@ -71,6 +71,7 @@
     _textView.font = [UIFont systemFontOfSize:17];
     [self.view addSubview:_textView];
 
+
 }
 
 - (void)buildFootView
@@ -111,6 +112,7 @@
         {
             ReturncardVC *vc = [[ReturncardVC alloc] init];
             vc.homeworkId = self.homeworkId;
+            vc.commentTitle = @"评论";
             [self.navigationController pushViewController:vc animated:YES];
         }
             break;
@@ -350,6 +352,7 @@
                 model.modelId = nilOrJSONObjectForKey(commentDic, @"id");
                 model.logo = nilOrJSONObjectForKey(commentDic, @"logo");
                 model.name = nilOrJSONObjectForKey(commentDic, @"nickName");
+                model.catId = [MyTool getValuesFor:commentDic key:@"teacherId"];
                 NSString *content = nilOrJSONObjectForKey(commentDic, @"content");
                 NSString *nickeNameOR = nilOrJSONObjectForKey(commentDic, @"nickNameOR");
                 NSString *content2;
@@ -594,13 +597,25 @@
             btn.layer.masksToBounds = YES;
             [cell.contentView addSubview:btn];
             
-            UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - 90, 10, 80, 20)];
+            UILabel *dateLabel = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - 80, 10, 70, 20)];
             dateLabel.text = model.date;
-            dateLabel.font = [UIFont systemFontOfSize:15];
+            dateLabel.font = [UIFont systemFontOfSize:13];
             dateLabel.textColor = [UIColor grayColor];
             [cell.contentView addSubview:dateLabel];
             
-            UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(btn.right + 10, 10, dateLabel.left - btn.right - 20, 20)];
+            UILabel *titleLabel = [[UILabel alloc] init];
+            if ([model.catId integerValue] == [[User shareUser].userId integerValue]) {
+                UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+                deleteBtn.frame = CGRectMake(dateLabel.left - 30, dateLabel.top, 20, 20);
+                [deleteBtn setImage:[UIImage imageNamed:@"ico_dustbin.png"] forState:UIControlStateNormal];
+                deleteBtn.tag = indexPath.row;
+                [deleteBtn addTarget:self action:@selector(deleteComment:) forControlEvents:UIControlEventTouchUpInside];
+                [cell.contentView addSubview:deleteBtn];
+                titleLabel.frame = CGRectMake(btn.right + 10, 10, deleteBtn.left - btn.right - 20, 20);
+            }else {
+                titleLabel.frame = CGRectMake(btn.right + 10, 10, dateLabel.left - btn.right - 20, 20);
+            }
+            
             titleLabel.text = model.name;
             [cell.contentView addSubview:titleLabel];
             
@@ -658,6 +673,26 @@
     }
 }
 
+    //删除作业
+- (void)deleteComment:(UIButton *)btn
+{
+    BaseCellModel *model = _commentArray[btn.tag - 1];
+
+    NSString *str = [NSString stringWithFormat:@"mobi/class/deleteReply?replyId=%@",model.modelId];
+    [[tools shared] HUDShowText:@"正在删除..."];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
+            _currentPage = 1;
+            [self loadData];
+        }else {
+            [[tools shared] HUDShowHideText:@"操作失败" delay:1.0];
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -669,6 +704,7 @@
             vc.homeworkId = _homeworkId;
             vc.replyId = model.modelId;
             vc.type = 2;
+            vc.commentTitle = @"评论";
             [self.navigationController pushViewController:vc animated:YES];
         }
     }

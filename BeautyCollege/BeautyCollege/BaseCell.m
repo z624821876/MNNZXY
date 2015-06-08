@@ -46,11 +46,11 @@
     self.bgView = [[UIImageView alloc] init];
     self.img1 = [[UIImageView alloc] init];
     self.img2 = [[UIImageView alloc] init];
-//    self.img3 = [[UIImageView alloc] init];
+    self.img3 = [[UIImageView alloc] init];
     [self.contentView addSubview:self.bgView];
     [self.contentView addSubview:self.img1];
     [self.contentView addSubview:self.img2];
-//    [self.contentView addSubview:self.img3];
+    [self.contentView addSubview:self.img3];
     [self.contentView addSubview:self.leftView];
     [self.contentView addSubview:self.cellView3];
     [self.contentView addSubview:self.logoImg];
@@ -523,7 +523,17 @@
 
     //            self.label3.frame = CGRectMake(self.logoImg.right + 5, self.label2.bottom + 10, <#CGFloat width#>, <#CGFloat height#>);
             
-            self.img1.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
+            
+            if ([_model.catId integerValue] == [[User shareUser].userId integerValue]) {
+                self.btn3.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
+                [self.btn3 setImage:[UIImage imageNamed:@"shopCat-delete.png"] forState:UIControlStateNormal];
+                self.btn3.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                
+                self.img1.frame = CGRectMake(self.btn3.left - 30, self.label2.bottom + 20, 20, 20);
+            }else {
+                self.img1.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
+
+            }
             if ([_model.collectId isEqualToString:@"0"]) {
                 
                 [self.img1 setImage:[UIImage imageNamed:@"baobei_b.png"]];
@@ -534,6 +544,8 @@
             }
             
             CGFloat width2 = [_model.likeCount boundingRectWithSize:CGSizeMake(100000, 20) options:NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
+            
+            
             self.btn1.frame = CGRectMake(self.img1.left - 20 - width2 - 10, self.img1.top, width2 + 30, 20);
             self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
             [self.btn1 setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -559,9 +571,9 @@
             [self.btn2 setImage:[Util sexImageWithNSString:_model.sex] forState:UIControlStateNormal];
             self.btn2.contentMode = UIViewContentModeScaleAspectFit;
             
-            self.btn3.frame = CGRectMake(self.btn2.right + 10, self.label3.top, 20, 20);
-            [self.btn3 setImage:[Util studentImageWithLevel:_model.level] forState:UIControlStateNormal];
-            self.btn3.contentMode = UIViewContentModeScaleAspectFit;
+            self.img2.frame = CGRectMake(self.btn2.right + 10, self.label3.top, 20, 20);
+            [self.img2 setImage:[Util studentImageWithLevel:_model.level]];
+            self.img2.contentMode = UIViewContentModeScaleAspectFit;
         }
             break;
         case 19:
@@ -632,11 +644,21 @@
             
             //            self.label3.frame = CGRectMake(self.logoImg.right + 5, self.label2.bottom + 10, <#CGFloat width#>, <#CGFloat height#>);
             
-            self.img1.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
+            if ([_model.catId integerValue] == [[User shareUser].userId integerValue]) {
+                self.btn3.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
+                [self.btn3 setImage:[UIImage imageNamed:@"shopCat-delete.png"] forState:UIControlStateNormal];
+                self.btn3.imageView.contentMode = UIViewContentModeScaleAspectFit;
+                
+                self.img1.frame = CGRectMake(self.btn3.left - 20, self.label2.bottom + 20, 20, 20);
+            }else {
+                self.img1.frame = CGRectMake(UI_SCREEN_WIDTH - 30, self.label2.bottom + 20, 20, 20);
+            }
+            
             [self.img1 setImage:[UIImage imageNamed:@"course_25.png"]];
 
-            self.img2.frame = CGRectMake(UI_SCREEN_WIDTH - 50, self.img1.top, 20, 20);
-//            [self.img2 setImage:[UIImage imageNamed:@"baobei_b.png"]];
+            self.img2.frame = CGRectMake(self.img1.left - 20, self.img1.top, 20, 20);
+            
+            
             if ([_model.collectId isEqualToString:@"0"]) {
                 
                 [self.img2 setImage:[UIImage imageNamed:@"baobei_b.png"]];
@@ -673,9 +695,9 @@
             [self.btn2 setImage:[Util sexImageWithNSString:_model.sex] forState:UIControlStateNormal];
             self.btn2.contentMode = UIViewContentModeScaleAspectFit;
             
-            self.btn3.frame = CGRectMake(self.btn2.right + 10, self.label3.top, 20, 20);
-            [self.btn3 setImage:[Util studentImageWithLevel:_model.level] forState:UIControlStateNormal];
-            self.btn3.contentMode = UIViewContentModeScaleAspectFit;
+            self.img3.frame = CGRectMake(self.btn2.right + 10, self.label3.top, 20, 20);
+            self.img3.contentMode = UIViewContentModeScaleAspectFit;
+            [self.img3 setImage:[Util studentImageWithLevel:_model.level]];
         }
             break;
         case 20:

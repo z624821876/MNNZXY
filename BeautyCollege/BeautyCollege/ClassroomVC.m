@@ -79,12 +79,16 @@
     [self getAllLessons];
 }
 
-
-
     //加载学生数
 - (void)loadDataCount
 {
-    NSString *str1 = [NSString stringWithFormat:@"mobi/class/getClass?classId=%ld",[self getClassIDWith]];
+    
+    NSString *locationId;
+    if (_currentBtn.tag == 14) {
+        locationId = _currentLocationId;
+    }
+
+    NSString *str1 = [NSString stringWithFormat:@"mobi/class/getClass?classId=%ld&cityId=%@",[self getClassIDWith],locationId];
     
     [[HttpManager shareManger] getWithStr:str1 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         if ([[json objectForKey:@"code"] integerValue] == 0) {
@@ -186,6 +190,7 @@
 {
     NSString *locationId;
     if (_currentBtn.tag == 14) {
+
         locationId = _currentLocationId;
     }
     NSString *str1 = [NSString stringWithFormat:@"mobi/class/getLessons?classId=%ld&pageNo=%ld&pageSize=10&isRecommend=0&cityId=%@",[self getClassIDWith],_currentPage,locationId];
@@ -212,6 +217,7 @@
             }else {
                 _currentPage -= 1;
             }
+            
             [_tableView reloadData];
         }else {
             _currentPage -= 1;
@@ -790,6 +796,14 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (_currentBtn.tag == 14) {
+        if (section == 2) {
+            return [_allDataArr count];
+        }else {
+            return 0;
+        }
+    }
+    
     if (section == 0) {
         return [_myLessonArr count];
     }
