@@ -104,11 +104,15 @@
     NSInteger i;
     if (btn.selected) {
         i = 1;
+        NSString *price = [NSString stringWithFormat:@"结算(￥0)"];
+        [_settlementBtn setTitle:price forState:UIControlStateNormal];
+
     }else {
         i = 2;
+        NSString *price = [NSString stringWithFormat:@"结算(￥%.2f)",[_price doubleValue]];
+        [_settlementBtn setTitle:price forState:UIControlStateNormal];
     }
     for (BaseCellModel *model in _dataArray) {
-        
         model.type = i;
     }
     btn.selected = !btn.selected;
@@ -197,6 +201,7 @@
 
 - (void)settlement:(UIButton *)btn
 {
+    
     NSString *str = [NSString stringWithFormat:@"type == 2"];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:str];
     NSArray *array = [_dataArray filteredArrayUsingPredicate:predicate];
@@ -228,11 +233,13 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    
     [self loadData];
 }
 
 - (void)loadData
 {
+    
     [[tools shared] HUDShowText:@"正在加载..."];
     NSString *str = [NSString stringWithFormat:@"mobi/pro/getShoppingCart?memberId=%@",[User shareUser].userId];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
@@ -256,8 +263,6 @@
                 [_dataArray addObject:model];
                 [_typeArray addObject:@"1"];
             }
-            NSString *price = [NSString stringWithFormat:@"结算(%.2f)",[_price doubleValue]];
-            [_settlementBtn setTitle:price forState:UIControlStateNormal];
             [_tableView reloadData];
         }else {
             [[tools shared] HUDShowHideText:@"加载失败" delay:1.5];
@@ -270,17 +275,31 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    
     return [_dataArray count];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     BaseCellModel *model = _dataArray[indexPath.row];
     if (model.type == 1) {
         model.type = 2;
     }else {
         model.type = 1;
     }
+    
+    NSString *str = [NSString stringWithFormat:@"type == 2"];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:str];
+    NSArray *array = [_dataArray filteredArrayUsingPredicate:predicate];
+
+    CGFloat price = 0;
+    for (BaseCellModel *cellInfo in array) {
+        price += [cellInfo.price doubleValue];
+    }
+    
+    NSString *priceStr = [NSString stringWithFormat:@"结算(￥%.2f)",price];
+    [_settlementBtn setTitle:priceStr forState:UIControlStateNormal];
     [_tableView reloadData];
 }
 
@@ -313,7 +332,6 @@
     }else {
         i = +1;
     }
-    
     NSInteger count = [model.count integerValue];
     model.count = [NSString stringWithFormat:@"%ld",count + i];
     [_tableView reloadData];
