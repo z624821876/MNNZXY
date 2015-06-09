@@ -46,13 +46,20 @@
     
     [self.window makeKeyAndVisible];
     
-    
-    // [1]:使用APPID/APPKEY/APPSECRENT创建个推实例
-    [self startSdkWith:kGTAppId appKey:kGTAppKey appSecret:kGTAppSecret];
-    
-    // [2]:注册APNS
-    [self registerRemoteNotification];
-    
+    NSString *messageNotice = [[NSUserDefaults standardUserDefaults] objectForKey:@"messageNotice"];
+    if ([messageNotice isKindOfClass:[NSNull class]] || messageNotice == nil) {
+        messageNotice = @"o";
+        [[NSUserDefaults standardUserDefaults] setObject:messageNotice forKey:@"messageNotice"];
+    }
+
+    if ([messageNotice isEqualToString:@"o"]) {
+
+        // [1]:使用APPID/APPKEY/APPSECRENT创建个推实例
+        [self startSdkWith:kGTAppId appKey:kGTAppKey appSecret:kGTAppSecret];
+        
+        // [2]:注册APNS
+        [self registerRemoteNotification];
+    }
     // [2-EXT]: 获取启动时收到的APN
     NSDictionary* message = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
     if (message) {
@@ -280,6 +287,7 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     // [EXT] 切后台关闭SDK，让SDK第一时间断线，让个推先用APN推送
     [self stopSdk];
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -291,8 +299,15 @@
 //    [UMSocialSnsService  applicationDidBecomeActive];
     //当程序还在后台运行
     application.applicationIconBadgeNumber = 0;
-    [self startSdkWith:kGTAppId appKey:kGTAppKey appSecret:kGTAppSecret];
-
+    
+    NSString *messageNotice = [[NSUserDefaults standardUserDefaults] objectForKey:@"messageNotice"];
+    if ([messageNotice isKindOfClass:[NSNull class]] || messageNotice == nil) {
+        messageNotice = @"o";
+        [[NSUserDefaults standardUserDefaults] setObject:messageNotice forKey:@"messageNotice"];
+    }
+    if ([messageNotice isEqualToString:@"o"]) {
+        [self startSdkWith:kGTAppId appKey:kGTAppKey appSecret:kGTAppSecret];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -511,6 +526,7 @@
 //注册通知
 - (void)registerRemoteNotification
 {
+    
 #ifdef __IPHONE_8_0
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
         

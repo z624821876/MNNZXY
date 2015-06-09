@@ -72,9 +72,19 @@
 //查看购物车
 - (void)toShoppingcart
 {
-    ShoppingcartVC *vc = [[ShoppingcartVC alloc] init];
-    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else {
+
+        ShoppingcartVC *vc = [[ShoppingcartVC alloc] init];
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)viewDidLoad {
@@ -377,6 +387,15 @@
     //喜欢和收藏
 - (void)likeAndCollect:(UIButton *)btn
 {
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+
+    }else {
+    
     NSString *urlStr;
     if (btn.tag == 10) {
         //喜欢
@@ -422,7 +441,7 @@
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
     }];
-    
+    }
 }
 
     //查看用户评论
@@ -462,13 +481,34 @@
     //购买
 - (void)buy:(UIButton *)btn
 {
-    [self selectNormsWith:btn.tag];
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else {
+
+        [self selectNormsWith:btn.tag];
+    }
 }
 
     //加入购物车
 - (void)addtocart:(UIButton *)btn
 {
-    [self selectNormsWith:btn.tag];
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else {
+
+        [self selectNormsWith:btn.tag];
+    }
+    
 }
 
     //选择属性

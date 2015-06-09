@@ -415,25 +415,43 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
-    NSString *str = [textField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
-    if (str.length > 0) {
-        MoreUserVC *vc = [[MoreUserVC alloc] init];
-        vc.type = 2;
-        vc.keyword = textField.text;
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
+        
+    }else {
+
+        NSString *str = [textField.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+        if (str.length > 0) {
+            MoreUserVC *vc = [[MoreUserVC alloc] init];
+            vc.type = 2;
+            vc.keyword = textField.text;
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
     }
-    
     return YES;
 }
 
     //查看更多用户
 - (void)searchMoreUser
 {
-    MoreUserVC *vc = [[MoreUserVC alloc] init];
-    vc.type = 1;
-    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else {
+        MoreUserVC *vc = [[MoreUserVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
     //加载大轮播图
@@ -470,37 +488,48 @@
     //点击轮播图
 - (void)bgScrollClick:(UIButton *)btn
 {
-    BaseCellModel *model = _topImgArr[btn.tag];
-    if ([model.content isEqualToString:@"帖子广告"]) {
-        [[tools shared] HUDShowText:@"请稍候..."];
-        NSString *str = [NSString stringWithFormat:@"mobi/class/tempGetHomeWorkForADV?memberId=%@&blogId=%@",[User shareUser].userId,model.modelId];
-        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-            if ([[json objectForKey:@"code"] integerValue] == 0) {
-                [[tools shared] HUDHide];
-                NSDictionary *resultDic = nilOrJSONObjectForKey(json, @"result");
-                model.likeId = [MyTool getValuesFor:resultDic key:@"likeId"];
-                model.collectId = [MyTool getValuesFor:resultDic key:@"favouriteId"];
+    if ([MyTool isLogin]) {
+        BaseCellModel *model = _topImgArr[btn.tag];
+        if ([model.content isEqualToString:@"帖子广告"]) {
+            [[tools shared] HUDShowText:@"请稍候..."];
+            NSString *str = [NSString stringWithFormat:@"mobi/class/tempGetHomeWorkForADV?memberId=%@&blogId=%@",[User shareUser].userId,model.modelId];
+            [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+                if ([[json objectForKey:@"code"] integerValue] == 0) {
+                    [[tools shared] HUDHide];
+                    NSDictionary *resultDic = nilOrJSONObjectForKey(json, @"result");
+                    model.likeId = [MyTool getValuesFor:resultDic key:@"likeId"];
+                    model.collectId = [MyTool getValuesFor:resultDic key:@"favouriteId"];
+                    
+                    HomeworkVC *vc = [[HomeworkVC alloc] init];
+                    vc.homeworkId = model.modelId;
+                    vc.homworkModel = model;
+                    vc.logoUrl = model.logo;
+                    vc.hidesBottomBarWhenPushed = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                    
+                }else {
+                    
+                    [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.5];
+                }
                 
-                HomeworkVC *vc = [[HomeworkVC alloc] init];
-                vc.homeworkId = model.modelId;
-                vc.homworkModel = model;
-                vc.logoUrl = model.logo;
-                vc.hidesBottomBarWhenPushed = YES;
-                [self.navigationController pushViewController:vc animated:YES];
+            } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 
-            }else {
-                [[tools shared] HUDShowHideText:@"加载失败" delay:1.5];
-            }
+            }];
             
-        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }else {
+            GoodsVC *vc = [[GoodsVC alloc] init];
+            vc.goodsId = model.modelId;
+            vc.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
 
-        }];
         
     }else {
-        GoodsVC *vc = [[GoodsVC alloc] init];
-        vc.goodsId = model.modelId;
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
+
     }
 }
 
@@ -534,21 +563,41 @@
 
 - (void)userDetails:(UIButton *)btn
 {
-    BaseCellModel *model = _topImgArr2[btn.tag];
-    ClassmateInfoVC *vc = [[ClassmateInfoVC alloc] init];
-    vc.ClassmateId = model.modelId;
-    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([MyTool isLogin]) {
+        BaseCellModel *model = _topImgArr2[btn.tag];
+        ClassmateInfoVC *vc = [[ClassmateInfoVC alloc] init];
+        vc.ClassmateId = model.modelId;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }else {
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 - (void)searchMore:(UIButton *)btn
 {
+    if (btn.tag == 0) {
+        MoreNoticeVC *vc = [[MoreNoticeVC alloc] init];
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    
+    if (![MyTool isLogin]) {
+        
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+        
+    }else {
+
     switch (btn.tag) {
         case 0:
         {
-            MoreNoticeVC *vc = [[MoreNoticeVC alloc] init];
-            vc.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:vc animated:YES];
         }
             break;
         case 1:
@@ -574,11 +623,10 @@
 
         }
             break;
-
-            
             
         default:
             break;
+    }
     }
 }
 
@@ -715,6 +763,9 @@
 {
     switch (indexPath.section) {
         case 0:
+        {
+            return 80;
+        }
         case 1:
         {
             return 70;
@@ -954,12 +1005,20 @@
             break;
         case 1:
         {
-            BaseCellModel *model = _homeworkArr[indexPath.row];
-            HomeworkVC *vc = [[HomeworkVC alloc] init];
-            vc.hidesBottomBarWhenPushed = YES;
-            vc.homeworkId = model.modelId;
-            vc.homworkModel = model;
-            [self.navigationController pushViewController:vc animated:YES];
+            if (![User shareUser].userId) {
+                LoginVC *vc = [[LoginVC alloc] init];
+                vc.type = 1;
+                vc.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:vc animated:YES];
+            }else {
+
+                BaseCellModel *model = _homeworkArr[indexPath.row];
+                HomeworkVC *vc = [[HomeworkVC alloc] init];
+                vc.hidesBottomBarWhenPushed = YES;
+                vc.homeworkId = model.modelId;
+                vc.homworkModel = model;
+                [self.navigationController pushViewController:vc animated:YES];
+            }
         }
             break;
 

@@ -43,11 +43,12 @@ typedef enum {
 @property (retain, nonatomic) NSString *payloadId;
 
 
+- (void)startSdkWith:(NSString *)appID appKey:(NSString *)appKey appSecret:(NSString *)appSecret;
 - (NSInteger)currentPage;
 + (AppDelegate *)shareApp;
 - (void)showMainTabBar;
-
-
+- (void)registerRemoteNotification;
+- (void)stopSdk;
 - (void)WXlogin;
 - (void)QQlogin;
 - (void)SinaLogin;

@@ -63,10 +63,20 @@
     //搜索
 - (void)search
 {
-    PublicSearchVC *vc = [[PublicSearchVC alloc] init];
-    vc.hidesBottomBarWhenPushed = YES;
-    vc.searchtype = 1;
-    [self.navigationController pushViewController:vc animated:YES];
+    if ([MyTool isLogin]) {
+        
+        PublicSearchVC *vc = [[PublicSearchVC alloc] init];
+        vc.hidesBottomBarWhenPushed = YES;
+        vc.searchtype = 1;
+        [self.navigationController pushViewController:vc animated:YES];
+
+    }else {
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -824,32 +834,39 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    BaseCellModel *model;
-    switch (indexPath.section) {
-        case 0:
-        {
-            model = _myLessonArr[indexPath.row];
-        }
-            break;
-        case 1:
-        {
-            model = _recommendArr[indexPath.row];
-        }
-            break;
-        case 2:
-        {
-            model = _allDataArr[indexPath.row];
-        }
-            break;
+    if (![MyTool isLogin]) {
+        LoginVC *vc = [[LoginVC alloc] init];
+        vc.type = 1;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
 
-        default:
-            break;
+    }else {
+        BaseCellModel *model;
+        switch (indexPath.section) {
+            case 0:
+            {
+                model = _myLessonArr[indexPath.row];
+            }
+                break;
+            case 1:
+            {
+                model = _recommendArr[indexPath.row];
+            }
+                break;
+            case 2:
+            {
+                model = _allDataArr[indexPath.row];
+            }
+                break;
+                
+            default:
+                break;
+        }
+        LessonsVC *vc = [[LessonsVC alloc] init];
+        vc.lessonsId = model.modelId;
+        vc.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:vc animated:YES];
     }
-    LessonsVC *vc = [[LessonsVC alloc] init];
-    vc.lessonsId = model.modelId;
-    vc.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:vc animated:YES];
-    
 }
 
 - (void)didReceiveMemoryWarning {

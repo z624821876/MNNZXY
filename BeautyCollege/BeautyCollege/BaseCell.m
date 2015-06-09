@@ -122,24 +122,23 @@
     switch (_type - 10) {
         case 0:
         {
-            self.logoImg.frame = CGRectMake(15, 10, 70, 50);
+            self.logoImg.frame = CGRectMake(15, 10, 60 * 154 / 105, 60);
             NSString *str = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,_model.logo];
             [self.logoImg sd_setImageWithURL:[NSURL URLWithString:str] placeholderImage:[UIImage imageNamed:@"course_titbg.png"]];
-            
             
             self.btn1.frame = CGRectMake(self.width - 40, 25, 20, 20);
             [self.btn1 setImage:[UIImage imageNamed:@"jiantou.png"] forState:UIControlStateNormal];
             [self.btn1 setImage:[UIImage imageNamed:@"jiantou1.png"] forState:UIControlStateSelected];
             
-            self.label1.frame = CGRectMake(_logoImg.right + 5, _logoImg.top, _btn1.left - _logoImg.right - 5, 50 / 3.0);
+            self.label1.frame = CGRectMake(_logoImg.right + 5, _logoImg.top, _btn1.left - _logoImg.right - 5, 20);
             self.label1.font = [UIFont systemFontOfSize:14];
             self.label1.text = _model.name;
             
-            self.label2.frame = CGRectMake(_logoImg.right + 5, _label1.bottom, _label1.width, 50 / 3.0);
+            self.label2.frame = CGRectMake(_logoImg.right + 5, _label1.bottom, _label1.width, 20);
             self.label2.text = _model.title;
             self.label2.font = [UIFont systemFontOfSize:14];
             
-            self.label3.frame = CGRectMake(_logoImg.right + 5, _label2.bottom, _label2.width, 50 / 3.0);
+            self.label3.frame = CGRectMake(_logoImg.right + 5, _label2.bottom, _label2.width, 20);
             self.label3.text = [[_model.date componentsSeparatedByString:@" "] firstObject];
             self.label3.font = [UIFont systemFontOfSize:12];
         }
@@ -367,7 +366,6 @@
             self.btn1.frame = CGRectMake(self.width - 40, 12, 20, 20);
             [self.btn1 setImage:[UIImage imageNamed:@"jiantou.png"] forState:UIControlStateNormal];
             [self.btn1 setImage:[UIImage imageNamed:@"jiantou1.png"] forState:UIControlStateSelected];
-            
         
             self.label1.frame = CGRectMake(15, 12, self.btn1.left - 15, 20);
             self.label1.textColor = [UIColor blackColor];

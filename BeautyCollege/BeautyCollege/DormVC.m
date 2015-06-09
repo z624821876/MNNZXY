@@ -144,9 +144,13 @@
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
     
+    [self getMessage];
+}
+
+- (void)getMessage
+{
     NSString *str1 = [NSString stringWithFormat:@"mobi/dialogue/getDialoguePage?memberId=%@&pageNo=1&pageSize=4",[User shareUser].userId];
     [[HttpManager shareManger] getWithStr:str1 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             [_RepArr removeAllObjects];
             NSDictionary *dic = nilOrJSONObjectForKey(json, @"result");
@@ -156,7 +160,8 @@
                     BaseCellModel *model = [[BaseCellModel alloc] init];
                     model.name = nilOrJSONObjectForKey(dict, @"nickName");
                     model.logo = nilOrJSONObjectForKey(dict, @"img");
-                    model.modelId = nilOrJSONObjectForKey(dict, @"id");
+                    model.modelId = [MyTool getValuesFor:dict key:@"object2"];
+                    model.catId = nilOrJSONObjectForKey(dict, @"id");
                     model.lastMessage = nilOrJSONObjectForKey(dict, @"lastMessage");
                     model.count = [MyTool getValuesFor:dict key:@"newRepCount"];
                     [_RepArr addObject:model];
@@ -166,8 +171,9 @@
         [_tableView reloadData];
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
-    
+
 }
+
 
 - (void)initData
 {
@@ -710,6 +716,41 @@
         default:
             break;
     }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        if (_currentBtn.tag == 3) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSMutableArray *array = [self getArr];
+    BaseCellModel *model = array[indexPath.row];
+
+    NSString *str = [NSString stringWithFormat:@"mobi/dialogue/deleteDialogue?dialogueId=%@",model.catId];
+    [[tools shared] HUDShowText:@"正在删除..."];
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
+            [self getMessage];
+        }else {
+            [[tools shared] HUDShowHideText:[json objectForKey:@"message"] delay:1.0];
+        }
+        
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
 }
 
 - (void)didReceiveMemoryWarning {
