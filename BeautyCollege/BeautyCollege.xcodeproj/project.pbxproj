@@ -3969,7 +3969,7 @@
 				TargetAttributes = {
 					B5D7A0CC1ADE057C00D88C42 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = 432PK8C5QE;
+						DevelopmentTeam = 2QFT6LVW73;
 					};
 					B5D7A0E51ADE057D00D88C42 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -4981,8 +4981,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -5002,7 +5002,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
+				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -5024,8 +5024,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -5038,7 +5038,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
+				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -5049,8 +5049,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeautyCollege/umeng_ios_social_sdk_4.2-2.1_arm64_custom/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -5083,7 +5083,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
+				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -5093,8 +5093,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeautyCollege/umeng_ios_social_sdk_4.2-2.1_arm64_custom/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -5127,7 +5127,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
+				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

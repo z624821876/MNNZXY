@@ -14,10 +14,10 @@
     UIScrollView        *_scrollView;
 
     NSMutableArray      *_labelArr;
-    NSMutableArray      *countArr;
-    NSString            *_nowMB;
-
-
+    NSMutableArray      *_countArr;
+    
+    UILabel             *_myPointsLabel;
+    NSString            *_myPoints;
 }
 @end
 
@@ -56,12 +56,37 @@
         [[tools shared] HUDHide];
         if ([[json  objectForKey:@"code"] integerValue] == 0) {
             
+            NSDictionary *dic = nilOrJSONObjectForKey(json, @"result");
+            NSDictionary *ScoreDetail = nilOrJSONObjectForKey(dic, @"ScoreDetail");
+            _myPoints = [MyTool getValuesFor:ScoreDetail key:@"totalScore"];
+                //创建课堂积分
+            NSString *createLessonScore = [MyTool getValuesFor:ScoreDetail key:@"createLessonScore"];
+                //创建作业积分
+            NSString *createBlogScore = [MyTool getValuesFor:ScoreDetail key:@"createBlogScore"];
+                //点赞
+            NSString *doGoodScore = [MyTool getValuesFor:ScoreDetail key:@"doGoodScore"];
+                //置顶
+            NSString *blogRecommendScore = [MyTool getValuesFor:ScoreDetail key:@"blogRecommendScore"];
+                //
+            NSString *lessonUpdateScore = [MyTool getValuesFor:ScoreDetail key:@"lessonUpdateScore"];
+            _countArr = [[NSMutableArray alloc] initWithObjects:createLessonScore,createBlogScore,doGoodScore,blogRecommendScore,lessonUpdateScore, nil];
+            [self updateGUI];
             
         }else {
             [[tools shared] HUDShowHideText:@"加载失败" delay:1.0];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
+}
+
+- (void)updateGUI
+{
+    _myPointsLabel.text = _myPoints;
+    
+    for (UILabel *Label in _labelArr) {
+        NSInteger i = [_labelArr indexOfObject:Label];
+        Label.text = [NSString stringWithFormat:@"%@积分",_countArr[i]];
+    }
 }
 
 - (void)initGUI
@@ -87,10 +112,14 @@
     NSArray *array = @[@"我的积分",@"我的美币"];
     for (NSInteger i = 0; i < 2; i ++) {
         UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake((UI_SCREEN_WIDTH / 2.0) * i, img.bottom + 20, UI_SCREEN_WIDTH / 2.0, 20)];
-        label1.text = @"123123";
+        label1.text = @"0";
         label1.textColor = BaseColor;
         label1.textAlignment = NSTextAlignmentCenter;
         [self.view addSubview:label1];
+        if (i == 1) {
+            
+            _myPointsLabel = label1;
+        }
         
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(label1.left, label1.bottom, label1.width, 20)];
         label2.text = array[i];
@@ -103,6 +132,7 @@
     _logo.layer.borderWidth = 2.0;
     _logo.layer.cornerRadius = 40;
     _logo.layer.masksToBounds = YES;
+    [MyTool setImgWithURLStr:[User shareUser].logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:_logo];
     [self.view addSubview:_logo];
     
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, img.bottom + 20 + 48, UI_SCREEN_WIDTH, 2)];
@@ -117,6 +147,7 @@
     [img1 setImage:[[UIImage imageNamed:@"coursebg_16.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
     [_scrollView addSubview:img1];
     
+    _labelArr = [[NSMutableArray alloc] initWithCapacity:5];
     NSArray *titleArr = @[@"创建课堂",@"写作业",@"评论点赞作业",@"作业推荐/置顶",@"课堂推荐"];
     for (NSInteger i = 0; i < 5; i ++) {
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, img1.top + 20 + 40 * i, 110, 20)];
@@ -133,6 +164,7 @@
         UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, integralLabel.bottom + 9.5, UI_SCREEN_WIDTH, 0.5)];
         view.backgroundColor = [UIColor grayColor];
         [_scrollView addSubview:view];
+        [_labelArr addObject:integralLabel];
     }
     
     UIImageView *img2 = [[UIImageView alloc] initWithFrame:CGRectMake(0, img1.bottom + 20, UI_SCREEN_WIDTH, 40)];

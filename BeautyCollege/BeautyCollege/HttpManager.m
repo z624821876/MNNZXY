@@ -25,7 +25,8 @@
 - (void)getWithStr:(NSString *)str ComplentionBlock:(Complention)complention Failure:(Failure)failure
 {
     NSString *getStr = [NSString stringWithFormat:@"%@%@",sBaseUrlStr,str];
-    DDLog(@"requestURL === %@",getStr);
+//    DDLog(@"requestURL === %@",getStr);
+    NSLog(@"%@",getStr);
     NSString *urlStr = [getStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     [manager GET:urlStr parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)  {

@@ -59,18 +59,19 @@
         
         // [2]:注册APNS
         [self registerRemoteNotification];
+        
+        // [2-EXT]: 获取启动时收到的APN
+        NSDictionary* message = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        if (message) {
+            NSString *payloadMsg = [message objectForKey:@"payload"];
+            NSString *record = [NSString stringWithFormat:@"[APN]%@, %@", [NSDate date], payloadMsg];
+            NSLog(@"-------------%@,%@",payloadMsg,record);
+            
+        }
+        
+        [[UIApplication sharedApplication] cancelAllLocalNotifications];
+        [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     }
-    // [2-EXT]: 获取启动时收到的APN
-    NSDictionary* message = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-    if (message) {
-        NSString *payloadMsg = [message objectForKey:@"payload"];
-        NSString *record = [NSString stringWithFormat:@"[APN]%@, %@", [NSDate date], payloadMsg];
-        NSLog(@"-------------%@,%@",payloadMsg,record);
-
-    }
-    
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
     
     [MyTool getUserInfo];
     
@@ -298,8 +299,6 @@
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 //    [UMSocialSnsService  applicationDidBecomeActive];
     //当程序还在后台运行
-    application.applicationIconBadgeNumber = 0;
-    
     NSString *messageNotice = [[NSUserDefaults standardUserDefaults] objectForKey:@"messageNotice"];
     if ([messageNotice isKindOfClass:[NSNull class]] || messageNotice == nil) {
         messageNotice = @"o";
@@ -307,6 +306,7 @@
     }
     if ([messageNotice isEqualToString:@"o"]) {
         [self startSdkWith:kGTAppId appKey:kGTAppKey appSecret:kGTAppSecret];
+        application.applicationIconBadgeNumber = 0;
     }
 }
 

@@ -201,6 +201,7 @@
 
 - (void)aliPay
 {
+    
     /*
      *商户的唯一的parnter和seller。
      *签约后，支付宝会为每个商户分配一个唯一的 parnter 和 seller。
@@ -240,8 +241,8 @@
     order.tradeNO = self.orderNo; //订单ID（由商家自行制定）
     order.productName = @"宁波美娘女子学院"; //商品标题
     order.productDescription = @"网上购物"; //商品描述
-//    order.amount = self.totalPrice; //商品价格
-    order.amount = @"0.01";
+    order.amount = self.totalPrice; //商品价格
+//    order.amount = @"0.01";
     order.notifyURL =  @"http://www.xxx.com"; //回调URL
     
     order.service = @"mobile.securitypay.pay";
