@@ -438,7 +438,7 @@
 
     [_topBgView removeFromSuperview];
     
-    if ([self.ClassmateId isEqualToString:[User shareUser].userId]) {
+    if ([self.ClassmateId integerValue] == [[User shareUser].userId integerValue]) {
         return;
     }
 

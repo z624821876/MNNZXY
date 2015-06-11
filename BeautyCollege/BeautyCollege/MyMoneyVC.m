@@ -7,6 +7,7 @@
 //
 
 #import "MyMoneyVC.h"
+#import "MNhelperVC.h"
 
 @interface MyMoneyVC ()
 {
@@ -18,6 +19,8 @@
     
     UILabel             *_myPointsLabel;
     NSString            *_myPoints;
+    
+    UILabel             *_myMoney;
 }
 @end
 
@@ -33,7 +36,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initGUI];
-    [self buildFootView];
+//    [self buildFootView];
     
     [self loadData];
 }
@@ -59,6 +62,7 @@
             NSDictionary *dic = nilOrJSONObjectForKey(json, @"result");
             NSDictionary *ScoreDetail = nilOrJSONObjectForKey(dic, @"ScoreDetail");
             _myPoints = [MyTool getValuesFor:ScoreDetail key:@"totalScore"];
+            _myMoney.text = [MyTool getValuesFor:dic key:@"nowMB"];
                 //创建课堂积分
             NSString *createLessonScore = [MyTool getValuesFor:ScoreDetail key:@"createLessonScore"];
                 //创建作业积分
@@ -71,7 +75,6 @@
             NSString *lessonUpdateScore = [MyTool getValuesFor:ScoreDetail key:@"lessonUpdateScore"];
             _countArr = [[NSMutableArray alloc] initWithObjects:createLessonScore,createBlogScore,doGoodScore,blogRecommendScore,lessonUpdateScore, nil];
             [self updateGUI];
-            
         }else {
             [[tools shared] HUDShowHideText:@"加载失败" delay:1.0];
         }
@@ -116,9 +119,13 @@
         label1.textColor = BaseColor;
         label1.textAlignment = NSTextAlignmentCenter;
         [self.view addSubview:label1];
-        if (i == 1) {
+        if (i == 0) {
             
             _myPointsLabel = label1;
+        }
+        
+        if (i == 1) {
+            _myMoney = label1;
         }
         
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(label1.left, label1.bottom, label1.width, 20)];
@@ -139,7 +146,7 @@
     lineView.backgroundColor = BaseColor;
     [self.view addSubview:lineView];
     
-    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, lineView.bottom, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - lineView.bottom - 35)];
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, lineView.bottom, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - lineView.bottom)];
     _scrollView.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
     [self.view addSubview:_scrollView];
     
@@ -177,14 +184,24 @@
     label2.font = [UIFont systemFontOfSize:15];
     [_scrollView addSubview:label2];
     
-    UILabel *Lable3 = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - 200, img2.bottom + 10, 190, 20)];
-    Lable3.font = [UIFont systemFontOfSize:15];
-    Lable3.textColor = BaseColor;
-    Lable3.text = @"如何赚取积分？";
-    Lable3.textAlignment = NSTextAlignmentRight;
-    [_scrollView addSubview:Lable3];
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
+    btn.frame = CGRectMake(UI_SCREEN_WIDTH - 200, img2.bottom + 10, 190, 20);
+    [btn setTitle:@"如何获取积分" forState:UIControlStateNormal];
+    [btn setTitleColor:BaseColor forState:UIControlStateNormal];
+    btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+    [btn addTarget:self action:@selector(btnClick) forControlEvents:UIControlEventTouchUpInside];
+    [_scrollView addSubview:btn];
+    
+    _scrollView.contentSize = CGSizeMake(UI_SCREEN_WIDTH, btn.bottom + 30);
 }
 
+- (void)btnClick
+{
+    MNhelperVC *vc = [[MNhelperVC alloc] init];
+//    vc.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:vc animated:YES];
+}
 
 - (void)back
 {

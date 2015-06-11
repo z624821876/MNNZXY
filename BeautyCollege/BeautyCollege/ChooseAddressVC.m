@@ -158,7 +158,7 @@
     
     UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH / 2.0, 50)];
     [btn setTitle:@"添加新地址" forState:UIControlStateNormal];
-    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [btn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [footView addSubview:btn];
     [btn addTarget:self action:@selector(addAddress) forControlEvents:UIControlEventTouchUpInside];
     
@@ -169,6 +169,10 @@
     [btn1 addTarget:self action:@selector(chooseAddress) forControlEvents:UIControlEventTouchUpInside];
     [footView addSubview:btn1];
     [self.view addSubview:footView];
+    
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 0.5)];
+    lineView.backgroundColor = [UIColor grayColor];
+    [footView addSubview:lineView];
 }
 
 - (void)chooseAddress

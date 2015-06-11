@@ -57,6 +57,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    
     if (![MyTool isLogin] && ([AppDelegate shareApp].mainTabBar.selectedIndex == 4)) {
         LoginVC *vc = [[LoginVC alloc] init];
         vc.type = 1;
@@ -173,7 +174,6 @@
     }];
 
 }
-
 
 - (void)initData
 {
@@ -316,6 +316,14 @@
         [img setImage:[UIImage imageNamed:@"a.png"]];
         [view addSubview:img];
         
+        UILabel *label = [[UILabel alloc] init];
+        label.frame = CGRectMake((UI_SCREEN_WIDTH - 150) / 2.0, 20, 150, 44);
+        label.text = @"宿舍";
+        label.font = [UIFont boldSystemFontOfSize:22];
+        label.textColor = [UIColor whiteColor];
+        label.textAlignment = NSTextAlignmentCenter;
+        [view addSubview:label];
+        
         UIButton *logo = [UIButton buttonWithType:UIButtonTypeCustom];
         logo.frame = CGRectMake((UI_SCREEN_WIDTH - 80) / 2.0, img.bottom - 40, 80, 80);
 //         [MyTool setImgWithURLStr:[User shareUser].logo withplaceholderImage:[UIImage imageNamed:@"default_avatar.png"] withImgView:logo];
@@ -450,7 +458,7 @@
     btn.backgroundColor = BaseColor;
     [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     _currentBtn = btn;
-    
+
     CGRect rect = _lineView.frame;
     rect.origin.x = UI_SCREEN_WIDTH / 4.0 * btn.tag;
     _lineView.frame = rect;

@@ -78,6 +78,77 @@
     [self.view addSubview:_tableView];
     _timelabel = [[MZTimerLabel alloc] initWithLabel:nil andTimerType:MZTimerLabelTypeTimer];
 
+    
+    [[tools shared] HUDShowText:@"正在加载"];
+    _refrenshCount = 0;
+    NSString *str0 = [NSString stringWithFormat:@"mobi/pro/getShoppingCartCount?memberId=%@",[User shareUser].userId];
+    [[HttpManager shareManger] getWithStr:str0 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            [btn setImage:[UIImage imageNamed:@"baobei_c.png"] forState:UIControlStateNormal];
+            btn.frame = CGRectMake(0, 0, 60, 60);
+            [btn setTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"result"]] forState:UIControlStateNormal];
+            btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
+            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
+            [btn addTarget:self action:@selector(shoppingcart) forControlEvents:UIControlEventTouchUpInside];
+            
+            UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:btn];
+            self.navigationItem.rightBarButtonItem = item;
+            
+        }
+        
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+    
+    //获取轮播图数据
+    NSString *str = @"mobi/index/getAdv?type=2";
+    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            [_topImgArr removeAllObjects];
+            if ([[[json objectForKey:@"result"] objectForKey:@"top"] isKindOfClass:[NSArray class]]) {
+                NSArray *array = [[json objectForKey:@"result"] objectForKey:@"top"];
+                for (NSDictionary *dic in array) {
+                    BaseCellModel *model = [[BaseCellModel alloc] init];
+                    model.url = nilOrJSONObjectForKey(dic, @"filePath");
+                    model.name = nilOrJSONObjectForKey(dic, @"orgName");
+                    model.modelId = [MyTool getValuesFor:dic key:@"clickurl"];
+                    [_topImgArr addObject:model];
+                }
+                _refrenshCount += 1;
+                [self stopRefrensh];
+                [_tableView reloadData];
+            }
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+    
+    //获取商品数
+    NSString *str2 = @"mobi/pro/getProductCount";
+    [[HttpManager shareManger] getWithStr:str2 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        if ([[json objectForKey:@"code"] integerValue] == 0) {
+            [_productCount removeAllObjects];
+            id data = nilOrJSONObjectForKey(json, @"result");
+            if ([data isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dic = data;
+                id discount = nilOrJSONObjectForKey(dic, @"discount");
+                [_productCount addObject:discount];
+                id nw = nilOrJSONObjectForKey(dic, @"new");
+                [_productCount addObject:nw];
+                id all = nilOrJSONObjectForKey(dic, @"all");
+                [_productCount addObject:all];
+                
+                _refrenshCount += 1;
+                [self stopRefrensh];
+                
+                [_tableView reloadData];
+            }
+        }
+    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    }];
+    
+    [self loadDataWithtype:_currentBtn.tag - 10];
+
 }
 
 - (void)initData
@@ -100,77 +171,6 @@
 {
     [super viewDidAppear:YES];
     
-    [[tools shared] HUDShowText:@"正在加载"];
-    _refrenshCount = 0;
-    NSString *str0 = [NSString stringWithFormat:@"mobi/pro/getShoppingCartCount?memberId=%@",[User shareUser].userId];
-    [[HttpManager shareManger] getWithStr:str0 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-            [btn setImage:[UIImage imageNamed:@"baobei_c.png"] forState:UIControlStateNormal];
-            btn.frame = CGRectMake(0, 0, 60, 60);
-            [btn setTitle:[NSString stringWithFormat:@"%@",[json objectForKey:@"result"]] forState:UIControlStateNormal];
-            btn.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 5);
-            btn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentRight;
-            [btn addTarget:self action:@selector(shoppingcart) forControlEvents:UIControlEventTouchUpInside];
-
-            UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithCustomView:btn];
-            self.navigationItem.rightBarButtonItem = item;
-            
-        }
-        
-    
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
-    
-        //获取轮播图数据
-    NSString *str = @"mobi/index/getAdv?type=2";
-    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            [_topImgArr removeAllObjects];
-            if ([[[json objectForKey:@"result"] objectForKey:@"top"] isKindOfClass:[NSArray class]]) {
-                NSArray *array = [[json objectForKey:@"result"] objectForKey:@"top"];
-                for (NSDictionary *dic in array) {
-                    BaseCellModel *model = [[BaseCellModel alloc] init];
-                    model.url = nilOrJSONObjectForKey(dic, @"filePath");
-                    model.name = nilOrJSONObjectForKey(dic, @"orgName");
-                    model.modelId = [MyTool getValuesFor:dic key:@"clickurl"];
-                    [_topImgArr addObject:model];
-                }
-                _refrenshCount += 1;
-                [self stopRefrensh];
-                [_tableView reloadData];
-            }
-        }
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
-    
-        //获取商品数
-    NSString *str2 = @"mobi/pro/getProductCount";
-    [[HttpManager shareManger] getWithStr:str2 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            [_productCount removeAllObjects];
-            id data = nilOrJSONObjectForKey(json, @"result");
-            if ([data isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *dic = data;
-                id discount = nilOrJSONObjectForKey(dic, @"discount");
-                [_productCount addObject:discount];
-                id nw = nilOrJSONObjectForKey(dic, @"new");
-                [_productCount addObject:nw];
-                id all = nilOrJSONObjectForKey(dic, @"all");
-                [_productCount addObject:all];
-                
-                _refrenshCount += 1;
-                [self stopRefrensh];
-
-                [_tableView reloadData];
-            }
-        }
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
-
-    [self loadDataWithtype:_currentBtn.tag - 10];
-    
     //获取团购图片
     NSString *str3 = @"mobi/index/getAdv?type=3";
     [[HttpManager shareManger] getWithStr:str3 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
@@ -189,13 +189,11 @@
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
-    
 }
 
 - (void)updateTime
 {
     [_timelabel reset];
-    
     NSURL *url=[NSURL URLWithString:@"http://www.baidu.com"];
     NSURLRequest *request=[NSURLRequest requestWithURL:url];
     NSURLConnection *connection=[[NSURLConnection alloc]initWithRequest:request delegate:self startImmediately:YES];
@@ -332,11 +330,16 @@
     _currentBtn.selected = NO;
     _currentBtn = btn;
     _currentBtn.selected = YES;
-    
     CGFloat width = UI_SCREEN_WIDTH / 3.0;
     CGRect rect = _lineView.frame;
     rect.origin.x = width * (btn.tag - 10);
     _lineView.frame = rect;
+    
+    if (_currentBtn.tag - 10 == 2) {
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }else {
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    }
     
     [self loadDataWithtype:_currentBtn.tag - 10];
 }
@@ -362,6 +365,7 @@
     if ((_currentBtn.tag - 10) == 2) {
         cell.type = 16;
         cell.model = _dataArray[indexPath.row];
+        
         [cell setBlock2:^(id model){
             if ([model isKindOfClass:[BaseCellModel class]]) {
                 BaseCellModel *info = model;
@@ -384,7 +388,6 @@
         }
         cell.type = 15;
         cell.modelArray = array;
-        
         cell.cellView.tag = num;
         cell.cellView2.tag = num + 1;
         [cell.cellView addTarget:self action:@selector(goodsClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -460,6 +463,10 @@
     [btn addTarget:self action:@selector(pushToGroup) forControlEvents:UIControlEventTouchUpInside];
     [bgView addSubview:btn];
     
+    UIImageView *groupImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 10, 100, 30)];
+    [groupImg setImage:[UIImage imageNamed:@"mall_wyqg.png"]];
+    [btn addSubview:groupImg];
+    
     CGFloat time = [_groupDate timeIntervalSinceDate:_currentDate] - 8 * 60 * 60;
     
     if (time > 0) {
@@ -521,6 +528,7 @@
             label.text = [NSString stringWithFormat:@"%.0f天",time / (60.0 * 60.0 * 24.0)];
         }
     }
+    
     CGFloat width = UI_SCREEN_WIDTH / 3.0;
     NSArray *array = @[@"特价",@"新品",@"全部"];
     for (NSInteger i = 0; i < 3; i ++) {
@@ -583,7 +591,7 @@
     if (_currentBtn.tag - 10 == 2) {
         BaseCellModel *model = _dataArray[indexPath.row];
         CGFloat height = (UI_SCREEN_WIDTH / 3.0 + 20 + 10) * (([model.cateArray count] + 2) / 3);
-        return height + 30;
+        return height + 50;
     }
     return (UI_SCREEN_WIDTH - 30) / 2.0 + 90;
 }

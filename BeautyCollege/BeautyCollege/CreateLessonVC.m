@@ -193,7 +193,6 @@
     }else {
         tagString = tags;
     }
-    NSLog(@"%@",tagString);
         if (self.cateId == 16) {
     
             self.cityId = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocationId"];

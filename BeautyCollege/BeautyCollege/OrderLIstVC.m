@@ -17,6 +17,7 @@
     UIView              *_markView;
     UIButton            *_currentBtn;
     NSMutableArray      *_dataArray;
+    NSMutableArray      *_labelArray;
 }
 
 @end
@@ -41,13 +42,13 @@
     }
 }
 
-
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     _dataArray = [[NSMutableArray alloc] init];
     [self buildOptionView];
     
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64 + 40, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64 - 40) style:UITableViewStyleGrouped];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64 + 60, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64 - 60) style:UITableViewStyleGrouped];
     _tableView.delegate = self;
     _tableView.dataSource = self;
     UIView *view = [UIView new];
@@ -58,25 +59,19 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *view = [[UIView alloc] init];
     
+    UIView *view = [[UIView alloc] init];
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 20, UI_SCREEN_WIDTH, 50)];
     [img setImage:[[UIImage imageNamed:@"bg_class_top.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)]];
     [view addSubview:img];
     
     BaseCellModel *model = _dataArray[section];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 25, UI_SCREEN_WIDTH - 120, 20)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 35, UI_SCREEN_WIDTH, 20)];
     label.font = [UIFont systemFontOfSize:15];
     label.textColor = [UIColor grayColor];
     label.text = [NSString stringWithFormat:@"订单号:%@",model.orderNo];
     [view addSubview:label];
-    
-    UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(10, label.bottom, UI_SCREEN_WIDTH - 120, 20)];
-    label1.font = [UIFont systemFontOfSize:15];
-    label1.textColor = [UIColor grayColor];
-    label1.text = model.date;
-    [view addSubview:label1];
     
     UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - 100, 30, 90, 30)];
     label2.font = [UIFont boldSystemFontOfSize:20];
@@ -124,7 +119,7 @@
     
     [view addSubview:label2];
     
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, label1.bottom + 4.5, UI_SCREEN_WIDTH, 0.5)];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, label.bottom + 14.5, UI_SCREEN_WIDTH, 0.5)];
     lineView.backgroundColor = [UIColor grayColor];
     [view addSubview:lineView];
     return view;
@@ -153,8 +148,16 @@
     [img setImage:[[UIImage imageNamed:@"bg_down1"] resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, 10, 10)]];
     [view addSubview:img];
     
+    BaseCellModel *model = _dataArray[section];
+
+    UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(5, 15, UI_SCREEN_WIDTH - 120, 30)];
+    label1.font = [UIFont systemFontOfSize:15];
+    label1.textColor = [UIColor grayColor];
+    label1.text = model.date;
+    [view addSubview:label1];
+
     UIButton *btn = [UIButton buttonWithType: UIButtonTypeCustom];
-    btn.frame = CGRectMake(UI_SCREEN_WIDTH - 210, 15, 90, 30);
+    btn.frame = CGRectMake(UI_SCREEN_WIDTH - 150 - 20, 15, 75, 30);
     btn.backgroundColor = BaseColor;
     btn.layer.cornerRadius = 5;
     btn.layer.masksToBounds = YES;
@@ -164,12 +167,11 @@
     [view addSubview:btn];
     
     UIButton *btn2 = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn2.frame = CGRectMake(btn.right + 20, 15, 90, 30);
+    btn2.frame = CGRectMake(btn.right + 10, 15, 75, 30);
     btn2.backgroundColor = BaseColor;
     btn2.layer.cornerRadius = 5;
     btn2.layer.masksToBounds = YES;
     btn2.tag = section;
-    BaseCellModel *model = _dataArray[section];
     switch ([model.status integerValue]) {
         case 0:
         {
@@ -317,6 +319,14 @@
     [self loadData];
 }
 
+- (void)loadOrderCount
+{
+//    NSString *str = [NSString stringWithFormat:@""];
+//    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+//    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//    }];
+}
+
 - (void)loadData
 {
     NSArray *typeArray = @[@"all",@"unpay",@"send",@"uncommented"];
@@ -370,16 +380,32 @@
 
 - (void)buildOptionView
 {
-    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 64, UI_SCREEN_WIDTH, 40)];
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 64, UI_SCREEN_WIDTH, 60)];
     view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view];
     
+    _labelArray = [NSMutableArray array];
     NSArray *array = @[@"全部订单",@"待付款",@"待收货",@"待评价"];
     for (NSInteger i = 0; i < 4; i ++) {
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(i * UI_SCREEN_WIDTH / 4.0, 10, UI_SCREEN_WIDTH / 4.0, 20)];
+        label.textColor = BaseColor;
+        label.text = @"0";
+        label.font = [UIFont boldSystemFontOfSize:20];
+        label.textAlignment = NSTextAlignmentCenter;
+        [view addSubview:label];
+        [_labelArray addObject:label];
+        
+        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(label.left, label.bottom, label.width, 20)];
+        label2.textAlignment = NSTextAlignmentCenter;
+        label2.text = array[i];
+        label2.font = [UIFont systemFontOfSize:15];
+        [view addSubview:label2];
+        
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-        btn.frame = CGRectMake(i * UI_SCREEN_WIDTH / 4.0, 0, UI_SCREEN_WIDTH / 4.0, 40);
-        [btn setTitle:array[i] forState:UIControlStateNormal];
-        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        btn.frame = CGRectMake(i * UI_SCREEN_WIDTH / 4.0, 0, UI_SCREEN_WIDTH / 4.0, 60);
+//        [btn setTitle:array[i] forState:UIControlStateNormal];
+//        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         btn.tag = i;
         if (i == 0) {
             btn.selected = YES;
@@ -389,7 +415,7 @@
         [view addSubview:btn];
     }
     
-    _markView = [[UIView alloc] initWithFrame:CGRectMake(0, 37, UI_SCREEN_WIDTH / 4.0, 3)];
+    _markView = [[UIView alloc] initWithFrame:CGRectMake(0, 57, UI_SCREEN_WIDTH / 4.0, 3)];
     _markView.backgroundColor = BaseColor;
     [view addSubview:_markView];
 }
@@ -408,7 +434,6 @@
     _markView.frame = rect;
     [self loadData];
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

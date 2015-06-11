@@ -57,9 +57,7 @@
 
 - (void)loadData
 {
-    
-    NSString *str = [NSString stringWithFormat:@"mobi/dialogue/getDialoguePage?memberId=%@&pageNo=1&pageSize=4",_userId];
-    
+    NSString *str = [NSString stringWithFormat:@"mobi/dialogue/getDialoguePage?memberId=%@&pageNo=%ld&pageSize=10",_userId,_currentPage];
     [[tools shared] HUDShowText:@"正在加载..."];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
         BOOL isNull = YES;

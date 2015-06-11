@@ -14,7 +14,7 @@
 {
     CellView *cellview = [super buttonWithType:buttonType];
     cellview.backgroundColor = [UIColor whiteColor];
-    [cellview setBackgroundImage:[Util createImageWithColor:ColorWithRGBA(232.0, 120.0, 128.0, 1)] forState:UIControlStateHighlighted];
+//    [cellview setBackgroundImage:[Util createImageWithColor:ColorWithRGBA(232.0, 120.0, 128.0, 1)] forState:UIControlStateHighlighted];
 //    [cellview setBackgroundImage:[Util createImageWithColor:ColorWithRGBA(232.0, 120.0, 128.0, 1)] forState:UIControlStateSelected];
     cellview.layer.borderColor = [UIColor grayColor].CGColor;
     cellview.layer.borderWidth = 0.5;

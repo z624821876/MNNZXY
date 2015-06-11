@@ -122,7 +122,7 @@
     switch (_type - 10) {
         case 0:
         {
-            self.logoImg.frame = CGRectMake(15, 10, 60 * 154 / 105, 60);
+            self.logoImg.frame = CGRectMake(10, 10, 60 * 154 / 105, 60);
             NSString *str = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,_model.logo];
             [self.logoImg sd_setImageWithURL:[NSURL URLWithString:str] placeholderImage:[UIImage imageNamed:@"course_titbg.png"]];
             
@@ -196,9 +196,9 @@
             break;
         case 3:
         {
-            self.logoImg.frame = CGRectMake(15, 10, 80, 60);
-            NSString *str = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,_model.logo];
-            self.logoImg.contentMode = UIViewContentModeScaleAspectFit;
+            self.logoImg.frame = CGRectMake(10, 10, 80, 60);
+//            NSString *str = [NSString stringWithFormat:@"%@%@",sBaseImgUrlStr,_model.logo];
+//            self.logoImg.contentMode = UIViewContentModeScaleAspectFit;
             [self setImgWithURLStr:_model.logo withplaceholderImage:[UIImage imageNamed:@"course_titbg.png"] withImgView:self.logoImg];
             
             self.label1.frame = CGRectMake(_logoImg.right + 5, _logoImg.top, UI_SCREEN_WIDTH - _logoImg.right - 20,20);
@@ -259,11 +259,12 @@
             break;
         case 6:
         {
-            
+            self.img1.frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, 20);
+            self.img1.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
             self.cellView3.hidden = NO;
-            self.leftView.frame = CGRectMake(0, 0, 10, 30);
+            self.leftView.frame = CGRectMake(0, 20, 10, 30);
             self.leftView.backgroundColor = BaseColor;
-            self.label1.frame = CGRectMake(self.leftView.right, 0, UI_SCREEN_WIDTH - 10, 30);
+            self.label1.frame = CGRectMake(self.leftView.right, 20, UI_SCREEN_WIDTH - 10, 30);
             self.label1.text = _model.title;
             CGFloat height = (UI_SCREEN_WIDTH / 3.0 + 20 + 10) * (([_model.cateArray count] + 2) / 3);
             self.cellView3.frame = CGRectMake(0, self.label1.bottom, UI_SCREEN_WIDTH, height);
@@ -271,6 +272,11 @@
             for (CellView *cell in self.cellView3.subviews) {
                 [cell addTarget:self action:@selector(cellView3Click:) forControlEvents:UIControlEventTouchUpInside];
             }
+            
+            self.img2.frame = CGRectMake(0, self.height - 12, UI_SCREEN_WIDTH, 15);
+//            self.img2.backgroundColor = [UIColor redColor];
+            [self.img2 setImage:[UIImage imageNamed:@"bg_down.png"]];
+            
         }
             break;
         case 7:
@@ -370,6 +376,7 @@
             self.label1.frame = CGRectMake(15, 12, self.btn1.left - 15, 20);
             self.label1.textColor = [UIColor blackColor];
             self.label1.textAlignment = NSTextAlignmentLeft;
+            self.label1.font = [UIFont systemFontOfSize:17];
             self.label1.text = _title;
             
         }
@@ -407,6 +414,7 @@
             self.label1.frame = CGRectMake(15, 12, UI_SCREEN_WIDTH - 30, 20);
             self.label1.textAlignment = NSTextAlignmentLeft;
             self.label1.textColor = [UIColor blackColor];
+            self.label1.font = [UIFont systemFontOfSize:17];
             self.label1.text = _title;
 
         }
@@ -481,6 +489,9 @@
             self.btn1.userInteractionEnabled = NO;
             self.btn1.titleLabel.font = [UIFont systemFontOfSize:15];
             [self.btn1 setTitle:@"举手" forState:UIControlStateNormal];
+            
+            self.img1.frame = CGRectMake(15, 79.5, UI_SCREEN_WIDTH - 15, 0.5);
+            [self.img1 setBackgroundColor:[UIColor lightGrayColor]];
         }
             break;
         case 18:
@@ -794,9 +805,8 @@
             self.label1.text = _model.title;
             
             self.label2.frame = CGRectMake(_label1.left, _label1.bottom + 10, _label1.width, 20);
-            
             _label2.textColor = [UIColor grayColor];
-            _label2.font = [UIFont systemFontOfSize:15];
+            _label2.font = [UIFont systemFontOfSize:13];
             _label2.text = _model.name;
             
             self.label3.frame = CGRectMake(_label2.left, _label2.bottom + 10, _label2.width / 2.0, 20);

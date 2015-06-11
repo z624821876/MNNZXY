@@ -243,12 +243,6 @@
     _bgScroll.contentSize = CGSizeMake(UI_SCREEN_WIDTH, _bgView3.bottom + 20);
     [self buildFootView];
 }
-- (void)stopHUD
-{
-    if (_refrenshCount >= 3) {
-        [[tools shared] HUDHide];
-    }
-}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -257,6 +251,7 @@
     [[tools shared] HUDShowText:@"正在加载..."];
     NSString *str0 = [NSString stringWithFormat:@"mobi/pro/getShoppingCartCount?memberId=%@",[User shareUser].userId];
     [[HttpManager shareManger] getWithStr:str0 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+        [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             
             UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -271,7 +266,7 @@
             self.navigationItem.rightBarButtonItem = item;
             
             _refrenshCount += 1;
-            [self stopHUD];
+//            [self stopHUD];
         }
         
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -280,7 +275,7 @@
     
     NSString *str = [NSString stringWithFormat:@"mobi/pro/getProductDetail?productId=%@&memberId=%@",self.goodsId,[User shareUser].userId];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        
+        [[tools shared] HUDHide];
         if ([[json objectForKey:@"code"] integerValue] == 0) {
             [_imgArray removeAllObjects];
             [_sizeArray removeAllObjects];
@@ -348,7 +343,8 @@
             [self updateGUI];
             
             _refrenshCount += 1;
-            [self stopHUD];
+        }else {
+            [[tools shared] HUDShowHideText:@"加载失败" delay:0.5];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
@@ -375,7 +371,6 @@
             }
             [self addRecommendGoods];
             _refrenshCount += 1;
-            [self stopHUD];
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLog(@"%@",error);
@@ -691,7 +686,7 @@
     }else {
         //加入购物车
         NSString *str = [NSString stringWithFormat:@"mobi/pro/addShoppingCart?memberId=%@&productId=%@&number=%@&paramIds=%@",[User shareUser].userId,self.goodsId,_numBtn.currentTitle,normsStr];
-        
+        NSLog(@"%@",str);
         [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
             [self close];
             if ([[json objectForKey:@"code"] integerValue] == 0) {

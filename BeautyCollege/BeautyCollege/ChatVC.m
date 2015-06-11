@@ -421,9 +421,14 @@
 
 - (void)sendMessage:(UIButton *)btn
 {
+    if ([self.userId integerValue] == [[User shareUser].userId integerValue]) {
+        [[tools shared] HUDShowHideText:@"不能给自己发送消息" delay:1.0];
+        return;
+    }
+    
     _textView.inputView = nil;
     [_textView resignFirstResponder];
-
+    
     if (_textView.text.length <= 0) {
         return;
     }
@@ -497,6 +502,11 @@
 
 - (void)imgBtnClick
 {
+    if ([self.userId integerValue] == [[User shareUser].userId integerValue]) {
+        [[tools shared] HUDShowHideText:@"不能给自己发送消息" delay:1.0];
+        return;
+    }
+
     _textView.inputView = nil;
     [_textView resignFirstResponder];
     
@@ -550,7 +560,6 @@
     }
     
 }
-
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSData *data = UIImageJPEGRepresentation([info objectForKey:UIImagePickerControllerOriginalImage], 0.1);

@@ -28,7 +28,7 @@
     [super viewDidLoad];
     
     UIImageView *bgImg = [[UIImageView alloc] initWithFrame:CGRectMake(10, 64 + 20 * UI_scaleY, UI_SCREEN_WIDTH - 20, 90 + 30 * UI_scaleY)];
-    [bgImg setImage:[UIImage imageNamed:@"blank_num.png"]];
+    [bgImg setImage:[UIImage imageNamed:@"comment_2.png"]];
     [self.view addSubview:bgImg];
     
     _pswTF1 = [[UITextField alloc] initWithFrame:CGRectMake(15, bgImg.top + 5 * UI_scaleY, UI_SCREEN_WIDTH - 30, 30)];

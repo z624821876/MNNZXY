@@ -8,7 +8,7 @@
 
 #import "MyCustomVC.h"
 
-@interface LessonsVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface LessonsVC : MyCustomVC<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate,UIAlertViewDelegate>
 
 
 @property (nonatomic, strong) UITableView *tableView;

@@ -25,7 +25,7 @@
 - (void)getWithStr:(NSString *)str ComplentionBlock:(Complention)complention Failure:(Failure)failure
 {
     NSString *getStr = [NSString stringWithFormat:@"%@%@",sBaseUrlStr,str];
-//    DDLog(@"requestURL === %@",getStr);
+    DDLog(@"requestURL === %@",getStr);
     NSLog(@"%@",getStr);
     NSString *urlStr = [getStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
@@ -54,8 +54,7 @@
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
     manager.requestSerializer = [AFJSONRequestSerializer serializer];
     [manager POST:urlStr parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        
-        [formData appendPartWithFormData:[dic objectForKey:@"Image"] name:@"Image"];
+                [formData appendPartWithFormData:[dic objectForKey:@"Image"] name:@"Image"];
     } success:^(AFHTTPRequestOperation *operation, id responseObject) {
         complention(operation,operation.responseObject);
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

@@ -673,24 +673,33 @@
     }
 }
 
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        BaseCellModel *model = _commentArray[alertView.tag];
+        NSString *str = [NSString stringWithFormat:@"mobi/class/deleteReply?replyId=%@",model.modelId];
+        [[tools shared] HUDShowText:@"正在删除..."];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
+                _currentPage = 1;
+                [self loadData];
+            }else {
+                [[tools shared] HUDShowHideText:@"操作失败" delay:1.0];
+            }
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+    }
+}
+
     //删除作业
 - (void)deleteComment:(UIButton *)btn
 {
-    BaseCellModel *model = _commentArray[btn.tag - 1];
-
-    NSString *str = [NSString stringWithFormat:@"mobi/class/deleteReply?replyId=%@",model.modelId];
-    [[tools shared] HUDShowText:@"正在删除..."];
-    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
-            _currentPage = 1;
-            [self loadData];
-        }else {
-            [[tools shared] HUDShowHideText:@"操作失败" delay:1.0];
-        }
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"是否删除此评论" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = btn.tag - 1;
+    [alert show];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

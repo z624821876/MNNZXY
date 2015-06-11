@@ -517,7 +517,14 @@
 
 - (void)deleteHomeWork:(UIButton *)btn
 {
-    BaseCellModel *model = _allDataArr[btn.tag];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"是否删除此作业" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = btn.tag;
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    BaseCellModel *model = _allDataArr[alertView.tag];
     NSString *str = [NSString stringWithFormat:@"/mobi/class/deleteHomework?blogId=%@",model.modelId];
     [[tools shared] HUDShowText:@"正在删除..."];
     [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
@@ -530,7 +537,7 @@
         }
     } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
     }];
-    
+
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section

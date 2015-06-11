@@ -381,7 +381,7 @@
     [_topBgView addSubview:_pageControl];
 
         //标签
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(5, 5, 150, 20)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 5, 150, 20)];
     label.text = @"找美女,上美娘";
     label.font = [UIFont systemFontOfSize:15];
     label.textColor = [UIColor whiteColor];
@@ -389,16 +389,16 @@
     
         //NextBtn
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-    btn.frame = CGRectMake(UI_SCREEN_WIDTH - 70, 10, 50, 12);
+    btn.frame = CGRectMake(UI_SCREEN_WIDTH - 50, 10, 50, 12);
     [btn setImage:[UIImage imageNamed:@"圆.png"] forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(searchMoreUser) forControlEvents:UIControlEventTouchUpInside];
     [_topBgView2 addSubview:btn];
     
-    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake( 20, _topBgView2.height - 30, 20, 20)];
+    UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, _topBgView2.height - 30, 20, 20)];
     [img setImage:[UIImage imageNamed:@"search.png"]];
     [_topBgView2 addSubview:img];
     
-    UITextField *searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.right + 5, _topBgView2.height - 32.5, UI_SCREEN_WIDTH - img.right - 20, 25)];
+    UITextField *searchTF = [[UITextField alloc] initWithFrame:CGRectMake(img.right + 5, _topBgView2.height - 32.5, UI_SCREEN_WIDTH - img.right - 15, 25)];
     [searchTF setBackground:[UIImage imageNamed:@"blank_home_search.png"]];
     searchTF.delegate = self;
     searchTF.textColor = [UIColor whiteColor];
@@ -445,7 +445,6 @@
         vc.type = 1;
         vc.hidesBottomBarWhenPushed = YES;
         [self.navigationController pushViewController:vc animated:YES];
-        
     }else {
         MoreUserVC *vc = [[MoreUserVC alloc] init];
         vc.type = 1;
@@ -547,18 +546,17 @@
     //
 - (void)updateScroll
 {
-    
     for (UIView *view in _topScroll2.subviews) {
         [view removeFromSuperview];
     }
     for (NSInteger i = 0; i < [_topImgArr2 count]; i ++) {
-        HeaderView *img = [[HeaderView alloc] initWithFrame:CGRectMake(20 + 80 * i, 0, 60, _topScroll2.height) dataDic:_topImgArr2[i]];
+        HeaderView *img = [[HeaderView alloc] initWithFrame:CGRectMake(10 + 80 * i, 0, 60, _topScroll2.height) dataDic:_topImgArr2[i]];
         img.button.tag = i;
         [img.button addTarget:self action:@selector(userDetails:) forControlEvents:UIControlEventTouchUpInside];
         [_topScroll2 addSubview:img];
     }
     
-    _topScroll2.contentSize = CGSizeMake(20 + 80 * [_topImgArr2 count] + 20, _topScroll2.height);
+    _topScroll2.contentSize = CGSizeMake(10 + 80 * [_topImgArr2 count] + 20, _topScroll2.height);
 }
 
 - (void)userDetails:(UIButton *)btn
@@ -630,7 +628,6 @@
     }
 }
 
-
 - (void)topBtnClick
 {
     if (nil != _currentDate && nil != _groupDate) {
@@ -676,26 +673,24 @@
 {
     if (section != 2) {
         UIView *view = [[UIView alloc] init];
-        
         view.backgroundColor = ColorWithRGBA(215.0, 225.0, 227.0, 1);
-        
         UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 30, UI_SCREEN_WIDTH, 30)];
         [img setImage:[UIImage imageNamed:@"bg_class_top"]];
         [view addSubview:img];
         
-        UIImageView *headerImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 35, 35)];
+        UIImageView *headerImg = [[UIImageView alloc] initWithFrame:CGRectMake(15, 15, 40, 40)];
         [headerImg setImage:_imgArray[section]];
         [view addSubview:headerImg];
         
-        UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerImg.right + 10, 30, 80, 30)];
+        UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(headerImg.right + 10, 35, 80, 20)];
         nameLabel.text = _titleArr[section];
         [view addSubview:nameLabel];
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
         btn.tag = section;
         [btn addTarget:self action:@selector(searchMore:) forControlEvents:UIControlEventTouchUpInside];
-        btn.frame = CGRectMake(UI_SCREEN_WIDTH - 40, 30, 30, 30);
-        [btn setImage:[UIImage imageNamed:@"dd.png"] forState:UIControlStateNormal];
+        btn.frame = CGRectMake(UI_SCREEN_WIDTH - 40, 35, 30, 20);
+        [btn setImage:[UIImage imageNamed:@"more.png"] forState:UIControlStateNormal];
         [view addSubview:btn];
         
         return view;

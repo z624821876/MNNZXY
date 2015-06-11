@@ -65,6 +65,9 @@
     
     UIButton *btn = [[UIButton alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - 50, progressLabel.top - 5, 40, 30)];
     [btn setTitle:@"关闭" forState:UIControlStateNormal];
+    btn.backgroundColor = BaseColor;
+    btn.layer.cornerRadius = 5;
+    btn.layer.masksToBounds = YES;
     [btn addTarget:self action:@selector(close) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:btn];
 }

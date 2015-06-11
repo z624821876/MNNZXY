@@ -49,6 +49,8 @@
 @property (nonatomic, strong) NSMutableArray    *myLessonArr;
 
 @property (nonatomic, strong) UIView            *coverView;
+
+@property (nonatomic, strong) UIImageView       *headIntervalImg;
 @end
 
 @implementation ClassroomVC
@@ -92,9 +94,9 @@
     //加载学生数
 - (void)loadDataCount
 {
-    
     NSString *locationId;
     if (_currentBtn.tag == 14) {
+        
         locationId = _currentLocationId;
     }
 
@@ -108,6 +110,7 @@
             _studentCountLab.text = _studentCount;
             NSNumber *lesson = nilOrJSONObjectForKey(dic, @"lessonCount");
             _lessonCount = [lesson stringValue];
+            NSLog(@"----%@",_lessonCount);
             _classCountLab.text = _lessonCount;
             NSNumber *homeWork = nilOrJSONObjectForKey(dic, @"homgworkCount");
             _homgworkCount = [homeWork stringValue];
@@ -145,6 +148,7 @@
     //加载课堂数
 - (void)loadClassCount
 {
+    
     if ([User shareUser].userId == nil) {
         return;
     }
@@ -154,7 +158,7 @@
     }else {
         type = 1;
     }
-    
+
     NSString *str1 = [NSString stringWithFormat:@"mobi/class/getMyLesson?classId=%ld&memberId=%@&type=%ld&pageNo=1&pageSize=4",[self getClassIDWith],[User shareUser].userId,type];
     
     [[HttpManager shareManger] getWithStr:str1 ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
@@ -164,7 +168,7 @@
             NSNumber *mylesson = nilOrJSONObjectForKey(dic, @"myLessonCount");
             _myLessonCount = [mylesson stringValue];
             _leftClassLab.text = _myLessonCount;
-            
+            NSLog(@"%@",_myLessonCount);
             NSNumber *addlesson = nilOrJSONObjectForKey(dic, @"addLessonCount");
             _addLessonCount = [addlesson stringValue];
             _rightClassLab.text = _addLessonCount;
@@ -209,8 +213,7 @@
             if (_currentPage == 1) {
                 [_allDataArr removeAllObjects];
             }
-            NSDictionary *dic = [json objectForKey:@"result"];
-            NSArray *array = [dic objectForKey:@"data"];
+            NSArray *array = nilOrJSONObjectForKey(json, @"result");
             if ([array count] != 0) {
                 
                 for (NSDictionary *dataDic in array) {
@@ -290,7 +293,8 @@
     return 0;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     _labelArr = [[NSMutableArray alloc] init];
@@ -409,6 +413,7 @@
     [btn addTarget:self action:@selector(createLessons) forControlEvents:UIControlEventTouchUpInside];
     [grayView addSubview:btn];
     
+    
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, btn.bottom + 10 * UI_scaleY, UI_SCREEN_WIDTH, 60 + 10 * UI_scaleY)];
     img.image = [UIImage imageNamed:@"bg_class_top.png"];
     [grayView addSubview:img];
@@ -501,21 +506,23 @@
     rect.origin.x = 20 + (20 + width) * (btn.tag - 10) + (width - 20) / 2.0;
     _remarkView.frame = rect;
     _loctionBtn.hidden = YES;
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     if (btn.tag == 14) {
         _loctionBtn.hidden = NO;
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.backgroundColor = ColorWithRGBA(218.0, 225.0, 227.0, 1);
         NSString *str = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocation"];
         NSString *string;
         if (str == nil || [str isKindOfClass:[NSNull class]]) {
-            string = @"宁波";
+            string = @"宁波 切换";
             [[NSUserDefaults standardUserDefaults] setObject:@"宁波" forKey:@"MNlocation"];
             [[NSUserDefaults standardUserDefaults] setObject:@"388" forKey:@"MNlocationId"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }else {
-            string = str;
+            string = [NSString stringWithFormat:@"%@ 切换",str];
         }
         _currentLocationId = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocationId"];
         CGFloat width = [string boundingRectWithSize:CGSizeMake(10000, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
-        
         _loctionBtn.frame = CGRectMake(UI_SCREEN_WIDTH - 10 - width - 40, 10, width + 40, 20);
         [_loctionBtn setTitle:string forState:UIControlStateNormal];
         [_loctionBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
@@ -539,7 +546,10 @@
     [location setBlock:^(NSString *str){
         weakSelf.currentLocationId = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocationId"];
         NSString *string = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocation"];
-        [_loctionBtn setTitle:string forState:UIControlStateNormal];
+        NSString *string2 = [NSString stringWithFormat:@"%@ 切换",string];
+        CGFloat width = [string2 boundingRectWithSize:CGSizeMake(10000, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.width;
+        _loctionBtn.frame = CGRectMake(UI_SCREEN_WIDTH - 10 - width - 40, 10, width + 40, 20);
+        [_loctionBtn setTitle:string2 forState:UIControlStateNormal];
     }];
     [self.navigationController pushViewController:location animated:YES];
 
@@ -633,13 +643,12 @@
     
     if (section == 2) {
         
-        
-        
         UIView *view = [[UIView alloc] init];
         
         if (_currentBtn.tag == 14) {
             UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 30)];
-            [img setImage:[UIImage imageNamed:@"bg_class_top"]];
+//            bg_class_top
+            [img setImage:[UIImage imageNamed:@"coursebg_16"]];
             [view addSubview:img];
             view.layer.masksToBounds = YES;
             return view;
@@ -755,9 +764,8 @@
         }
     }
     if (section == 2) {
-        
         if (_currentBtn.tag == 14) {
-            return 1;
+            return 30;
         }
 
     }

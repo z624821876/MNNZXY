@@ -16,6 +16,8 @@
     if (self) {
 
         _headerImg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.width, self.width)];
+        _headerImg.layer.cornerRadius = 10;
+        _headerImg.layer.masksToBounds = YES;
         [_headerImg sd_setImageWithURL:[NSURL URLWithString:model.logo] placeholderImage:[UIImage imageNamed:@"default_avatar.png"]];
         [self addSubview:_headerImg];
         

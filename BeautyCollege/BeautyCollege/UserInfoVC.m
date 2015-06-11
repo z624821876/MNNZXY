@@ -333,8 +333,22 @@
     topView = nil;
     if (currentBtn.tag >= 20) {
         
-//        0女 1无 2男
-        NSInteger sex = currentBtn.tag - 20;
+//        0无性 1男 2女
+        NSInteger sex;
+        switch (currentBtn.tag - 20) {
+            case 0:
+                sex = 2;
+                break;
+            case 1:
+                sex = 1;
+                break;
+            case 2:
+                sex = 0;
+                break;
+            default:
+                break;
+        }
+        
         NSString *str = [NSString stringWithFormat:@"mobi/user/updateUserInfo?memberId=%@&sex=%ld",[User shareUser].userId,sex];
         [self changeUserInfoWithUrlStr:str];
     }

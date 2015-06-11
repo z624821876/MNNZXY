@@ -483,17 +483,17 @@
             switch ([sexNum integerValue]) {
                 case 0:
                 {
-                    sex = @"女";
+                    sex = @"无性";
                 }
                     break;
                 case 1:
                 {
-                    sex = @"无性";
+                    sex = @"男";
                 }
                     break;
                 case 2:
                 {
-                    sex = @"男";
+                    sex = @"女";
                 }
                     break;
 
