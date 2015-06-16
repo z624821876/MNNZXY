@@ -314,6 +314,8 @@
         view.backgroundColor = [UIColor whiteColor];
         UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 122)];
         [img setImage:[UIImage imageNamed:@"a.png"]];
+        img.contentMode = UIViewContentModeScaleAspectFill;
+        img.clipsToBounds = YES;
         [view addSubview:img];
         
         UILabel *label = [[UILabel alloc] init];

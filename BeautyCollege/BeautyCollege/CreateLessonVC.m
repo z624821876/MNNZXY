@@ -196,7 +196,6 @@
         if (self.cateId == 16) {
     
             self.cityId = [[NSUserDefaults standardUserDefaults] objectForKey:@"MNlocationId"];
-    
         }else {
             self.cityId = nil;
         }

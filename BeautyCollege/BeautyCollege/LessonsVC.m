@@ -524,19 +524,22 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    BaseCellModel *model = _allDataArr[alertView.tag];
-    NSString *str = [NSString stringWithFormat:@"/mobi/class/deleteHomework?blogId=%@",model.modelId];
-    [[tools shared] HUDShowText:@"正在删除..."];
-    [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
-        if ([[json objectForKey:@"code"] integerValue] == 0) {
-            [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
-            _currentPage = 1;
-            [self loadLessonsInfo];
-        }else {
-            [[tools shared] HUDShowHideText:@"操作失败" delay:1.0];
-        }
-    } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    }];
+    if (buttonIndex == 1) {
+        BaseCellModel *model = _allDataArr[alertView.tag];
+        NSString *str = [NSString stringWithFormat:@"/mobi/class/deleteHomework?blogId=%@",model.modelId];
+        [[tools shared] HUDShowText:@"正在删除..."];
+        [[HttpManager shareManger] getWithStr:str ComplentionBlock:^(AFHTTPRequestOperation *operation, id json) {
+            if ([[json objectForKey:@"code"] integerValue] == 0) {
+                [[tools shared] HUDShowHideText:@"删除成功" delay:1.0];
+                _currentPage = 1;
+                [self loadLessonsInfo];
+            }else {
+                [[tools shared] HUDShowHideText:@"操作失败" delay:1.0];
+            }
+        } Failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        }];
+
+    }
 
 }
 

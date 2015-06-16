@@ -332,18 +332,26 @@
     [topView removeFromSuperview];
     topView = nil;
     if (currentBtn.tag >= 20) {
-        
 //        0无性 1男 2女
         NSInteger sex;
         switch (currentBtn.tag - 20) {
             case 0:
+            {
                 sex = 2;
+
+            }
                 break;
             case 1:
-                sex = 1;
+            {
+                sex = 0;
+
+            }
                 break;
             case 2:
-                sex = 0;
+            {
+                sex = 1;
+ 
+            }
                 break;
             default:
                 break;
@@ -385,17 +393,17 @@
             switch ([sexNum integerValue]) {
                 case 0:
                 {
-                    sex = @"女";
+                    sex = @"无性";
                 }
                     break;
                 case 1:
                 {
-                    sex = @"无性";
+                    sex = @"男";
                 }
                     break;
                 case 2:
                 {
-                    sex = @"男";
+                    sex = @"女";
                 }
                     break;
                     

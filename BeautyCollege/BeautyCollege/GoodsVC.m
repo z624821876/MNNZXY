@@ -802,7 +802,7 @@
     
     [_detailWeb loadHTMLString:_productModel.detail baseURL:nil];
     
-    _conmentCountLabel.text = [NSString stringWithFormat:@"用户评价(%@)",_productModel.commentCount];
+    _conmentCountLabel.text = [NSString stringWithFormat:@"用户评价(%d)",[_productModel.cateArray count]];
     CGRect rect4 = _bgView3.frame;
     rect4.origin.y = _bgView2.bottom + 15;
     _bgView3.frame = rect4;
