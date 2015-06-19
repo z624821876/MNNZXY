@@ -439,6 +439,7 @@
     [_topBgView removeFromSuperview];
     
     if ([self.ClassmateId integerValue] == [[User shareUser].userId integerValue]) {
+        [[tools shared] HUDShowHideText:@"自己不能添加自己" delay:1.0];
         return;
     }
 

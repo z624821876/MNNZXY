@@ -16,6 +16,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:YES];
     [IQKeyboardManager sharedManager].enable = NO;
     [[UIApplication sharedApplication] setStatusBarHidden:NO];
     self.navigationController.navigationBarHidden = NO;
