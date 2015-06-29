@@ -532,7 +532,6 @@
 		B5C223741B15E1F900FAF9D8 /* 图片按钮@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B5C223731B15E1F900FAF9D8 /* 图片按钮@2x.png */; };
 		B5CCE7EB1B01F3B9003D79E4 /* ClassmateInfoVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CCE7EA1B01F3B9003D79E4 /* ClassmateInfoVC.m */; };
 		B5CE29991ADE24170059903D /* MyCustomVC.m in Sources */ = {isa = PBXBuildFile; fileRef = B5CE29981ADE24170059903D /* MyCustomVC.m */; };
-		B5CE29D01ADE50C40059903D /* course_titbg.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE29CF1ADE50C40059903D /* course_titbg.png */; };
 		B5CE2B4B1ADE59DE0059903D /* a.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE29D21ADE59DC0059903D /* a.png */; };
 		B5CE2B4C1ADE59DE0059903D /* add_address.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE29D31ADE59DC0059903D /* add_address.png */; };
 		B5CE2B4D1ADE59DE0059903D /* add_img1.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CE29D41ADE59DC0059903D /* add_img1.png */; };
@@ -1723,7 +1722,6 @@
 		B5CCE7EA1B01F3B9003D79E4 /* ClassmateInfoVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassmateInfoVC.m; sourceTree = "<group>"; };
 		B5CE29971ADE24170059903D /* MyCustomVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyCustomVC.h; sourceTree = "<group>"; };
 		B5CE29981ADE24170059903D /* MyCustomVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyCustomVC.m; sourceTree = "<group>"; };
-		B5CE29CF1ADE50C40059903D /* course_titbg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = course_titbg.png; path = ../course_titbg.png; sourceTree = "<group>"; };
 		B5CE29D21ADE59DC0059903D /* a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = a.png; sourceTree = "<group>"; };
 		B5CE29D31ADE59DC0059903D /* add_address.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_address.png; sourceTree = "<group>"; };
 		B5CE29D41ADE59DC0059903D /* add_img1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_img1.png; sourceTree = "<group>"; };
@@ -3269,7 +3267,6 @@
 				B56A1BB01AE489AC00873CA7 /* tabbar */,
 				B582716F1AE4F901007DA672 /* 三角.png */,
 				B5CE2CC41ADE5C600059903D /* 圆@2x.png */,
-				B5CE29CF1ADE50C40059903D /* course_titbg.png */,
 				B5CE29D21ADE59DC0059903D /* a.png */,
 				B5CE29D31ADE59DC0059903D /* add_address.png */,
 				B5CE29D41ADE59DC0059903D /* add_img1.png */,
@@ -3931,7 +3928,7 @@
 				TargetAttributes = {
 					B5D7A0CC1ADE057C00D88C42 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = 2QFT6LVW73;
+						DevelopmentTeam = 432PK8C5QE;
 					};
 					B5D7A0E51ADE057D00D88C42 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -4077,7 +4074,6 @@
 				B56A1BBF1AE489AC00873CA7 /* tabicon_3@2x.png in Resources */,
 				B58089D41B0F2890007543A3 /* 20-创建课堂-点击效果_02@2x.png in Resources */,
 				B5CE2C871ADE59DE0059903D /* reg11.png in Resources */,
-				B5CE29D01ADE50C40059903D /* course_titbg.png in Resources */,
 				B5CE2C411ADE59DE0059903D /* jiantou1.png in Resources */,
 				9A4DF9DF1B240E62006872F1 /* mn-sex-2.png in Resources */,
 				B5CE2C381ADE59DE0059903D /* icon_14.png in Resources */,
@@ -4933,8 +4929,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -4954,7 +4950,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -4976,8 +4972,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -4990,7 +4986,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -5001,8 +4997,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeautyCollege/umeng_ios_social_sdk_4.2-2.1_arm64_custom/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -5035,7 +5031,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -5045,8 +5041,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Ningbo Mygirl Mobile Internet Technology Co., Ltd. (2QFT6LVW73)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hangzhou Sunday Network Technology Co.,Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/BeautyCollege/umeng_ios_social_sdk_4.2-2.1_arm64_custom/UMSocial_Sdk_Extra_Frameworks/TencentOpenAPI",
@@ -5079,7 +5075,7 @@
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "d0fa9dda-c5cd-4ab5-92fe-ec199e3b0424";
+				PROVISIONING_PROFILE = "f1d12f53-8d61-47ad-866b-0fca055e1e56";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

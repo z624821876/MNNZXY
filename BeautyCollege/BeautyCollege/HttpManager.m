@@ -29,6 +29,7 @@
     NSLog(@"%@",getStr);
     NSString *urlStr = [getStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    
     [manager GET:urlStr parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject)  {
         complention(operation,operation.responseObject);
         

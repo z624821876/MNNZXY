@@ -79,8 +79,6 @@
 static NSString * const sBaseUrlStr = @"http://nzxyadmin.53xsd.com/";
 static NSString * const sBaseImgUrlStr = @"http://nzxyimage.53xsd.com/meiniang";
 
-
-
 static NSString * const sBaseJsonURLStr = @"http://beauty.o2o2m.com";
 //http://gaoxinquan.xasd.com.cn/
 static NSString * const sBaseJsonURLStrWeb = @"http://admin.o2o2m.com/";

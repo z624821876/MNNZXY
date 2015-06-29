@@ -194,9 +194,8 @@
     if ([result isEqualToString:@"success"]) {
         [self submitResult];
     }else {
-        [[tools shared] HUDShowHideText:@"支付失败" delay:1.5];
+        [[tools shared] HUDShowHideText:@"支付失败" delay:0.5];
     }
-
 }
 
 - (void)aliPay
@@ -269,6 +268,7 @@
                        orderSpec, signedString, @"RSA"];
         
         [[AlipaySDK defaultService] payOrder:orderString fromScheme:appScheme callback:^(NSDictionary *resultDic) {
+            
             if ([[resultDic objectForKey:@"resultStatus"] integerValue] == 9000) {
                 [self submitResult];
             }
